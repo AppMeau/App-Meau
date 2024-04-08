@@ -4,16 +4,22 @@ import InputComponent from '../components/input';
 import React from 'react';
 
 export default function Page() {
-  const [text, onChangeText] = React.useState('')
+  const [user, setUser] = React.useState('')
+  const [password, setPassword] = React.useState('')
 
   return (
     <View style={styles.container}>
-      <InputComponent placeholder='Usuario' value='text' onChangeText={onChangeText}/>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <View style={{flexDirection: 'column', gap: 8}}>
+      <View style={{flexDirection: 'column', gap: 20, marginBottom: 52}}>
+        <InputComponent lazy rule={(val)=>val!==''} placeholder='Usuário' value={user} onChangeText={setUser}/>
+        <InputComponent placeholder='Senha' type='password' value={password} onChangeText={setPassword}/>
+      </View>
+      
+      <View style={{marginBottom:72}}>
         <ButtonComponent link='/login' type='positive'>ENTRAR</ButtonComponent>
-        <ButtonComponent link='/login' type='google'>ENTRAR COM GOOGLE</ButtonComponent>
-        <ButtonComponent link='/login' type='facebook'>ENTRAR COM FACEBOOK</ButtonComponent>
+      </View>
+      <View style={{flexDirection: 'column', gap: 8}}>
+        <ButtonComponent link='/login' type='google' icon='googleplus'>ENTRAR COM GOOGLE</ButtonComponent>
+        <ButtonComponent link='/login' type='facebook' icon='facebook'>ENTRAR COM FACEBOOK</ButtonComponent>
       </View>
     </View>
   );
@@ -22,7 +28,7 @@ export default function Page() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#fafafa',
 
     alignItems: 'center',
     justifyContent: 'center',

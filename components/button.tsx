@@ -8,6 +8,7 @@ import { useFonts, Roboto_400Regular } from '@expo-google-fonts/roboto';
 
 type componentProps = {
     type: 'positive' | 'google' | 'facebook',
+    icon?: 'googleplus' | 'facebook',
     link: string,
     children: string | JSX.Element | JSX.Element[]
 }
@@ -25,9 +26,8 @@ export default function ButtonComponent(props: componentProps) {
         href={props.link}
     >
         <View style={{display: 'flex', flexDirection: 'row', gap:6, justifyContent: 'center', alignItems: 'center'}}>
-            {props.type=='google'?<Zocial style={{color:'#fff'}} name='googleplus' />:''}
-            {props.type=='facebook'?<Zocial style={{color:'#fff'}} name='facebook' />:''}
-            <Text style={{color:'#fff'}}>{props.children}</Text>
+            {props.icon?<Zocial style={styles[props.type]} name={props.icon} /> : ''}
+            <Text style={styles[props.type]}>{props.children}</Text>
         </View>
     </Link>
   );
