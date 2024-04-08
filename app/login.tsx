@@ -1,11 +1,14 @@
-import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
 import ButtonComponent from '../components/button';
-import Zocial from '@expo/vector-icons/Zocial'
+import InputComponent from '../components/input';
+import React from 'react';
 
 export default function Page() {
+  const [text, onChangeText] = React.useState('')
+
   return (
     <View style={styles.container}>
+      <InputComponent placeholder='Usuario' value='text' onChangeText={onChangeText}/>
       <Text>Open up App.tsx to start working on your app!</Text>
       <View style={{flexDirection: 'column', gap: 8}}>
         <ButtonComponent link='/login' type='positive'>ENTRAR</ButtonComponent>

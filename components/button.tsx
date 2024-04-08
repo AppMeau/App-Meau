@@ -1,4 +1,3 @@
-import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, View, Text } from 'react-native';
 import { Link } from 'expo-router';
 import Zocial from '@expo/vector-icons/Zocial'
