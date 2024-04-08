@@ -1,6 +1,7 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, View, Text } from 'react-native';
 import { Link } from 'expo-router';
+import Zocial from '@expo/vector-icons/Zocial'
 import { useFonts, Roboto_400Regular } from '@expo-google-fonts/roboto';
 
 
@@ -23,7 +24,13 @@ export default function ButtonComponent(props: componentProps) {
     <Link
         style={{...styles[props.type], ...styles.button}}
         href={props.link}
-    >{props.children}</Link>
+    >
+        <View style={{display: 'flex', flexDirection: 'row', gap:6, justifyContent: 'center', alignItems: 'center'}}>
+            {props.type=='google'?<Zocial style={{color:'#fff'}} name='googleplus' />:''}
+            {props.type=='facebook'?<Zocial style={{color:'#fff'}} name='facebook' />:''}
+            <Text style={{color:'#fff'}}>{props.children}</Text>
+        </View>
+    </Link>
   );
 }
 
@@ -31,7 +38,6 @@ const styles = StyleSheet.create({
     button: {
         width: 232,
         display:'flex',
-        flexDirection:"row",
         height: 40,
         borderRadius: 2,
         fontSize: 12,
