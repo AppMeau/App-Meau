@@ -15,7 +15,7 @@ export default function Page() {
       </View>
       
       <View style={{marginBottom:72}}>
-        <ButtonComponent link='/login' type='positive'>ENTRAR</ButtonComponent>
+        <ButtonComponent link='/' type='positive'>ENTRAR</ButtonComponent>
       </View>
       <View style={{flexDirection: 'column', gap: 8}}>
         <ButtonComponent link='/login' type='google' icon='googleplus'>ENTRAR COM GOOGLE</ButtonComponent>
