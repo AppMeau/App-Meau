@@ -14,8 +14,9 @@ const Colors = {
     
     // AUXS
     grey1: '#f7f7f7',
-    grey2: '#e6e7e8',
-    grey3: '#bdbdbd',
+    grey2: '#e6e7e7',
+    grey3: '#e6e7e8',
+    grey4: '#bdbdbd',
     
     // NETWORK
     google: '#f15f5c',

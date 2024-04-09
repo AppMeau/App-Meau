@@ -1,10 +1,12 @@
 import { StatusBar } from 'expo-status-bar';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Image, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import Header from '../components/header';
 import Colors from '../util/Colors';
 import InputComponent from '../components/input';
 import { useState } from 'react';
 import CustomButton from '../components/customButton';
+import { MaterialIcons } from '@expo/vector-icons';
+import * as ImagePicker from 'expo-image-picker';
 
 export default function RegisterComponent() {
   const [name, setName] = useState('');
@@ -16,11 +18,39 @@ export default function RegisterComponent() {
   const [phone, setPhone] = useState('');
   const [user, setUser] = useState('');
   const [password, setPassword] = useState('');
-  const [photo, setPhoto] = useState('');
+  const [passwordConfirmation, setPasswordConfirmation] = useState('');
+  const [photo, setPhoto] = useState<null | string>(null);
 
-  const registrationHandler = () => {
-    console.log('REGISTRADO!');
-  }
+  const handleSubmit = async () => {
+  
+    const formData = new FormData();
+    formData.append('name', name);
+    formData.append('age', age);
+    formData.append('email', email);
+    formData.append('state', state);
+    formData.append('city', city);
+    formData.append('adress', adress);
+    formData.append('phone', phone);
+    formData.append('user', user);
+    formData.append('password', password);
+    formData.append('password', password);
+    // formData.append('photo', {uri: photo, name: 'image.jpg', type: 'image/jpeg'})
+  
+    
+  };
+
+  const pickImageAsync = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      allowsEditing: true,
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      setPhoto(result.assets[0].uri);
+    } else {
+      alert('You did not select any image.');
+    }
+  };
   
   return (
     <>
@@ -45,15 +75,26 @@ export default function RegisterComponent() {
                 <InputComponent lazy rule={(val)=>val!==''} placeholder='Telefone' value={phone} onChangeText={setPhone}/>
               <Text style={styles.subtitle}>INFORMAÇÕES DE PERFIL</Text>
                 <InputComponent lazy rule={(val)=>val!==''} placeholder='Nome de Usuário' value={user} onChangeText={setUser}/>
-                <InputComponent lazy rule={(val)=>val!==''} placeholder='Senha' value={password} onChangeText={setPassword}/>
-                <InputComponent lazy rule={(val)=>val!==''} placeholder='Confirmação de Senha' value={password} onChangeText={setPassword}/>
+                <InputComponent lazy type='password' rule={(val)=>val!==''} placeholder='Senha' value={password} onChangeText={setPassword}/>
+                <InputComponent lazy type='password' rule={(val)=>val===password} placeholder='Confirmação de Senha' value={passwordConfirmation} onChangeText={setPasswordConfirmation}/>
               
               <Text style={styles.subtitle}>FOTO DE PERFIL</Text>
 
-                {/* FOTO !! */}
-
               <View style={styles.container}>
-                <CustomButton backgroundColor={Colors.bluePrimary} onPress={registrationHandler}>FAZER CADASTRO</CustomButton>
+                <Pressable onPress={pickImageAsync}>
+                  <View style={styles.containerPhoto}>
+                    {photo !== null ? (
+                      <Image source={{uri: photo}} style={styles.img}/>
+                    ):(
+                      <>
+                        <MaterialIcons name='control-point' size={24} color={Colors.textAuxSecondary} />
+                        <Text style={styles.textContainerPhoto} >Adicionar foto</Text>
+                      </>
+                    )}
+                  </View>
+                </Pressable>
+                
+                <CustomButton backgroundColor={Colors.bluePrimary} onPress={handleSubmit}>FAZER CADASTRO</CustomButton>
               </View>
               
             </View>
@@ -95,5 +136,25 @@ const styles = StyleSheet.create({
     textAlign: 'left',
     gap: 20,
    
+  },
+  containerPhoto: {
+    width: 128,
+    height: 128,
+    backgroundColor: Colors.grey2,
+    borderWidth: 2,
+    borderColor: Colors.grey2,
+    justifyContent: 'center',
+    alignContent: 'center',
+    alignItems: 'center',
+    elevation: 2,
+  },
+  textContainerPhoto: {
+    color: Colors.textAuxSecondary,
+    fontFamily: 'roboto-regular',
+    fontSize: 14
+  },
+  img: {
+    width: 128,
+    height: 128,
   }
 });
