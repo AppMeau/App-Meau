@@ -8,6 +8,8 @@ const Colors = {
     // PRIMARY COLORS
     bluePrimary: '#88c9bf',
     blueSecundary: '#cfe9e5',
+    blueHighlight: '#589b9b',
+    
     yellowPrimary: '##ffd358',
     
     // AUXS

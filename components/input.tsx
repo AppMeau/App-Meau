@@ -10,13 +10,7 @@ type props = {type?: textContentType, lazy?: boolean, rule?: (value:any)=>boolea
 export default function InputComponent(props: props) {
     const [focused, setFocus] = useState(false) 
     const [isValid, setValid] = useState<null|boolean>(null)
-    let [fontsLoaded, fontError] = useFonts({
-        Roboto_400Regular,
-    });
-
-    if (!fontsLoaded && !fontError) {
-        return null;
-    }
+    
   return (
     <View style={{...styles.container, borderColor: focused? '#88c9bf':'#e6e7e8', borderBottomWidth: focused? 2:1}}>
       <TextInput
@@ -63,13 +57,12 @@ const styles = StyleSheet.create({
       paddingBottom: 8
     },
     input: {
-
-      height: 14,
+      height: 15,
       flexGrow: 1,
       fontSize: 14,
       justifyContent: 'center',
       includeFontPadding: false,
-      fontFamily: 'Roboto_400Regular',
+      fontFamily: 'roboto-regular',
       color: '#575757',
     },
   });

@@ -6,34 +6,40 @@ import { Ionicons } from '@expo/vector-icons';
 
 export default function Header({color, title, search=false}:{color: string, title: string, search?: Boolean}) {
     
-  
     return (
-    <View style={[styles.container, {backgroundColor: color}]}>
-      <Ionicons name='menu' size={24} color={Colors.textAuxPrimary} style={styles.icon} />
-      <Text style={styles.title}>{title}</Text>
-      {search && 
-        <Ionicons name="search-sharp" size={24} color={Colors.textAuxPrimary} />
-      }
-    </View>
+      <View style={[styles.container, styles.flex, {backgroundColor: color}]}>
+        <View style={[styles.flex,  styles.headerContainer]}>
+          <Ionicons name='menu' size={24} color={Colors.textAuxPrimary} />
+          <Text style={styles.title}>{title}</Text>
+        </View>
+        
+        {search && 
+          <Ionicons name="search-sharp" size={24} color={Colors.textAuxPrimary} />
+        }
+      </View>
   );
 }
 
 const styles = StyleSheet.create({
+  flex: {
+    alignContent: 'center',
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
   container: {
-    borderColor: 'red',
     width: '100%',
     height: 56,
     alignItems: 'center',
     textAlign: 'center',
-    alignContent: 'center',
-    flexDirection: 'row'
+    justifyContent: 'space-between',
+    paddingHorizontal: 16,
   },
   title: {
     fontSize: 20,
     fontFamily: 'roboto-medium',
     color: Colors.textAuxPrimary
   },
-  icon: {
-    margin: 16
-  }
+  headerContainer: {
+    gap: 16
+  },
 });

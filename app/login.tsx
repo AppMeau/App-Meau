@@ -4,8 +4,8 @@ import InputComponent from '../components/input';
 import React from 'react';
 
 export default function Page() {
-  const [user, setUser] = React.useState('')
-  const [password, setPassword] = React.useState('')
+  const [user, setUser] = React.useState('');
+  const [password, setPassword] = React.useState('');
 
   return (
     <View style={styles.container}>
