@@ -3,9 +3,6 @@ import { Link } from 'expo-router';
 import Zocial from '@expo/vector-icons/Zocial'
 import { useFonts, Roboto_400Regular } from '@expo-google-fonts/roboto';
 
-
-
-
 type componentProps = {
     type: 'positive' | 'google' | 'facebook',
     icon?: 'googleplus' | 'facebook',
