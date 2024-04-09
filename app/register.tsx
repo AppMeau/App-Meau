@@ -55,7 +55,7 @@ export default function Page() {
   };
   
   return (
-    <View>
+    <View style={{flex:1}}>
         <Header color={Colors.blueSecundary} title='Cadastro Pessoal' search />
         
         <ScrollView>
