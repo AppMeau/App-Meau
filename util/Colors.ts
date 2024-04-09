@@ -10,7 +10,7 @@ const Colors = {
     blueSecundary: '#cfe9e5',
     blueHighlight: '#589b9b',
     
-    yellowPrimary: '##ffd358',
+    yellowPrimary: '#ffd358',
     
     // AUXS
     grey1: '#f7f7f7',

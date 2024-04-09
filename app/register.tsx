@@ -5,10 +5,12 @@ import Colors from '../util/Colors';
 import InputComponent from '../components/input';
 import { useState } from 'react';
 import CustomButton from '../components/customButton';
+import { router } from 'expo-router';
 import { MaterialIcons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 
-export default function RegisterComponent() {
+export default function Page() {
+
   const [name, setName] = useState('');
   const [age, setAge] = useState('');
   const [email, setEmail] = useState('');
@@ -35,7 +37,7 @@ export default function RegisterComponent() {
     formData.append('password', password);
     formData.append('password', password);
     // formData.append('photo', {uri: photo, name: 'image.jpg', type: 'image/jpeg'})
-  
+    router.replace('/login')
     
   };
 
@@ -53,7 +55,7 @@ export default function RegisterComponent() {
   };
   
   return (
-    <>
+    <View style={{flex:1}}>
         <Header color={Colors.blueSecundary} title='Cadastro Pessoal' search />
         
         <ScrollView>
@@ -101,7 +103,7 @@ export default function RegisterComponent() {
           </View>
           
         </ScrollView>
-    </>
+    </View>
   );
 }
 

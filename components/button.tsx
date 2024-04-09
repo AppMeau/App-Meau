@@ -2,9 +2,10 @@ import { StyleSheet, View, Text } from 'react-native';
 import { Link } from 'expo-router';
 import Zocial from '@expo/vector-icons/Zocial'
 import { useFonts, Roboto_400Regular } from '@expo-google-fonts/roboto';
+import Colors from '../util/Colors';
 
 type componentProps = {
-    type: 'positive' | 'google' | 'facebook',
+    type: 'warn' | 'positive' | 'google' | 'facebook',
     icon?: 'googleplus' | 'facebook',
     link: string,
     children: string | JSX.Element | JSX.Element[]
@@ -43,16 +44,20 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         fontFamily: 'Roboto_400Regular',
     },
+    warn: {
+        backgroundColor: Colors.yellowPrimary,
+        color: Colors.textAuxPrimary,
+    },
     positive: {
-        backgroundColor: '#88c9bf',
-        color: '#434343',
+        backgroundColor: Colors.bluePrimary,
+        color: Colors.textAuxPrimary,
     },
     google: {
-        backgroundColor: '#f15f5c',
-        color: '#f7f7f7',
+        backgroundColor: Colors.google,
+        color: Colors.grey1,
     },
     facebook: {
-        backgroundColor: '#194f7c',
-        color: '#f7f7f7',
+        backgroundColor: Colors.facebook,
+        color: Colors.grey1,
     }
 });
