@@ -1,13 +1,33 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { Alert, StyleSheet, Text, View } from 'react-native';
 import ButtonComponent from '../components/button';
 import InputComponent from '../components/input';
 import React from 'react';
 import Header from '../components/header';
 import Colors from '../util/Colors';
 
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import {firebase} from '../util/firebase'
+import CustomButton from '../components/customButton';
+import { router } from 'expo-router';
+
 export default function Page() {
   const [user, setUser] = React.useState('');
   const [password, setPassword] = React.useState('');
+
+  const auth = ()=>{
+    const auth = getAuth(firebase);
+    signInWithEmailAndPassword(auth, user, password)
+    .then((userCredential) => {
+      const user = userCredential.user;
+      Alert.alert('logado com sucesso')
+      router.replace('/')
+    })
+    .catch((error):void => {
+      if(error.code==='auth/invalid-email' || error.code === 'auth/invalid-credential'){
+        Alert.alert('Email ou senha invalidos')
+      }
+    });
+  }
 
   return (
     <>
@@ -20,7 +40,9 @@ export default function Page() {
         </View>
         
         <View style={{marginBottom:72}}>
-          <ButtonComponent link='/' type='positive'>ENTRAR</ButtonComponent>
+          <CustomButton backgroundColor={Colors.bluePrimary} onPress={()=>{
+            auth()
+          }}>ENTRAR</CustomButton>
         </View>
         <View style={{flexDirection: 'column', gap: 8}}>
           <ButtonComponent link='/login' type='google' icon='googleplus'>ENTRAR COM GOOGLE</ButtonComponent>
