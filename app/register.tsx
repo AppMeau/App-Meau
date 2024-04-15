@@ -60,7 +60,7 @@ export default function Page() {
 
   return (
     <View style={{ flex: 1 }}>
-      <Header color={Colors.blueSecundary} title="Cadastro Pessoal" search />
+      <Header bgColor={Colors.blueSecundary} title="Cadastro Pessoal" search />
 
       <ScrollView>
         <View style={styles.container}>

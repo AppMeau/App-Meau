@@ -1,10 +1,12 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useFonts } from "expo-font";
-import { Link } from "expo-router";
+import { Link, Stack } from "expo-router";
 import { StyleSheet, Text, View, Image } from "react-native";
 
 import ButtonComponent from "../components/button";
 import Colors from "../util/Colors";
+import { Button } from "react-native-paper";
+import Header from "../components/header";
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -18,13 +20,18 @@ export default function App() {
   }
   return (
     <View style={styles.container}>
+      <Stack.Screen
+        options={{
+          headerTitle: () => <Header bgColor="red" />,
+        }}
+      />
       {/* <Link href="/login">Login</Link>
       <Text>Open up App.tsx to start working on your app!</Text>
       <StatusBar style="auto" /> */}
       {/* <RegisterComponent /> */}
-      <View style={{ width: "100%", alignItems: "flex-start" }}>
+      {/* <View style={{ width: "100%", alignItems: "flex-start" }}>
         <Ionicons name="menu" size={24} color={Colors.bluePrimary} />
-      </View>
+      </View> */}
       <View style={{ justifyContent: "center" }}>
         <View
           style={[
@@ -45,16 +52,12 @@ export default function App() {
             Qual o seu interesse?
           </Text>
         </View>
-        <View style={{ gap: 12, alignItems: "center", paddingBottom: 44 }}>
-          <ButtonComponent type="warn" link="/register">
-            ADOTAR
-          </ButtonComponent>
-          <ButtonComponent type="warn" link="/register">
-            AJUDAR
-          </ButtonComponent>
-          <ButtonComponent type="warn" link="/register">
-            CADASTRAR ANIMAL
-          </ButtonComponent>
+        <View style={{ alignItems: "center", paddingBottom: 44 }}>
+          <View style={{ gap: 12, width: 232 }}>
+            <Button mode="contained-tonal">ADOTAR</Button>
+            <Button mode="contained-tonal">AJUDAR</Button>
+            <Button mode="contained-tonal">CADASTRAR ANIMAL</Button>
+          </View>
         </View>
         <View style={{ alignItems: "center", paddingBottom: 68 }}>
           <Link

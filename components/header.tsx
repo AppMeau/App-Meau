@@ -4,16 +4,16 @@ import { StyleSheet, Text, View } from "react-native";
 import Colors from "../util/Colors";
 
 export default function Header({
-  color,
+  bgColor,
   title,
   search = false,
 }: {
-  color: string;
-  title: string;
+  bgColor?: string;
+  title?: string;
   search?: boolean;
 }) {
   return (
-    <View style={[styles.container, styles.flex, { backgroundColor: color }]}>
+    <View style={[styles.container, styles.flex, { backgroundColor: bgColor }]}>
       <View style={[styles.flex, styles.headerContainer]}>
         <Ionicons name="menu" size={24} color={Colors.textAuxPrimary} />
         <Text style={styles.title}>{title}</Text>
@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     textAlign: "center",
     justifyContent: "space-between",
-    paddingHorizontal: 16,
+    paddingHorizontal: 0,
   },
   title: {
     fontSize: 20,
