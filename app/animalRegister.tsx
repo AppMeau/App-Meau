@@ -2,7 +2,7 @@ import { Image, Pressable, ScrollView, StyleSheet, Text, View } from 'react-nati
 import Header from '../components/header';
 import Colors from '../util/Colors';
 import InputComponent from '../components/input';
-import { useState } from 'react';
+import { lazy, useEffect, useState } from 'react';
 import CustomButton from '../components/customButton';
 import { router } from 'expo-router';
 import { MaterialIcons } from '@expo/vector-icons';
@@ -10,21 +10,51 @@ import * as ImagePicker from 'expo-image-picker';
 import { RadioButton } from 'react-native-paper';
 import { RadioButtonContext } from 'react-native-paper/lib/typescript/components/RadioButton/RadioButtonGroup';
 import RadioContainer from '../components/radioContainer';
+import CheckboxContainer from '../components/checkboxContainer';
 
 export default function AnimalRegister() {
 
   const [goal, setGoal] = useState('Adoção');
   const [name, setName] = useState('');
+  const [photo, setPhoto] = useState<null | string>(null);
+  
   const [species, setSpecies] = useState('');
   const [gender, setGender] = useState('');
   const [size, setSize] = useState('');
   const [age, setAge] = useState('');
-  const [personality, setPersonality] = useState('');
-  const [health, setHealth] = useState('');
-  const [requirement, setRequirement] = useState('');
+
+  // TEMPERAMENTO
+  const [playfull, setPlayfull] = useState(false);
+  const [shy, setShy] = useState(false);
+  const [calm, setCalm] = useState(false);
+  const [guard, setGuard] = useState(false);
+  const [lovely, setLovely] = useState(false);
+  const [lazy, setLazy] = useState(false);
+
+  // SAÚDE
+  const [vaccinated, setVaccinated] = useState(false);
+  const [dewormed, setDewormed] = useState(false);
+  const [castrated, setCastrated] = useState(false);
+  const [sick, setSick] = useState(false);
+  const [sickness, setSickness] = useState('');
+
+  // EXIGÊNCIAS PARA ADOÇÃO
+  const [adoptionTerm, setAdoptionTerm] = useState(false);
+  const [homePhotos, setHomePhotos] = useState(false);
+  const [previousVisit, setPreviousVisit] = useState(false);
+  const [acompanyBeforeAdoption, setacompanyBeforeAdoption] = useState(false);
+  const [oneMonth, setOneMonth] = useState(false);
+  const [threeMonths, setThreeMonths] = useState(false);
+  const [sixMonths, setSixMonths] = useState(false);
+  
   const [about, setAbout] = useState('');
-  const [photo, setPhoto] = useState<null | string>(null);
-  const [checked, setChecked] = useState('first');
+  const [disable, setDisable] = useState(false);
+  
+  
+  useEffect(() => {
+    setDisable(!disable);
+  }, [acompanyBeforeAdoption])
+
   const handleSubmit = async () => {
   
     const formData = new FormData();
@@ -99,11 +129,34 @@ export default function AnimalRegister() {
               <RadioContainer labels={['Filhote', 'Adulto', 'Idoso']} />
  
               <Text style={styles.subtitle}>TEMPERAMENTO</Text>
+              <CheckboxContainer
+              states={[playfull, shy, calm, guard, lovely, lazy]} 
+                onPress={[setPlayfull, setShy, setCalm, setGuard, setLovely, setLazy]}
+                labels={['Brincalhão', 'Tímido', 'Calmo', 'Guarda', 'Amoroso', 'Preguiçoso']} />
+              
               <Text style={styles.subtitle}>SAÚDE</Text>
+              <CheckboxContainer
+                states={[vaccinated, dewormed, castrated, sick]}
+                onPress={[setVaccinated, setDewormed, setCastrated, setSick]} 
+                labels={['Vacinado', 'Vermifugado', 'Castrado', 'Doente']} />
+              <InputComponent lazy rule={(val)=>val!==''} placeholder='Doenças do animal' value={sickness} onChangeText={setSickness}/>
+
               <Text style={styles.subtitle}>EXIGÊNCIAS PARA ADOÇÃO</Text>
+              <CheckboxContainer
+                states={[adoptionTerm, homePhotos, previousVisit, acompanyBeforeAdoption]} 
+                onPress={[setAdoptionTerm, setHomePhotos, setPreviousVisit, setacompanyBeforeAdoption]}
+                labels={['Termo de adoção', 'Fotos da casa', 'Visita prévia ao animal', 'Acompanhamento pós adoção']} />
+              <CheckboxContainer
+                states={[oneMonth, threeMonths, sixMonths]}
+                onPress={[setOneMonth, setThreeMonths, setSixMonths]} 
+                disable={disable} 
+                labels={['1 mês', '3 meses', '6 meses']} />
+
               <Text style={styles.subtitle}>SOBRE O ANIMAL</Text>
+              <InputComponent lazy rule={(val)=>val!==''} placeholder='Compartilhe a história do animal' value={about} onChangeText={setAbout}/>
               
               <CustomButton backgroundColor={Colors.yellowPrimary} onPress={handleSubmit}>COLOCAR PARA ADOÇÃO</CustomButton>
+
             </View>
           </View>
           
