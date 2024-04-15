@@ -1,12 +1,11 @@
-import { Ionicons } from "@expo/vector-icons";
 import { useFonts } from "expo-font";
-import { Link, Stack } from "expo-router";
-import { StyleSheet, Text, View, Image } from "react-native";
-
-import ButtonComponent from "../components/button";
-import Colors from "../util/Colors";
+import { Link, Stack, router } from "expo-router";
+import { StyleSheet, Text, View, Image, SafeAreaView } from "react-native";
 import { Button } from "react-native-paper";
+
 import Header from "../components/header";
+import Colors from "../util/Colors";
+import { redirect } from "../util/functions";
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -20,18 +19,7 @@ export default function App() {
   }
   return (
     <View style={styles.container}>
-      <Stack.Screen
-        options={{
-          headerTitle: () => <Header bgColor="red" />,
-        }}
-      />
-      {/* <Link href="/login">Login</Link>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" /> */}
-      {/* <RegisterComponent /> */}
-      {/* <View style={{ width: "100%", alignItems: "flex-start" }}>
-        <Ionicons name="menu" size={24} color={Colors.bluePrimary} />
-      </View> */}
+      <Stack.Screen options={{ header: () => <Header /> }} />
       <View style={{ justifyContent: "center" }}>
         <View
           style={[
@@ -54,18 +42,34 @@ export default function App() {
         </View>
         <View style={{ alignItems: "center", paddingBottom: 44 }}>
           <View style={{ gap: 12, width: 232 }}>
-            <Button mode="contained-tonal">ADOTAR</Button>
-            <Button mode="contained-tonal">AJUDAR</Button>
-            <Button mode="contained-tonal">CADASTRAR ANIMAL</Button>
+            <Button
+              mode="contained-tonal"
+              onPress={() => {
+                redirect("login");
+              }}
+            >
+              ADOTAR
+            </Button>
+            <Button
+              mode="contained-tonal"
+              onPress={() => {
+                redirect("login");
+              }}
+            >
+              AJUDAR
+            </Button>
+            <Button
+              mode="contained-tonal"
+              onPress={() => {
+                redirect("login");
+              }}
+            >
+              CADASTRAR ANIMAL
+            </Button>
           </View>
         </View>
         <View style={{ alignItems: "center", paddingBottom: 68 }}>
-          <Link
-            style={{ color: Colors.bluePrimary, fontSize: 16 }}
-            href="/login"
-          >
-            login
-          </Link>
+          <Button onPress={() => redirect("login")}>login</Button>
         </View>
         <View style={{ alignItems: "center" }}>
           <Image
@@ -90,6 +94,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   container: {
+    flex: 1,
     padding: 12,
     backgroundColor: "#fff",
     alignItems: "center",

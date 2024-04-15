@@ -2,6 +2,7 @@ import { Stack } from "expo-router";
 import { PaperProvider } from "react-native-paper";
 
 import { theme } from "../util/theme";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export const unstable_settings = {
   // Ensure any route can link back to `/`
@@ -11,7 +12,9 @@ export const unstable_settings = {
 export default function Layout() {
   return (
     <PaperProvider theme={theme}>
-      <Stack />
+      <SafeAreaView style={{ flex: 1 }}>
+        <Stack />
+      </SafeAreaView>
     </PaperProvider>
   );
 }
