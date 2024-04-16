@@ -7,7 +7,7 @@ import CustomButton from '../components/customButton';
 import { router } from 'expo-router';
 import { MaterialIcons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
-import { RadioButton } from 'react-native-paper';
+import { Button, RadioButton } from 'react-native-paper';
 import { RadioButtonContext } from 'react-native-paper/lib/typescript/components/RadioButton/RadioButtonGroup';
 import RadioContainer from '../components/radioContainer';
 import CheckboxContainer from '../components/checkboxContainer';
@@ -42,7 +42,7 @@ export default function AnimalRegister() {
   const [adoptionTerm, setAdoptionTerm] = useState(false);
   const [homePhotos, setHomePhotos] = useState(false);
   const [previousVisit, setPreviousVisit] = useState(false);
-  const [acompanyBeforeAdoption, setacompanyBeforeAdoption] = useState(false);
+  const [acompanyBeforeAdoption, setAcompanyBeforeAdoption] = useState(false);
   const [oneMonth, setOneMonth] = useState(false);
   const [threeMonths, setThreeMonths] = useState(false);
   const [sixMonths, setSixMonths] = useState(false);
@@ -52,7 +52,13 @@ export default function AnimalRegister() {
   
   
   useEffect(() => {
-    setDisable(!disable);
+    if(acompanyBeforeAdoption === true){
+      setDisable(false);
+    } else{
+      setAcompanyBeforeAdoption(false);
+      setDisable(true);
+    }
+    console.log(acompanyBeforeAdoption)
   }, [acompanyBeforeAdoption])
 
   const handleSubmit = async () => {
@@ -88,12 +94,42 @@ export default function AnimalRegister() {
 
               <Text>Tenho interesse em cadastrar o animal para:</Text>
               <View style={styles.buttonsContainer}>
-                <CustomButton backgroundColor={Colors.yellowPrimary} onPress={setGoal}>ADOÇÃO</CustomButton>
+                {/* <CustomButton backgroundColor={Colors.yellowPrimary} onPress={setGoal}>ADOÇÃO</CustomButton>
                 <CustomButton backgroundColor='white' onPress={setGoal}>APADRINHAR</CustomButton>
-                <CustomButton backgroundColor='white' onPress={setGoal}>AJUDA</CustomButton>
+                <CustomButton backgroundColor='white' onPress={setGoal}>AJUDA</CustomButton> */}
+
+                <Button 
+                  mode='elevated' 
+                  buttonColor={Colors.yellowPrimary}
+                  textColor={Colors.textAuxPrimary}
+                  contentStyle={styles.buttons}
+                  theme={{roundness: 1, }}
+                  labelStyle={styles.buttonsText}
+                >
+                  ADOÇÃO
+                </Button>
+                <Button
+                  disabled
+                  mode='elevated' 
+                  textColor={Colors.textAuxPrimary}
+                  contentStyle={{width: 148}}
+                  theme={{roundness: 1, }}
+                  labelStyle={styles.buttonsText}
+                >
+                  APADRINHAR
+                </Button>
+                <Button
+                  mode='elevated' 
+                  textColor={Colors.textAuxPrimary}
+                  contentStyle={styles.buttons}
+                  theme={{roundness: 1, }}
+                  labelStyle={styles.buttonsText}
+                >
+                  AJUDA
+                </Button>
               </View>
 
-              <Text>Adoção</Text>
+              <Text style={styles.sectionText}>Adoção</Text>
 
               <Text style={styles.subtitle}>NOME DO ANIMAL</Text>
               <InputComponent lazy rule={(val)=>val!==''} placeholder='Nome do animal' value={name} onChangeText={setName}/>
@@ -130,7 +166,7 @@ export default function AnimalRegister() {
  
               <Text style={styles.subtitle}>TEMPERAMENTO</Text>
               <CheckboxContainer
-              states={[playfull, shy, calm, guard, lovely, lazy]} 
+                states={[playfull, shy, calm, guard, lovely, lazy]} 
                 onPress={[setPlayfull, setShy, setCalm, setGuard, setLovely, setLazy]}
                 labels={['Brincalhão', 'Tímido', 'Calmo', 'Guarda', 'Amoroso', 'Preguiçoso']} />
               
@@ -144,7 +180,7 @@ export default function AnimalRegister() {
               <Text style={styles.subtitle}>EXIGÊNCIAS PARA ADOÇÃO</Text>
               <CheckboxContainer
                 states={[adoptionTerm, homePhotos, previousVisit, acompanyBeforeAdoption]} 
-                onPress={[setAdoptionTerm, setHomePhotos, setPreviousVisit, setacompanyBeforeAdoption]}
+                onPress={[setAdoptionTerm, setHomePhotos, setPreviousVisit, setAcompanyBeforeAdoption]}
                 labels={['Termo de adoção', 'Fotos da casa', 'Visita prévia ao animal', 'Acompanhamento pós adoção']} />
               <CheckboxContainer
                 states={[oneMonth, threeMonths, sixMonths]}
@@ -155,7 +191,9 @@ export default function AnimalRegister() {
               <Text style={styles.subtitle}>SOBRE O ANIMAL</Text>
               <InputComponent lazy rule={(val)=>val!==''} placeholder='Compartilhe a história do animal' value={about} onChangeText={setAbout}/>
               
-              <CustomButton backgroundColor={Colors.yellowPrimary} onPress={handleSubmit}>COLOCAR PARA ADOÇÃO</CustomButton>
+              <View style={styles.container}>
+                <CustomButton backgroundColor={Colors.yellowPrimary} onPress={handleSubmit}>COLOCAR PARA ADOÇÃO</CustomButton>
+              </View>
 
             </View>
           </View>
@@ -175,7 +213,18 @@ const styles = StyleSheet.create({
   },
   buttonsContainer: {
     flexDirection: 'row',
-    flex: 1
+    justifyContent: 'center',
+    flex: 1,
+    gap: 8
+  },
+  buttons: {
+    width: 100, 
+    height: 40,
+    // borderWidth: 2,
+    // borderColor: Colors.yellowPrimary,
+  },
+  buttonsText: {
+    fontSize: 12
   },
   notice: {
     width: '100%',
@@ -194,6 +243,9 @@ const styles = StyleSheet.create({
   subtitle: {
     color: Colors.yellowSecondary,
     paddingHorizontal: 8
+  },
+  sectionText: {
+    fontSize: 16
   },
   formContainer: {
     width: '100%',
