@@ -34,7 +34,7 @@ export default function App() {
         <View style={{gap:12, alignItems: 'center', paddingBottom:44}}>
           <ButtonComponent type='warn' link='/register'>ADOTAR</ButtonComponent>
           <ButtonComponent type='warn' link='/register'>AJUDAR</ButtonComponent>
-          <ButtonComponent type='warn' link='/register'>CADASTRAR ANIMAL</ButtonComponent>
+          <ButtonComponent type='warn' link='/animalRegister'>CADASTRAR ANIMAL</ButtonComponent>
         </View>
         <View style={{alignItems: 'center', paddingBottom: 68}}>
           <Link style={{color: Colors.bluePrimary, fontSize:16}} href='/login'>login</Link>
