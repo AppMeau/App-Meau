@@ -89,7 +89,6 @@ export default function AnimalRegister() {
 
   return (
     <View style={{ flex: 1 }}>
-      <Header color={Colors.yellowPrimary} title="Cadastro Pessoal" />
       <ScrollView>
         <View style={styles.container}>
           <View style={styles.formContainer}>
