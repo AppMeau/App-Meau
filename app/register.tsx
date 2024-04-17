@@ -1,4 +1,3 @@
-import { StatusBar } from 'expo-status-bar';
 import { Image, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import Header from '../components/header';
 import Colors from '../util/Colors';
@@ -9,7 +8,7 @@ import { router } from 'expo-router';
 import { MaterialIcons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 
-export default function Page() {
+export default function Register() {
 
   const [name, setName] = useState('');
   const [age, setAge] = useState('');

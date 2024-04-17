@@ -11,12 +11,14 @@ const Colors = {
     blueHighlight: '#589b9b',
     
     yellowPrimary: '#ffd358',
+    yellowSecondary: '#f7a800',
     
     // AUXS
     grey1: '#f7f7f7',
     grey2: '#e6e7e7',
     grey3: '#e6e7e8',
     grey4: '#bdbdbd',
+    grey5: '#f1f2f2',
     
     // NETWORK
     google: '#f15f5c',
