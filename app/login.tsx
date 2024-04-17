@@ -31,7 +31,6 @@ export default function Page() {
 
   return (
     <>
-      <Header color={Colors.blueSecundary} title='Login'/>
       <View style={styles.container}>
 
         <View style={{flexDirection: 'column', gap: 20, marginBottom: 52}}>

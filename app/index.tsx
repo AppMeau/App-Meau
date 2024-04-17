@@ -22,7 +22,6 @@ export default function App() {
       <Text>Open up App.tsx to start working on your app!</Text>
       <StatusBar style="auto" /> */}
       {/* <RegisterComponent /> */}
-      <View style={{width:'100%', alignItems: 'flex-start'}}><Ionicons name="menu" size={24} color={Colors.bluePrimary} /></View>
       <View style={{justifyContent:'center'}}>
         <View style={[styles.container, {paddingHorizontal: 36, paddingTop: 20, paddingBottom: 48, gap:52}]}>
           <Text style={styles.h1}>Olá!</Text>

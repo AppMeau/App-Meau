@@ -1,20 +1,24 @@
 import { StyleSheet, Text, View } from 'react-native';
 import Colors from '../util/Colors';
 import { Ionicons } from '@expo/vector-icons';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 
 
-export default function Header({color, title, search=false}:{color: string, title: string, search?: Boolean}) {
+export default function Header({color, title, search=false, iconColor=Colors.textAuxPrimary, onDrawerClick}:{color: string, title?: string, search?: Boolean, iconColor?: string, onDrawerClick: () => void}) {
     
     return (
       <View style={[styles.container, styles.flex, {backgroundColor: color}]}>
         <View style={[styles.flex,  styles.headerContainer]}>
-          <Ionicons name='menu' size={24} color={Colors.textAuxPrimary} />
+          <TouchableOpacity onPress={onDrawerClick}>
+            <Ionicons name='menu' size={24} color={iconColor} />
+          </TouchableOpacity>
+          
           <Text style={styles.title}>{title}</Text>
         </View>
         
         {search && 
-          <Ionicons name="search-sharp" size={24} color={Colors.textAuxPrimary} />
+          <Ionicons name="search-sharp" size={24} color={iconColor} />
         }
       </View>
   );
