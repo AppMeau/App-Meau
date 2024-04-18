@@ -39,7 +39,6 @@ export default function Register() {
     }
     try {
       const newDoc = await addDoc(collection(db, "users"), docData);
-      console.log(newDoc)
     
     }catch(e){
       console.log(e)

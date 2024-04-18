@@ -97,7 +97,6 @@ export default function AnimalRegister() {
     }
     try {
       const newDoc = await addDoc(collection(db, "pets"), docData);
-      console.log(newDoc)
     }catch(e){
       console.log(e)
     }
