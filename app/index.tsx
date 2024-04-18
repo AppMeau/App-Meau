@@ -5,8 +5,12 @@ import Colors from '../util/Colors';
 import { Ionicons } from '@expo/vector-icons';
 import { useFonts } from 'expo-font';
 import ButtonComponent from '../components/button';
+import { useSafeAreaInsets, SafeAreaProvider } from 'react-native-safe-area-context';
+import { headerSize } from '../components/header';
 
 export default function App() {
+  const insets = useSafeAreaInsets();
+
   let [fontsLoaded] = useFonts({
       'roboto-regular': require('../assets/fonts/Roboto-Regular.ttf'),
       'roboto-medium': require('../assets/fonts/Roboto-Medium.ttf'),
@@ -16,8 +20,10 @@ export default function App() {
   if (!fontsLoaded) {
       return null;
   }
+  
   return (
-    <View style={styles.container}>
+    <SafeAreaProvider>
+      <View style={[styles.container, {paddingTop: insets.top+headerSize}]}>
       {/* <Link href="/login">Login</Link>
       <Text>Open up App.tsx to start working on your app!</Text>
       <StatusBar style="auto" /> */}
@@ -44,6 +50,9 @@ export default function App() {
         </View>
       </View>
     </View>
+    </SafeAreaProvider>
+    
+    
   );
 }
 

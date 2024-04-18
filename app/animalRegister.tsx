@@ -6,7 +6,7 @@ import {
   Text,
   View,
 } from "react-native";
-import Header from "../components/header";
+import Header, { headerSize } from "../components/header";
 import Colors from "../util/Colors";
 import InputComponent from "../components/input";
 import { lazy, useEffect, useState } from "react";
@@ -18,8 +18,10 @@ import { Button, RadioButton } from "react-native-paper";
 import { RadioButtonContext } from "react-native-paper/lib/typescript/components/RadioButton/RadioButtonGroup";
 import RadioContainer from "../components/radioContainer";
 import CheckboxContainer from "../components/checkboxContainer";
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function AnimalRegister() {
+  const insets = useSafeAreaInsets();
   const [goal, setGoal] = useState("Adoção");
   const [name, setName] = useState("");
   const [photo, setPhoto] = useState<null | string>(null);
@@ -86,11 +88,11 @@ export default function AnimalRegister() {
       alert("You did not select any image.");
     }
   };
-
+  
   return (
     <View style={{ flex: 1 }}>
       <ScrollView>
-        <View style={styles.container}>
+        <View style={[styles.container, {paddingTop: insets.top+headerSize}]}>
           <View style={styles.formContainer}>
             <Text>Tenho interesse em cadastrar o animal para:</Text>
             <View style={styles.buttonsContainer}>

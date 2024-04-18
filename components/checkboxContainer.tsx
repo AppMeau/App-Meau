@@ -17,7 +17,6 @@ function CheckboxContainer({
   return (
     <View style={styles.container}>
       {states.map((state, index) => {
-        console.log(state);
         return (
           <View style={styles.checkboxContainer}>
             <Checkbox
