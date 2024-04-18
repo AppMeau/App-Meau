@@ -1,14 +1,18 @@
-import {initializeApp} from 'firebase/app'
+import {initializeApp} from 'firebase/app';
+import { getFirestore } from "firebase/firestore";
 
 import {API_KEY, AUTH_DOMAIN, PROJECT_ID, STORAGE_BUCKET, APP_ID} from "@env"
 
 const firebaseConfig = {
-    apiKey: API_KEY,
-    authDomain: AUTH_DOMAIN,
+    apiKey: "AIzaSyAhx8hIEcABwbOJt7LfAGMbvFzYA803urk",
+    authDomain: "app-meau-f213c.firebaseapp.com",
     // The value of `databaseURL` depends on the location of the database
-    projectId: PROJECT_ID,
-    storageBucket: STORAGE_BUCKET,
-    appId: APP_ID,
+    projectId: "app-meau-f213c",
+    storageBucket: "app-meau-f213c.appspot.com",
+    appId: "1:959727693777:web:80b8566de8a37de6da7af0",
   };
 
 export const firebase = initializeApp(firebaseConfig)
+
+// Initialize Cloud Firestore and get a reference to the service
+export const db = getFirestore(firebase);
