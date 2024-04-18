@@ -2,15 +2,20 @@ import { Alert, StyleSheet, Text, View } from 'react-native';
 import ButtonComponent from '../components/button';
 import InputComponent from '../components/input';
 import React from 'react';
-import Header from '../components/header';
+import Header, { headerSize } from '../components/header';
 import Colors from '../util/Colors';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
 
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import {firebase} from '../util/firebase'
 import CustomButton from '../components/customButton';
 import { router } from 'expo-router';
 
+
 export default function Page() {
+  const insets = useSafeAreaInsets();
+
   const [user, setUser] = React.useState('');
   const [password, setPassword] = React.useState('');
 
@@ -31,8 +36,7 @@ export default function Page() {
 
   return (
     <>
-      <Header color={Colors.blueSecundary} title='Login'/>
-      <View style={styles.container}>
+      <View style={[styles.container, {paddingTop: insets.top+headerSize}]}>
 
         <View style={{flexDirection: 'column', gap: 20, marginBottom: 52}}>
           <InputComponent lazy rule={(val)=>val!==''} placeholder='Usuário' value={user} onChangeText={setUser}/>

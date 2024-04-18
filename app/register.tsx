@@ -1,16 +1,18 @@
 import { Image, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
-import Header from '../components/header';
+import Header, { headerSize } from '../components/header';
 import Colors from '../util/Colors';
 import InputComponent from '../components/input';
 import { useState } from 'react';
 import CustomButton from '../components/customButton';
 import { router } from 'expo-router';
 import { MaterialIcons } from '@expo/vector-icons';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import * as ImagePicker from 'expo-image-picker';
 import { collection, doc, setDoc, addDoc } from "firebase/firestore";
 import { db } from '../util/firebase';
 
 export default function Register() {
+  const insets = useSafeAreaInsets();
 
   const [name, setName] = useState('');
   const [age, setAge] = useState('');
@@ -62,10 +64,9 @@ export default function Register() {
   
   return (
     <View style={{flex:1}}>
-        <Header color={Colors.blueSecundary} title='Cadastro Pessoal' search />
         
         <ScrollView>
-          <View style={styles.container}>
+          <View style={[styles.container, {paddingTop: insets.top+headerSize}]}>
             <View style={styles.notice}>
                 <Text style={styles.textNotice}>As informações preenchidas serão divulgadas 
         apenas para a pessoa com a qual você realizar 

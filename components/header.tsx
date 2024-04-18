@@ -1,25 +1,30 @@
 import { StyleSheet, Text, View } from 'react-native';
 import Colors from '../util/Colors';
 import { Ionicons } from '@expo/vector-icons';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
 
-
-
-export default function Header({color, title, search=false}:{color: string, title: string, search?: Boolean}) {
-    
+export default function Header({color, title, search=false, iconColor=Colors.textAuxPrimary, onDrawerClick}:{color: string, title?: string, search?: Boolean, iconColor?: string, onDrawerClick: () => void}) {
+    const insets = useSafeAreaInsets();
     return (
-      <View style={[styles.container, styles.flex, {backgroundColor: color}]}>
+      <SafeAreaProvider>
+        <View style={[styles.container, styles.flex, {backgroundColor: color, paddingTop: insets.top}]}>
         <View style={[styles.flex,  styles.headerContainer]}>
-          <Ionicons name='menu' size={24} color={Colors.textAuxPrimary} />
+          <TouchableOpacity onPress={onDrawerClick}>
+            <Ionicons name='menu' size={24} color={iconColor} />
+          </TouchableOpacity>
+          
           <Text style={styles.title}>{title}</Text>
         </View>
         
         {search && 
-          <Ionicons name="search-sharp" size={24} color={Colors.textAuxPrimary} />
+          <Ionicons name="search-sharp" size={24} color={iconColor} />
         }
-      </View>
+        </View>
+      </SafeAreaProvider>
   );
 }
-
+export const headerSize = 90;
 const styles = StyleSheet.create({
   flex: {
     alignContent: 'center',
@@ -28,7 +33,7 @@ const styles = StyleSheet.create({
   },
   container: {
     width: '100%',
-    height: 56,
+    height: headerSize,
     alignItems: 'center',
     textAlign: 'center',
     justifyContent: 'space-between',

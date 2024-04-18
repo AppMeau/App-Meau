@@ -5,8 +5,12 @@ import Colors from '../util/Colors';
 import { Ionicons } from '@expo/vector-icons';
 import { useFonts } from 'expo-font';
 import ButtonComponent from '../components/button';
+import { useSafeAreaInsets, SafeAreaProvider } from 'react-native-safe-area-context';
+import { headerSize } from '../components/header';
 
 export default function App() {
+  const insets = useSafeAreaInsets();
+
   let [fontsLoaded] = useFonts({
       'roboto-regular': require('../assets/fonts/Roboto-Regular.ttf'),
       'roboto-medium': require('../assets/fonts/Roboto-Medium.ttf'),
@@ -16,13 +20,14 @@ export default function App() {
   if (!fontsLoaded) {
       return null;
   }
+  
   return (
-    <View style={styles.container}>
+    <SafeAreaProvider>
+      <View style={[styles.container, {paddingTop: insets.top+headerSize}]}>
       {/* <Link href="/login">Login</Link>
       <Text>Open up App.tsx to start working on your app!</Text>
       <StatusBar style="auto" /> */}
       {/* <RegisterComponent /> */}
-      <View style={{width:'100%', alignItems: 'flex-start'}}><Ionicons name="menu" size={24} color={Colors.bluePrimary} /></View>
       <View style={{justifyContent:'center'}}>
         <View style={[styles.container, {paddingHorizontal: 36, paddingTop: 20, paddingBottom: 48, gap:52}]}>
           <Text style={styles.h1}>Olá!</Text>
@@ -45,6 +50,9 @@ export default function App() {
         </View>
       </View>
     </View>
+    </SafeAreaProvider>
+    
+    
   );
 }
 
