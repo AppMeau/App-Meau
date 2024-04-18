@@ -8,6 +8,8 @@ import { router } from 'expo-router';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import * as ImagePicker from 'expo-image-picker';
+import { collection, doc, setDoc, addDoc } from "firebase/firestore";
+import { db } from '../util/firebase';
 
 export default function Register() {
   const insets = useSafeAreaInsets();
@@ -26,20 +28,25 @@ export default function Register() {
 
   const handleSubmit = async () => {
   
-    const formData = new FormData();
-    formData.append('name', name);
-    formData.append('age', age);
-    formData.append('email', email);
-    formData.append('state', state);
-    formData.append('city', city);
-    formData.append('adress', adress);
-    formData.append('phone', phone);
-    formData.append('user', user);
-    formData.append('password', password);
-    formData.append('password', password);
-    // formData.append('photo', {uri: photo, name: 'image.jpg', type: 'image/jpeg'})
-    router.replace('/login')
+    const docData = {
+      name: name,
+      age: age,
+      email: email,
+      state: state,
+      city: city,
+      adress: adress,
+      phone: phone,
+      user: user,
+      password: password,
+    }
+    try {
+      const newDoc = await addDoc(collection(db, "users"), docData);
     
+    }catch(e){
+      console.log(e)
+    }
+
+    router.replace('/login');
   };
 
   const pickImageAsync = async () => {

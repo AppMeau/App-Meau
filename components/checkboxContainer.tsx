@@ -18,9 +18,8 @@ function CheckboxContainer({
     <View style={styles.container}>
       {states.map((state, index) => {
         return (
-          <View style={styles.checkboxContainer}>
+          <View key={index} style={styles.checkboxContainer}>
             <Checkbox
-              key={index}
               status={state === true ? "checked" : "unchecked"}
               disabled={disable}
               color={Colors.textAuxSecondary}
