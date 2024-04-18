@@ -14,13 +14,14 @@ import CustomButton from "../components/customButton";
 import { router } from "expo-router";
 import { MaterialIcons } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
-import { Button, RadioButton } from "react-native-paper";
-import { RadioButtonContext } from "react-native-paper/lib/typescript/components/RadioButton/RadioButtonGroup";
+import { Button } from "react-native-paper";
 import RadioContainer from "../components/radioContainer";
 import CheckboxContainer from "../components/checkboxContainer";
+import { collection, doc, setDoc, addDoc } from "firebase/firestore";
+import { db } from '../util/firebase';
 
 export default function AnimalRegister() {
-  const [goal, setGoal] = useState("Adoção");
+  // const [goal, setGoal] = useState("Adoção");
   const [name, setName] = useState("");
   const [photo, setPhoto] = useState<null | string>(null);
 
@@ -66,11 +67,40 @@ export default function AnimalRegister() {
   }, [acompanyBeforeAdoption]);
 
   const handleSubmit = async () => {
-    const formData = new FormData();
-    formData.append("name", name);
-    formData.append("age", age);
-
-    // formData.append('photo', {uri: photo, name: 'image.jpg', type: 'image/jpeg'})
+    const docData = {
+      name: name,
+      // photo: photo,
+      species: species,
+      gender: gender,
+      size: size,
+      age: age,
+      playfull: playfull,
+      shy: shy,
+      calm: calm,
+      guard: guard,
+      lovely: lovely,
+      lazy: lazy,
+      vaccinated: vaccinated,
+      dewormed: dewormed,
+      castrated: castrated,
+      sick: sick,
+      sickness: sickness,
+      adoptionTerm: adoptionTerm,
+      homePhotos: homePhotos,
+      previousVisit: previousVisit,
+      acompanyBeforeAdoption: acompanyBeforeAdoption,
+      oneMonth: oneMonth,
+      threeMonths: threeMonths,
+      sixMonths: sixMonths,
+      about: about,
+      disable: disable,
+    }
+    try {
+      const newDoc = await addDoc(collection(db, "pets"), docData);
+      console.log(newDoc)
+    }catch(e){
+      console.log(e)
+    }
     router.replace("/login");
   };
 
@@ -95,10 +125,7 @@ export default function AnimalRegister() {
           <View style={styles.formContainer}>
             <Text>Tenho interesse em cadastrar o animal para:</Text>
             <View style={styles.buttonsContainer}>
-              {/* <CustomButton backgroundColor={Colors.yellowPrimary} onPress={setGoal}>ADOÇÃO</CustomButton>
-                <CustomButton backgroundColor='white' onPress={setGoal}>APADRINHAR</CustomButton>
-                <CustomButton backgroundColor='white' onPress={setGoal}>AJUDA</CustomButton> */}
-
+   
               <Button
                 mode="elevated"
                 buttonColor={Colors.yellowPrimary}
@@ -146,16 +173,16 @@ export default function AnimalRegister() {
             </View>
 
             <Text style={styles.subtitle}>ESPÉCIE</Text>
-            <RadioContainer labels={["Cachorro", "Gato"]} />
+            <RadioContainer state={species} onPress={setSpecies} labels={["Cachorro", "Gato"]} />
 
             <Text style={styles.subtitle}>SEXO</Text>
-            <RadioContainer labels={["Macho", "Fêmea"]} />
+            <RadioContainer state={gender} onPress={setGender} labels={["Macho", "Fêmea"]} />
 
             <Text style={styles.subtitle}>PORTE</Text>
-            <RadioContainer labels={["Pequeno", "Médio", "Grande"]} />
+            <RadioContainer state={size} onPress={setSize} labels={["Pequeno", "Médio", "Grande"]} />
 
             <Text style={styles.subtitle}>IDADE</Text>
-            <RadioContainer labels={["Filhote", "Adulto", "Idoso"]} />
+            <RadioContainer state={age} onPress={setAge} labels={["Filhote", "Adulto", "Idoso"]} />
 
             <Text style={styles.subtitle}>TEMPERAMENTO</Text>
             <CheckboxContainer

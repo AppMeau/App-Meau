@@ -37,7 +37,6 @@ export default function Register() {
       user: user,
       password: password,
     }
-    console.log("ANTES")
     try {
       const newDoc = await addDoc(collection(db, "users"), docData);
       console.log(newDoc)
@@ -45,7 +44,7 @@ export default function Register() {
     }catch(e){
       console.log(e)
     }
-    console.log(docData)
+
     router.replace('/login');
   };
 
