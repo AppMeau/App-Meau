@@ -18,11 +18,11 @@ import { Button } from "react-native-paper";
 import RadioContainer from "../components/radioContainer";
 import CheckboxContainer from "../components/checkboxContainer";
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { collection, doc, setDoc, addDoc } from "firebase/firestore";
+import { db } from '../util/firebase';
 
 export default function AnimalRegister() {
   const insets = useSafeAreaInsets();
-  import { collection, doc, setDoc, addDoc } from "firebase/firestore";
-  import { db } from '../util/firebase';
 
   // const [goal, setGoal] = useState("Adoção");
   const [name, setName] = useState("");
