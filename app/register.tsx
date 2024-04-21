@@ -2,14 +2,15 @@ import { Image, Pressable, ScrollView, StyleSheet, Text, View } from 'react-nati
 import Header, { headerSize } from '../components/header';
 import Colors from '../util/Colors';
 import InputComponent from '../components/input';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import CustomButton from '../components/customButton';
 import { router } from 'expo-router';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import * as ImagePicker from 'expo-image-picker';
 import { collection, doc, setDoc, addDoc } from "firebase/firestore";
-import { db } from '../util/firebase';
+import { db, storage } from '../util/firebase';
+import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
 
 export default function Register() {
   const insets = useSafeAreaInsets();
@@ -24,10 +25,37 @@ export default function Register() {
   const [user, setUser] = useState('');
   const [password, setPassword] = useState('');
   const [passwordConfirmation, setPasswordConfirmation] = useState('');
-  const [photo, setPhoto] = useState<null | string>(null);
+  const [photoUrl, setPhotoUrl] = useState<null | string>(null);
+  const [photoDownloadUrl, setPhotoDowloadUrl] = useState("");
+
+  useEffect(() => {
+
+  }, [name])
+
+  const imageHandler = async () => {
+    const response = await fetch(photoUrl!);
+    const blob = await response.blob();
+
+    const imageRef = ref(storage, 'images/users/' + name);
+    uploadBytesResumable(imageRef, blob)
+      .then((snapshot) => {
+        console.log('Uploaded', snapshot.totalBytes, 'bytes.');
+        console.log('File metadata:', snapshot.metadata);
+        // Let's get a download URL for the file.
+        getDownloadURL(snapshot.ref).then((url) => {
+          setPhotoDowloadUrl(url);
+          console.log('File available at', url);
+        });
+      }).catch((error) => {
+        console.error('Upload failed', error);
+      });
+  }
 
   const handleSubmit = async () => {
-  
+
+    await imageHandler();
+    console.log(photoDownloadUrl)
+
     const docData = {
       name: name,
       age: age,
@@ -38,6 +66,7 @@ export default function Register() {
       phone: phone,
       user: user,
       password: password,
+      photo: photoDownloadUrl,
     }
     try {
       const newDoc = await addDoc(collection(db, "users"), docData);
@@ -56,7 +85,7 @@ export default function Register() {
     });
 
     if (!result.canceled) {
-      setPhoto(result.assets[0].uri);
+      setPhotoUrl(result.assets[0].uri);
     } else {
       alert('You did not select any image.');
     }
@@ -92,8 +121,8 @@ export default function Register() {
               <View style={styles.container}>
                 <Pressable onPress={pickImageAsync}>
                   <View style={styles.containerPhoto}>
-                    {photo !== null ? (
-                      <Image source={{uri: photo}} style={styles.img}/>
+                    {photoUrl !== null ? (
+                      <Image source={{uri: photoUrl}} style={styles.img}/>
                     ):(
                       <>
                         <MaterialIcons name='control-point' size={24} color={Colors.textAuxSecondary} />

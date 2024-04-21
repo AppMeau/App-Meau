@@ -1,5 +1,6 @@
 import {initializeApp} from 'firebase/app';
 import { getFirestore } from "firebase/firestore";
+import { getStorage } from "firebase/storage";
 
 import {API_KEY, AUTH_DOMAIN, PROJECT_ID, STORAGE_BUCKET, APP_ID} from "@env"
 
@@ -16,3 +17,4 @@ export const firebase = initializeApp(firebaseConfig)
 
 // Initialize Cloud Firestore and get a reference to the service
 export const db = getFirestore(firebase);
+export const storage = getStorage(firebase);

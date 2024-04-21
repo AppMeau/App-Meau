@@ -18,15 +18,17 @@ import { Button } from "react-native-paper";
 import RadioContainer from "../components/radioContainer";
 import CheckboxContainer from "../components/checkboxContainer";
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { collection, doc, setDoc, addDoc } from "firebase/firestore";
+import { db, storage } from '../util/firebase';
+import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 
 export default function AnimalRegister() {
   const insets = useSafeAreaInsets();
-  import { collection, doc, setDoc, addDoc } from "firebase/firestore";
-  import { db } from '../util/firebase';
 
   // const [goal, setGoal] = useState("Adoção");
   const [name, setName] = useState("");
-  const [photo, setPhoto] = useState<null | string>(null);
+  const [photoUrl, setPhotoUrl] = useState<null | string>(null);
+  const [photoDownloadUrl, setPhotoDowloadUrl] = useState("");
 
   const [species, setSpecies] = useState("");
   const [gender, setGender] = useState("");
@@ -69,10 +71,33 @@ export default function AnimalRegister() {
     }
   }, [acompanyBeforeAdoption]);
 
+  const imageHandler = async () => {
+    const response = await fetch(photoUrl!);
+    const blob = await response.blob();
+
+    const imageRef = ref(storage, 'images/pets/' + name);
+    uploadBytesResumable(imageRef, blob)
+      .then((snapshot) => {
+        console.log('Uploaded', snapshot.totalBytes, 'bytes.');
+        console.log('File metadata:', snapshot.metadata);
+        // Let's get a download URL for the file.
+        getDownloadURL(snapshot.ref).then((url) => {
+          setPhotoDowloadUrl(url);
+          console.log('File available at', url);
+          
+        });
+      }).catch((error) => {
+        console.error('Upload failed', error);
+      });
+  }
+
   const handleSubmit = async () => {
+    
+    await imageHandler();
+
     const docData = {
       name: name,
-      // photo: photo,
+      photo: photoDownloadUrl,
       species: species,
       gender: gender,
       size: size,
@@ -113,7 +138,7 @@ export default function AnimalRegister() {
     });
 
     if (!result.canceled) {
-      setPhoto(result.assets[0].uri);
+      setPhotoUrl(result.assets[0].uri);
     } else {
       alert("You did not select any image.");
     }
@@ -147,7 +172,7 @@ export default function AnimalRegister() {
               rule={(val) => val !== ""}
               placeholder="Nome do animal"
               value={name}
-              onChangeText={setName}
+              onChangeText={(newName) => setName(newName)}
             />
 
             <Text style={styles.subtitle}>FOTOS DO ANIMAL</Text>
@@ -155,8 +180,8 @@ export default function AnimalRegister() {
             <View style={styles.container}>
               <Pressable onPress={pickImageAsync}>
                 <View style={styles.containerPhoto}>
-                  {photo !== null ? (
-                    <Image source={{ uri: photo }} style={styles.img} />
+                  {photoUrl !== null ? (
+                    <Image source={{ uri: photoUrl }} style={styles.img} />
                   ) : (
                     <>
                       <MaterialIcons
