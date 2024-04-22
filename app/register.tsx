@@ -2,15 +2,15 @@ import { Image, Pressable, ScrollView, StyleSheet, Text, View } from 'react-nati
 import Header, { headerSize } from '../components/header';
 import Colors from '../util/Colors';
 import InputComponent from '../components/input';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import CustomButton from '../components/customButton';
 import { router } from 'expo-router';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import * as ImagePicker from 'expo-image-picker';
-import { collection, doc, setDoc, addDoc } from "firebase/firestore";
-import { db, storage } from '../util/firebase';
-import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
+import { collection, addDoc } from "firebase/firestore";
+import { db } from '../util/firebase';
+import imageHandler from '../util/functions/ImageHandler';
 
 export default function Register() {
   const insets = useSafeAreaInsets();
@@ -25,36 +25,11 @@ export default function Register() {
   const [user, setUser] = useState('');
   const [password, setPassword] = useState('');
   const [passwordConfirmation, setPasswordConfirmation] = useState('');
-  const [photoUrl, setPhotoUrl] = useState<null | string>(null);
-  const [photoDownloadUrl, setPhotoDowloadUrl] = useState("");
-
-  useEffect(() => {
-
-  }, [name])
-
-  const imageHandler = async () => {
-    const response = await fetch(photoUrl!);
-    const blob = await response.blob();
-
-    const imageRef = ref(storage, 'images/users/' + name);
-    uploadBytesResumable(imageRef, blob)
-      .then((snapshot) => {
-        console.log('Uploaded', snapshot.totalBytes, 'bytes.');
-        console.log('File metadata:', snapshot.metadata);
-        // Let's get a download URL for the file.
-        getDownloadURL(snapshot.ref).then((url) => {
-          setPhotoDowloadUrl(url);
-          console.log('File available at', url);
-        });
-      }).catch((error) => {
-        console.error('Upload failed', error);
-      });
-  }
+  const [photoUrl, setPhotoUrl] = useState<string | null>(null);
 
   const handleSubmit = async () => {
 
-    await imageHandler();
-    console.log(photoDownloadUrl)
+    const url = await imageHandler('images/users/', photoUrl, name);
 
     const docData = {
       name: name,
@@ -66,7 +41,7 @@ export default function Register() {
       phone: phone,
       user: user,
       password: password,
-      photo: photoDownloadUrl,
+      photo: url,
     }
     try {
       const newDoc = await addDoc(collection(db, "users"), docData);
@@ -75,7 +50,7 @@ export default function Register() {
       console.log(e)
     }
 
-    router.replace('/login');
+    router.navigate('/login');
   };
 
   const pickImageAsync = async () => {
