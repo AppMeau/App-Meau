@@ -8,8 +8,9 @@ import { router } from 'expo-router';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import * as ImagePicker from 'expo-image-picker';
-import { collection, doc, setDoc, addDoc } from "firebase/firestore";
-import { db } from '../util/firebase';
+import { collection, addDoc } from "firebase/firestore";
+import {createUserWithEmailAndPassword, getAuth} from 'firebase/auth'
+import { db, firebase } from '../util/firebase';
 
 export default function Register() {
   const insets = useSafeAreaInsets();
@@ -40,13 +41,19 @@ export default function Register() {
       password: password,
     }
     try {
-      const newDoc = await addDoc(collection(db, "users"), docData);
+      const auth = getAuth(firebase);
+      const newUser = await createUserWithEmailAndPassword(auth, email, password)
+      if(newUser){
+        await addDoc(collection(db, "users"), {...docData, uid: newUser.user.uid});
+      }
+      console.log("antes")
+      router.navigate('/login');
+      console.log("depois")
     
     }catch(e){
       console.log(e)
     }
 
-    router.replace('/login');
   };
 
   const pickImageAsync = async () => {
