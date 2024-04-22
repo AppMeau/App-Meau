@@ -6,6 +6,8 @@ import {
   Text,
   View,
 } from "react-native";
+import validateAnimalRegister from "../util/model/validateAnimalRegister";
+import animalRegisterTypes from "../types/AnimalRegister/animalRegisterTypes";
 import Header, { headerSize } from "../components/header";
 import Colors from "../util/Colors";
 import InputComponent from "../components/input";
@@ -18,12 +20,12 @@ import { Button } from "react-native-paper";
 import RadioContainer from "../components/radioContainer";
 import CheckboxContainer from "../components/checkboxContainer";
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { collection, doc, setDoc, addDoc } from "firebase/firestore";
+import { db } from '../util/firebase';
 
 export default function AnimalRegister() {
   const insets = useSafeAreaInsets();
-  import { collection, doc, setDoc, addDoc } from "firebase/firestore";
-  import { db } from '../util/firebase';
-
+  
   // const [goal, setGoal] = useState("Adoção");
   const [name, setName] = useState("");
   const [photo, setPhoto] = useState<null | string>(null);
@@ -70,7 +72,7 @@ export default function AnimalRegister() {
   }, [acompanyBeforeAdoption]);
 
   const handleSubmit = async () => {
-    const docData = {
+    const docData:animalRegisterTypes = {
       name: name,
       // photo: photo,
       species: species,
@@ -99,11 +101,12 @@ export default function AnimalRegister() {
       disable: disable,
     }
     try {
+      validateAnimalRegister(docData);
       const newDoc = await addDoc(collection(db, "pets"), docData);
     }catch(e){
       console.log(e)
     }
-    router.replace("/login");
+    router.push("/login");
   };
 
   const pickImageAsync = async () => {

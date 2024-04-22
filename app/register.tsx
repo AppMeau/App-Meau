@@ -10,6 +10,8 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import * as ImagePicker from 'expo-image-picker';
 import { collection, doc, setDoc, addDoc } from "firebase/firestore";
 import { db } from '../util/firebase';
+import userRegisterType from '../types/UserRegister/userRegister';
+import validateUserRegister from '../util/model/validateUserRegister';
 
 export default function Register() {
   const insets = useSafeAreaInsets();
@@ -28,7 +30,7 @@ export default function Register() {
 
   const handleSubmit = async () => {
   
-    const docData = {
+    const docData:userRegisterType = {
       name: name,
       age: age,
       email: email,
@@ -40,13 +42,14 @@ export default function Register() {
       password: password,
     }
     try {
+      validateUserRegister(docData);
       const newDoc = await addDoc(collection(db, "users"), docData);
     
     }catch(e){
       console.log(e)
     }
 
-    router.replace('/login');
+    router.push('/login');
   };
 
   const pickImageAsync = async () => {
