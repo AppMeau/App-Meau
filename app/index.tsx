@@ -43,7 +43,12 @@ export default function App() {
           <ButtonComponent type='warn' link='/animalRegister'>CADASTRAR ANIMAL</ButtonComponent>
         </View>
         <View style={{alignItems: 'center', paddingBottom: 68}}>
-          <Link style={{color: Colors.bluePrimary, fontSize:16}} href='/login'>login</Link>
+          { auth.currentUser? <Button onPress={async ()=>{
+            await auth.signOut();
+            router.navigate('/login');
+          }}>
+            logout
+          </Button> : <Link style={{color: Colors.bluePrimary, fontSize:16}} href='/login'>login</Link>}
         </View>
         <View style={{alignItems: 'center'}}>
           <Image source={require('../assets/logo.png')} style={{width:122, height:44}}/>
