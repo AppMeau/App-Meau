@@ -7,7 +7,7 @@ import Colors from '../util/Colors';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import {firebase} from '../util/firebase'
 import CustomButton from '../components/customButton';
 import { router } from 'expo-router';
@@ -20,12 +20,12 @@ export default function Page() {
   const [password, setPassword] = React.useState('');
 
   const auth = ()=>{
-    const auth = getAuth(firebase);
-    signInWithEmailAndPassword(auth, user, password)
+    
+    signInWithEmailAndPassword(getAuth(firebase), user, password)
     .then((userCredential) => {
       const user = userCredential.user;
       Alert.alert('logado com sucesso')
-      router.replace('/')
+      router.navigate('/')
     })
     .catch((error):void => {
       if(error.code==='auth/invalid-email' || error.code === 'auth/invalid-credential'){
