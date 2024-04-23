@@ -11,6 +11,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { collection, addDoc } from "firebase/firestore";
 import {createUserWithEmailAndPassword, getAuth} from 'firebase/auth'
 import { db, firebase } from '../util/firebase';
+import imageHandler from '../util/functions/ImageHandler';
 
 export default function Register() {
   const insets = useSafeAreaInsets();
@@ -25,10 +26,12 @@ export default function Register() {
   const [user, setUser] = useState('');
   const [password, setPassword] = useState('');
   const [passwordConfirmation, setPasswordConfirmation] = useState('');
-  const [photo, setPhoto] = useState<null | string>(null);
+  const [photoUrl, setPhotoUrl] = useState<string | null>(null);
 
   const handleSubmit = async () => {
-  
+
+    const url = await imageHandler('images/users/', photoUrl, name);
+
     const docData = {
       name: name,
       age: age,
@@ -39,6 +42,7 @@ export default function Register() {
       phone: phone,
       user: user,
       password: password,
+      photo: url,
     }
     try {
       const auth = getAuth(firebase);
@@ -54,6 +58,7 @@ export default function Register() {
       console.log(e)
     }
 
+    router.navigate('/login');
   };
 
   const pickImageAsync = async () => {
@@ -63,7 +68,7 @@ export default function Register() {
     });
 
     if (!result.canceled) {
-      setPhoto(result.assets[0].uri);
+      setPhotoUrl(result.assets[0].uri);
     } else {
       alert('You did not select any image.');
     }
@@ -99,8 +104,8 @@ export default function Register() {
               <View style={styles.container}>
                 <Pressable onPress={pickImageAsync}>
                   <View style={styles.containerPhoto}>
-                    {photo !== null ? (
-                      <Image source={{uri: photo}} style={styles.img}/>
+                    {photoUrl !== null ? (
+                      <Image source={{uri: photoUrl}} style={styles.img}/>
                     ):(
                       <>
                         <MaterialIcons name='control-point' size={24} color={Colors.textAuxSecondary} />

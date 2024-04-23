@@ -19,14 +19,17 @@ import RadioContainer from "../components/radioContainer";
 import CheckboxContainer from "../components/checkboxContainer";
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { collection, doc, setDoc, addDoc } from "firebase/firestore";
-import { db } from '../util/firebase';
+import { db, storage } from '../util/firebase';
+import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
+import imageHandler from "../util/functions/ImageHandler";
 
 export default function AnimalRegister() {
   const insets = useSafeAreaInsets();
 
   // const [goal, setGoal] = useState("Adoção");
   const [name, setName] = useState("");
-  const [photo, setPhoto] = useState<null | string>(null);
+  const [photoUrl, setPhotoUrl] = useState<string | null>(null);
+  const [photoDownloadUrl, setPhotoDowloadUrl] = useState("");
 
   const [species, setSpecies] = useState("");
   const [gender, setGender] = useState("");
@@ -70,9 +73,12 @@ export default function AnimalRegister() {
   }, [acompanyBeforeAdoption]);
 
   const handleSubmit = async () => {
+    
+    const url = await imageHandler('images/pets/', photoUrl, name);
+
     const docData = {
       name: name,
-      // photo: photo,
+      photo: url,
       species: species,
       gender: gender,
       size: size,
@@ -113,7 +119,7 @@ export default function AnimalRegister() {
     });
 
     if (!result.canceled) {
-      setPhoto(result.assets[0].uri);
+      setPhotoUrl(result.assets[0].uri);
     } else {
       alert("You did not select any image.");
     }
@@ -147,7 +153,7 @@ export default function AnimalRegister() {
               rule={(val) => val !== ""}
               placeholder="Nome do animal"
               value={name}
-              onChangeText={setName}
+              onChangeText={(newName) => setName(newName)}
             />
 
             <Text style={styles.subtitle}>FOTOS DO ANIMAL</Text>
@@ -155,8 +161,8 @@ export default function AnimalRegister() {
             <View style={styles.container}>
               <Pressable onPress={pickImageAsync}>
                 <View style={styles.containerPhoto}>
-                  {photo !== null ? (
-                    <Image source={{ uri: photo }} style={styles.img} />
+                  {photoUrl !== null ? (
+                    <Image source={{ uri: photoUrl }} style={styles.img} />
                   ) : (
                     <>
                       <MaterialIcons
