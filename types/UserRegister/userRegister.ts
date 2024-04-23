@@ -8,5 +8,6 @@ type userRegisterType={
     phone: string;
     user: string;
     password: string;
+    photo ?: string;
 }
 export default userRegisterType;

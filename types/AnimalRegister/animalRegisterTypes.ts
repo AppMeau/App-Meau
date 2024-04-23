@@ -1,6 +1,6 @@
 type animalRegisterTypes={
     name: string;
-    photo?: string;
+    photo?: string | any;
     species: string;
     gender: string;
     size: string;

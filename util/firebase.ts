@@ -1,7 +1,10 @@
 import {initializeApp} from 'firebase/app';
 import { getFirestore } from "firebase/firestore";
+import { getStorage } from "firebase/storage";
 
 import {API_KEY, AUTH_DOMAIN, PROJECT_ID, STORAGE_BUCKET, APP_ID} from "@env"
+import { getReactNativePersistence, initializeAuth } from 'firebase/auth';
+import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
 
 const firebaseConfig = {
     apiKey: "AIzaSyAhx8hIEcABwbOJt7LfAGMbvFzYA803urk",
@@ -16,3 +19,4 @@ export const firebase = initializeApp(firebaseConfig)
 
 // Initialize Cloud Firestore and get a reference to the service
 export const db = getFirestore(firebase);
+export const storage = getStorage(firebase);
