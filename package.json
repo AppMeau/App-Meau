@@ -13,7 +13,9 @@
   },
   "jest": {
     "preset": "jest-expo",
-    "setupFilesAfterEnv": ["<rootDir>/tests/setup-jest.ts"]
+    "setupFilesAfterEnv": [
+      "<rootDir>/tests/setup-jest.ts"
+    ]
   },
   "dependencies": {
     "@expo-google-fonts/roboto": "^0.2.3",
@@ -35,7 +37,8 @@
     "react-native-reanimated": "~3.6.2",
     "react-native-safe-area-context": "4.8.2",
     "react-native-screens": "~3.29.0",
-    "react-test-renderer": "18.2.0"
+    "react-test-renderer": "18.2.0",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

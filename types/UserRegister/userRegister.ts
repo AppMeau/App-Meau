@@ -1,13 +1,20 @@
-type userRegisterType={
-    name: string;
-    age: string;
-    email: string;
-    state: string;
-    city: string;
-    adress: string;
-    phone: string;
-    user: string;
-    password: string;
-    photo ?: string;
-}
-export default userRegisterType;
+import { z } from "zod";
+
+const emailFormat =
+  /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+const phoneFormat = /(?:\()?[0-9]{2}(?:\)?)\s?[0-9]{4,5}(-?|\s?)[0-9]{4}$/;
+
+export const userRegisterSchema = z.object({
+  name: z.string().min(1),
+  age: z.string().min(1),
+  email: z.string().regex(emailFormat, "Email Inválido").min(1),
+  state: z.string().min(1),
+  city: z.string().min(1),
+  adress: z.string().min(1),
+  phone: z.string().regex(phoneFormat, "Telefone Inválido").min(1),
+  user: z.string().min(1),
+  password: z.string().min(1),
+  photo: z.string().optional(),
+});
+
+export type userRegisterType = z.infer<typeof userRegisterSchema>;
