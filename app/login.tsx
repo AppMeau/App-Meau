@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { router } from "expo-router";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import React from "react";
@@ -9,8 +10,25 @@ import Header from "../components/header";
 import InputComponent from "../components/input";
 import Colors from "../util/Colors";
 import { firebase } from "../util/firebase";
+=======
+import { Alert, StyleSheet, Text, View } from 'react-native';
+import ButtonComponent from '../components/button';
+import InputComponent from '../components/input';
+import React from 'react';
+import Header, { headerSize } from '../components/header';
+import Colors from '../util/Colors';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
+
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import {firebase} from '../util/firebase'
+import CustomButton from '../components/customButton';
+import { router } from 'expo-router';
+>>>>>>> d04d4a2ab296c1fab7cc71958a63947c123cec09
+
 
 export default function Page() {
+<<<<<<< HEAD
   const [user, setUser] = React.useState("");
   const [password, setPassword] = React.useState("");
 
@@ -51,6 +69,31 @@ export default function Page() {
             onChangeText={setPassword}
           />
         </View>
+=======
+  const insets = useSafeAreaInsets();
+
+  const [user, setUser] = React.useState('');
+  const [password, setPassword] = React.useState('');
+
+  const auth = ()=>{
+    
+    signInWithEmailAndPassword(getAuth(firebase), user, password)
+    .then((userCredential) => {
+      const user = userCredential.user;
+      Alert.alert('logado com sucesso')
+      router.navigate('/')
+    })
+    .catch((error):void => {
+      if(error.code==='auth/invalid-email' || error.code === 'auth/invalid-credential'){
+        Alert.alert('Email ou senha invalidos')
+      }
+    });
+  }
+
+  return (
+    <>
+      <View style={[styles.container, {paddingTop: insets.top+headerSize}]}>
+>>>>>>> d04d4a2ab296c1fab7cc71958a63947c123cec09
 
         <View style={{ marginBottom: 72 }}>
           <CustomButton

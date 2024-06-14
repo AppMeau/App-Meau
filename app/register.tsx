@@ -1,7 +1,3 @@
-import { MaterialIcons } from "@expo/vector-icons";
-import * as ImagePicker from "expo-image-picker";
-import { router } from "expo-router";
-import { useState } from "react";
 import {
   Image,
   Pressable,
@@ -10,13 +6,25 @@ import {
   Text,
   View,
 } from "react-native";
-
-import CustomButton from "../components/customButton";
-import Header from "../components/header";
-import InputComponent from "../components/input";
+import Header, { headerSize } from "../components/header";
 import Colors from "../util/Colors";
+import InputComponent from "../components/input";
+import { useState } from "react";
+import CustomButton from "../components/customButton";
+import { router } from "expo-router";
+import { MaterialIcons } from "@expo/vector-icons";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import * as ImagePicker from "expo-image-picker";
+import { collection, doc, setDoc, addDoc } from "firebase/firestore";
+import userRegisterType from "../types/UserRegister/userRegister";
+import validateUserRegister from "../util/model/validateUserRegister";
+import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
+import { db, firebase } from "../util/firebase";
+import imageHandler from "../util/functions/ImageHandler";
 
-export default function Page() {
+export default function Register() {
+  const insets = useSafeAreaInsets();
+
   const [name, setName] = useState("");
   const [age, setAge] = useState("");
   const [email, setEmail] = useState("");
@@ -27,22 +35,45 @@ export default function Page() {
   const [user, setUser] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
-  const [photo, setPhoto] = useState<null | string>(null);
+  const [photoUrl, setPhotoUrl] = useState<string | null>(null);
 
   const handleSubmit = async () => {
-    const formData = new FormData();
-    formData.append("name", name);
-    formData.append("age", age);
-    formData.append("email", email);
-    formData.append("state", state);
-    formData.append("city", city);
-    formData.append("adress", adress);
-    formData.append("phone", phone);
-    formData.append("user", user);
-    formData.append("password", password);
-    formData.append("password", password);
-    // formData.append('photo', {uri: photo, name: 'image.jpg', type: 'image/jpeg'})
-    router.replace("/login");
+    const url = await imageHandler("images/users/", photoUrl, name);
+
+    const docData: userRegisterType = {
+      name: name,
+      age: age,
+      email: email,
+      state: state,
+      city: city,
+      adress: adress,
+      phone: phone,
+      user: user,
+      password: password,
+      photo: url,
+    };
+    try {
+      const auth = getAuth(firebase);
+      const newUser = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      if (newUser) {
+        validateUserRegister(docData);
+        await addDoc(collection(db, "users"), {
+          ...docData,
+          uid: newUser.user.uid,
+        });
+      }
+      console.log("antes");
+      router.navigate("/login");
+      console.log("depois");
+    } catch (e) {
+      console.log(e);
+    }
+
+    router.push("/login");
   };
 
   const pickImageAsync = async () => {
@@ -52,7 +83,7 @@ export default function Page() {
     });
 
     if (!result.canceled) {
-      setPhoto(result.assets[0].uri);
+      setPhotoUrl(result.assets[0].uri);
     } else {
       alert("You did not select any image.");
     }
@@ -60,10 +91,10 @@ export default function Page() {
 
   return (
     <View style={{ flex: 1 }}>
-      <Header color={Colors.blueSecundary} title="Cadastro Pessoal" search />
-
       <ScrollView>
-        <View style={styles.container}>
+        <View
+          style={[styles.container, { paddingTop: insets.top + headerSize }]}
+        >
           <View style={styles.notice}>
             <Text style={styles.textNotice}>
               As informações preenchidas serão divulgadas apenas para a pessoa
@@ -152,8 +183,8 @@ export default function Page() {
             <View style={styles.container}>
               <Pressable onPress={pickImageAsync}>
                 <View style={styles.containerPhoto}>
-                  {photo !== null ? (
-                    <Image source={{ uri: photo }} style={styles.img} />
+                  {photoUrl !== null ? (
+                    <Image source={{ uri: photoUrl }} style={styles.img} />
                   ) : (
                     <>
                       <MaterialIcons
