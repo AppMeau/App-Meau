@@ -1,3 +1,9 @@
+import { MaterialIcons } from "@expo/vector-icons";
+import * as ImagePicker from "expo-image-picker";
+import { router } from "expo-router";
+import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
+import { collection, doc, setDoc, addDoc } from "firebase/firestore";
+import { useState } from "react";
 import {
   Image,
   Pressable,
@@ -6,19 +12,14 @@ import {
   Text,
   View,
 } from "react-native";
-import Header, { headerSize } from "../components/header";
-import Colors from "../util/Colors";
-import InputComponent from "../components/input";
-import { useState } from "react";
-import CustomButton from "../components/customButton";
-import { router } from "expo-router";
-import { MaterialIcons } from "@expo/vector-icons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import * as ImagePicker from "expo-image-picker";
-import { collection, doc, setDoc, addDoc } from "firebase/firestore";
-import userRegisterType from "../types/UserRegister/userRegister";
-import validateUserRegister from "../util/model/validateUserRegister";
-import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
+
+import CustomButton from "../components/customButton";
+import Header, { headerSize } from "../components/header";
+import InputComponent from "../components/input";
+import type { User } from "../schemas/UserRegister/userRegister";
+import { userSchema } from "../schemas/UserRegister/userRegister";
+import Colors from "../util/Colors";
 import { db, firebase } from "../util/firebase";
 import imageHandler from "../util/functions/ImageHandler";
 
@@ -40,16 +41,16 @@ export default function Register() {
   const handleSubmit = async () => {
     const url = await imageHandler("images/users/", photoUrl, name);
 
-    const docData: userRegisterType = {
-      name: name,
-      age: age,
-      email: email,
-      state: state,
-      city: city,
-      adress: adress,
-      phone: phone,
-      user: user,
-      password: password,
+    const docData: User = {
+      name,
+      age,
+      email,
+      state,
+      city,
+      adress,
+      phone,
+      user,
+      password,
       photo: url,
     };
     try {
@@ -57,10 +58,10 @@ export default function Register() {
       const newUser = await createUserWithEmailAndPassword(
         auth,
         email,
-        password
+        password,
       );
       if (newUser) {
-        validateUserRegister(docData);
+        userSchema.parse(docData);
         await addDoc(collection(db, "users"), {
           ...docData,
           uid: newUser.user.uid,
