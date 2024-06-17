@@ -47,7 +47,9 @@ export const animalRegisterSchema = z
     (data) => {
       return (
         (data.acompanyBeforeAdoption &&
-          (data.oneMonth || data.threeMonths || data.sixMonths)) ||
+          ((data.oneMonth && !data.threeMonths && !data.sixMonths) ||
+            (!data.oneMonth && data.threeMonths && !data.sixMonths) ||
+            (!data.oneMonth && !data.threeMonths && data.sixMonths))) ||
         (!data.acompanyBeforeAdoption &&
           !data.oneMonth &&
           !data.threeMonths &&
@@ -58,6 +60,31 @@ export const animalRegisterSchema = z
       message: "Month Information inválido",
       path: ["oneMonth", "threeMonths", "sixMonths"],
     },
-  );
+  )
+  .refine((data) => {
+    return (
+      typeof data.playfull === "boolean" &&
+      typeof data.shy === "boolean" &&
+      typeof data.calm === "boolean" &&
+      typeof data.guard === "boolean" &&
+      typeof data.lovely === "boolean" &&
+      typeof data.lazy === "boolean" &&
+      typeof data.vaccinated === "boolean" &&
+      typeof data.dewormed === "boolean" &&
+      typeof data.castrated === "boolean" &&
+      typeof data.sick === "boolean" &&
+      typeof data.adoptionTerm === "boolean" &&
+      typeof data.homePhotos === "boolean" &&
+      typeof data.previousVisit === "boolean" &&
+      typeof data.acompanyBeforeAdoption === "boolean" &&
+      typeof data.oneMonth === "boolean" &&
+      typeof data.threeMonths === "boolean" &&
+      typeof data.sixMonths === "boolean" &&
+      typeof data.disable === "boolean"
+    );
+  });
 
 export type animalRegisterType = z.infer<typeof animalRegisterSchema>;
+function refine(arg0: (data: any) => boolean) {
+  throw new Error("Function not implemented.");
+}
