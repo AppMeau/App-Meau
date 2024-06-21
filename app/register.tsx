@@ -25,40 +25,54 @@ import imageHandler from "../util/functions/ImageHandler";
 
 export default function Register() {
   const insets = useSafeAreaInsets();
+  const [inputs, setInputs] = useState({
+    name: "",
+    age: "",
+    email: "",
+    state: "",
+    city: "",
+    adress: "",
+    phone: "",
+    user: "",
+    password: "",
+    passwordConfirmation: "",
+    photoUrl: null,
+  });
 
-  const [name, setName] = useState("");
-  const [age, setAge] = useState("");
-  const [email, setEmail] = useState("");
-  const [state, setState] = useState("");
-  const [city, setCity] = useState("");
-  const [adress, setAdress] = useState("");
-  const [phone, setPhone] = useState("");
-  const [user, setUser] = useState("");
-  const [password, setPassword] = useState("");
-  const [passwordConfirmation, setPasswordConfirmation] = useState("");
-  const [photoUrl, setPhotoUrl] = useState<string | null>(null);
+  function inputChangedHandler(inputIdentifier: string, enteredValue: any) {
+    setInputs((currentInput) => {
+      return {
+        ...currentInput,
+        [inputIdentifier]: enteredValue,
+      };
+    });
+  }
 
   const handleSubmit = async () => {
-    const url = await imageHandler("images/users/", photoUrl, name);
+    const url = await imageHandler(
+      "images/users/",
+      inputs.photoUrl,
+      inputs.name,
+    );
 
     const docData: User = {
-      name,
-      age,
-      email,
-      state,
-      city,
-      adress,
-      phone,
-      user,
-      password,
+      name: inputs.name,
+      age: inputs.age,
+      email: inputs.email,
+      state: inputs.state,
+      city: inputs.city,
+      adress: inputs.adress,
+      phone: inputs.phone,
+      user: inputs.user,
+      password: inputs.password,
       photo: url,
     };
     try {
       const auth = getAuth(firebase);
       const newUser = await createUserWithEmailAndPassword(
         auth,
-        email,
-        password,
+        inputs.email,
+        inputs.password,
       );
       if (newUser) {
         userSchema.parse(docData);
@@ -74,7 +88,7 @@ export default function Register() {
       console.log(e);
     }
 
-    router.push("/login");
+    // router.push("/login");
   };
 
   const pickImageAsync = async () => {
@@ -84,7 +98,7 @@ export default function Register() {
     });
 
     if (!result.canceled) {
-      setPhotoUrl(result.assets[0].uri);
+      inputChangedHandler("photoUrl", result.assets[0].uri);
     } else {
       alert("You did not select any image.");
     }
@@ -109,74 +123,94 @@ export default function Register() {
               lazy
               rule={(val) => val !== ""}
               placeholder="Nome Completo"
-              value={name}
-              onChangeText={setName}
+              value={inputs.name}
+              onChangeText={(enteredValue) =>
+                inputChangedHandler("name", enteredValue)
+              }
             />
             <InputComponent
               lazy
               rule={(val) => val !== ""}
               placeholder="Idade"
-              value={age}
-              onChangeText={setAge}
+              value={inputs.age}
+              onChangeText={(enteredValue) =>
+                inputChangedHandler("age", enteredValue)
+              }
             />
             <InputComponent
               lazy
               rule={(val) => val !== ""}
               placeholder="Email"
-              value={email}
-              onChangeText={setEmail}
+              value={inputs.email}
+              onChangeText={(enteredValue) =>
+                inputChangedHandler("email", enteredValue)
+              }
             />
             <InputComponent
               lazy
               rule={(val) => val !== ""}
               placeholder="Estado"
-              value={state}
-              onChangeText={setState}
+              value={inputs.state}
+              onChangeText={(enteredValue) =>
+                inputChangedHandler("state", enteredValue)
+              }
             />
             <InputComponent
               lazy
               rule={(val) => val !== ""}
               placeholder="Cidade"
-              value={city}
-              onChangeText={setCity}
+              value={inputs.city}
+              onChangeText={(enteredValue) =>
+                inputChangedHandler("city", enteredValue)
+              }
             />
             <InputComponent
               lazy
               rule={(val) => val !== ""}
               placeholder="Endereço"
-              value={adress}
-              onChangeText={setAdress}
+              value={inputs.adress}
+              onChangeText={(enteredValue) =>
+                inputChangedHandler("adress", enteredValue)
+              }
             />
             <InputComponent
               lazy
               rule={(val) => val !== ""}
               placeholder="Telefone"
-              value={phone}
-              onChangeText={setPhone}
+              value={inputs.phone}
+              onChangeText={(enteredValue) =>
+                inputChangedHandler("phone", enteredValue)
+              }
             />
             <Text style={styles.subtitle}>INFORMAÇÕES DE PERFIL</Text>
             <InputComponent
               lazy
               rule={(val) => val !== ""}
               placeholder="Nome de Usuário"
-              value={user}
-              onChangeText={setUser}
+              value={inputs.user}
+              onChangeText={(enteredValue) =>
+                inputChangedHandler("user", enteredValue)
+              }
             />
             <InputComponent
               lazy
               type="password"
               rule={(val) => val !== ""}
               placeholder="Senha"
-              value={password}
-              onChangeText={setPassword}
+              value={inputs.password}
+              onChangeText={(enteredValue) =>
+                inputChangedHandler("password", enteredValue)
+              }
             />
             <InputComponent
               lazy
               type="password"
-              rule={(val) => val === password}
+              rule={(val) => val === inputs.password}
               placeholder="Confirmação de Senha"
-              value={passwordConfirmation}
-              onChangeText={setPasswordConfirmation}
+              value={inputs.passwordConfirmation}
+              onChangeText={(enteredValue) =>
+                inputChangedHandler("passwordConfirmation", enteredValue)
+              }
             />
 
             <Text style={styles.subtitle}>FOTO DE PERFIL</Text>
@@ -184,8 +218,11 @@ export default function Register() {
             <View style={styles.container}>
               <Pressable onPress={pickImageAsync}>
                 <View style={styles.containerPhoto}>
-                  {photoUrl !== null ? (
-                    <Image source={{ uri: photoUrl }} style={styles.img} />
+                  {inputs.photoUrl !== null ? (
+                    <Image
+                      source={{ uri: inputs.photoUrl }}
+                      style={styles.img}
+                    />
                   ) : (
                     <>
                       <MaterialIcons
