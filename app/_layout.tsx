@@ -2,9 +2,13 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Drawer } from 'expo-router/drawer';
 import Header from '../components/header';
 import Colors from '../util/Colors';
+import { Provider } from 'react-redux';
+import store from '../redux/store';
+
 
 export default function Layout() {
   return (
+    <Provider store={store}>
     <GestureHandlerRootView style={{ flex: 1 }}>
       <Drawer>
         <Drawer.Screen
@@ -40,6 +44,7 @@ export default function Layout() {
           }}
         />
       </Drawer>
-    </GestureHandlerRootView>    
+    </GestureHandlerRootView>  
+    </Provider>  
   );
 }
