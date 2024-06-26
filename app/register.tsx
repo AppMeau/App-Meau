@@ -65,7 +65,7 @@ export default function Register() {
       phone: inputs.phone,
       user: inputs.user,
       password: inputs.password,
-      photo: url,
+      photo: url ? url : "",
     };
     try {
       const auth = getAuth(firebase);
@@ -75,6 +75,7 @@ export default function Register() {
         inputs.password,
       );
       if (newUser) {
+        console.log(userSchema.parse(docData));
         userSchema.parse(docData);
         await addDoc(collection(db, "users"), {
           ...docData,
@@ -82,13 +83,11 @@ export default function Register() {
         });
       }
       console.log("antes");
-      router.navigate("/login");
+      router.navigate("login");
       console.log("depois");
     } catch (e) {
       console.log(e);
     }
-
-    // router.push("/login");
   };
 
   const pickImageAsync = async () => {
@@ -121,7 +120,14 @@ export default function Register() {
             <Text style={styles.subtitle}>INFORMAÇÕES PESSOAIS</Text>
             <InputComponent
               lazy
-              rule={(val) => val !== ""}
+              rule={(val) => {
+                return (
+                  userSchema
+                    .pick({ name: true })
+                    .safeParse({ name: val })
+                    .success.toString() !== "false"
+                );
+              }}
               placeholder="Nome Completo"
               value={inputs.name}
               onChangeText={(enteredValue) =>
@@ -130,7 +136,14 @@ export default function Register() {
             />
             <InputComponent
               lazy
-              rule={(val) => val !== ""}
+              rule={(val) => {
+                return (
+                  userSchema
+                    .pick({ age: true })
+                    .safeParse({ age: val })
+                    .success.toString() !== "false"
+                );
+              }}
               placeholder="Idade"
               keyboardType="decimal-pad"
               value={inputs.age}
@@ -140,7 +153,14 @@ export default function Register() {
             />
             <InputComponent
               lazy
-              rule={(val) => val !== ""}
+              rule={(val) => {
+                return (
+                  userSchema
+                    .pick({ email: true })
+                    .safeParse({ email: val })
+                    .success.toString() !== "false"
+                );
+              }}
               placeholder="Email"
               value={inputs.email}
               onChangeText={(enteredValue) =>
@@ -149,7 +169,14 @@ export default function Register() {
             />
             <InputComponent
               lazy
-              rule={(val) => val !== ""}
+              rule={(val) => {
+                return (
+                  userSchema
+                    .pick({ state: true })
+                    .safeParse({ state: val })
+                    .success.toString() !== "false"
+                );
+              }}
               placeholder="Estado"
               value={inputs.state}
               onChangeText={(enteredValue) =>
@@ -158,7 +185,14 @@ export default function Register() {
             />
             <InputComponent
               lazy
-              rule={(val) => val !== ""}
+              rule={(val) => {
+                return (
+                  userSchema
+                    .pick({ city: true })
+                    .safeParse({ city: val })
+                    .success.toString() !== "false"
+                );
+              }}
               placeholder="Cidade"
               value={inputs.city}
               onChangeText={(enteredValue) =>
@@ -167,7 +201,14 @@ export default function Register() {
             />
             <InputComponent
               lazy
-              rule={(val) => val !== ""}
+              rule={(val) => {
+                return (
+                  userSchema
+                    .pick({ address: true })
+                    .safeParse({ address: val })
+                    .success.toString() !== "false"
+                );
+              }}
               placeholder="Endereço"
               value={inputs.adress}
               onChangeText={(enteredValue) =>
@@ -176,7 +217,14 @@ export default function Register() {
             />
             <InputComponent
               lazy
-              rule={(val) => val !== ""}
+              rule={(val) => {
+                return (
+                  userSchema
+                    .pick({ phone: true })
+                    .safeParse({ phone: val })
+                    .success.toString() !== "false"
+                );
+              }}
               placeholder="Telefone"
               value={inputs.phone}
               onChangeText={(enteredValue) =>
@@ -186,7 +234,14 @@ export default function Register() {
             <Text style={styles.subtitle}>INFORMAÇÕES DE PERFIL</Text>
             <InputComponent
               lazy
-              rule={(val) => val !== ""}
+              rule={(val) => {
+                return (
+                  userSchema
+                    .pick({ user: true })
+                    .safeParse({ user: val })
+                    .success.toString() !== "false"
+                );
+              }}
               placeholder="Nome de Usuário"
               value={inputs.user}
               onChangeText={(enteredValue) =>
@@ -196,7 +251,14 @@ export default function Register() {
             <InputComponent
               lazy
               type="password"
-              rule={(val) => val !== ""}
+              rule={(val) => {
+                return (
+                  userSchema
+                    .pick({ password: true })
+                    .safeParse({ password: val })
+                    .success.toString() !== "false"
+                );
+              }}
               placeholder="Senha"
               value={inputs.password}
               onChangeText={(enteredValue) =>

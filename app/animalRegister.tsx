@@ -20,7 +20,7 @@ import CustomButton from "../components/customButton";
 import Header, { headerSize } from "../components/header";
 import InputComponent from "../components/input";
 import RadioContainer from "../components/radioContainer";
-import { animalRegisterSchema } from "../schemas/AnimalRegister/animalRegisterTypes";
+import { animalSchema } from "../schemas/AnimalRegister/animalRegisterTypes";
 import Colors from "../util/Colors";
 import { db, storage } from "../util/firebase";
 import imageHandler from "../util/functions/ImageHandler";
@@ -118,7 +118,7 @@ export default function AnimalRegister() {
       disable: inputs.disable,
     };
     try {
-      animalRegisterSchema.parse(docData);
+      animalSchema.parse(docData);
       await addDoc(collection(db, "pets"), docData);
       router.navigate("/login");
     } catch (e) {

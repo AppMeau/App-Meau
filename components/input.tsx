@@ -29,7 +29,10 @@ export default function InputComponent(props: props) {
       <TextInput
         textContentType={props.type ? props.type : "none"}
         secureTextEntry={props.type === "password"}
-        style={[isValid && { color: "red" }, styles.input]}
+        style={[
+          styles.input,
+          isValid ? { color: "#575757" } : { color: "red" },
+        ]}
         value={props.value}
         onChangeText={props.onChangeText}
         placeholder={props.placeholder}
@@ -86,6 +89,5 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     includeFontPadding: false,
     fontFamily: "roboto-regular",
-    color: "#575757",
   },
 });

@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const animalRegisterSchema = z
+export const animalSchema = z
   .object({
     name: z.string().min(1),
     photo: z.string().optional(),
@@ -84,7 +84,7 @@ export const animalRegisterSchema = z
     );
   });
 
-export type animalRegisterType = z.infer<typeof animalRegisterSchema>;
+export type animalRegisterType = z.infer<typeof animalSchema>;
 function refine(arg0: (data: any) => boolean) {
   throw new Error("Function not implemented.");
 }
