@@ -61,7 +61,7 @@ export default function Register() {
       email: inputs.email,
       state: inputs.state,
       city: inputs.city,
-      adress: inputs.adress,
+      address: inputs.adress,
       phone: inputs.phone,
       user: inputs.user,
       password: inputs.password,
@@ -132,6 +132,7 @@ export default function Register() {
               lazy
               rule={(val) => val !== ""}
               placeholder="Idade"
+              keyboardType="decimal-pad"
               value={inputs.age}
               onChangeText={(enteredValue) =>
                 inputChangedHandler("age", enteredValue)

@@ -1,10 +1,12 @@
 import { Ionicons } from "@expo/vector-icons";
-import React, { useState } from "react";
-import { TextInput, StyleSheet, View } from "react-native";
+import React, { Key, useState } from "react";
+import { StyleSheet, View, TextInput, KeyboardTypeOptions } from "react-native";
+// import { TextInput } from "react-native-paper";
 
 type textContentType = "password" | "username" | "name";
 type props = {
   type?: textContentType;
+  keyboardType?: KeyboardTypeOptions;
   lazy?: boolean;
   rule?: (value: any) => boolean;
   placeholder: string;
@@ -27,11 +29,11 @@ export default function InputComponent(props: props) {
       <TextInput
         textContentType={props.type ? props.type : "none"}
         secureTextEntry={props.type === "password"}
-        style={styles.input}
+        style={[isValid && { color: "red" }, styles.input]}
         value={props.value}
         onChangeText={props.onChangeText}
         placeholder={props.placeholder}
-        placeholderTextColor="#bdbdbd"
+        placeholderTextColor={isValid || isValid === null ? "#bdbdbd" : "red"}
         onFocus={() => {
           setFocus(true);
         }}
@@ -42,6 +44,7 @@ export default function InputComponent(props: props) {
             }
           }
         }}
+        keyboardType={props.keyboardType ? props.keyboardType : "default"}
         onEndEditing={(e) => {
           setFocus(false);
           if (props.lazy) {
