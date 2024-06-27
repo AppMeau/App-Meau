@@ -20,7 +20,10 @@ import CustomButton from "../components/customButton";
 import Header, { headerSize } from "../components/header";
 import InputComponent from "../components/input";
 import RadioContainer from "../components/radioContainer";
-import { animalSchema } from "../schemas/AnimalRegister/animalRegisterTypes";
+import {
+  animalSchema,
+  baseAnimalSchema,
+} from "../schemas/AnimalRegister/animalRegisterTypes";
 import Colors from "../util/Colors";
 import { db, storage } from "../util/firebase";
 import imageHandler from "../util/functions/ImageHandler";
@@ -32,10 +35,10 @@ export default function AnimalRegister() {
     photoUrl: null,
     photoDownloadUrl: "",
 
-    species: "",
-    gender: "",
-    size: "",
-    age: "",
+    species: "Cachorro",
+    gender: "Macho",
+    size: "Pequeno",
+    age: "Filhote",
 
     // TEMPERAMENTO
     playfull: false,
@@ -165,7 +168,14 @@ export default function AnimalRegister() {
             <Text style={styles.subtitle}>NOME DO ANIMAL</Text>
             <InputComponent
               lazy
-              rule={(val) => val !== ""}
+              rule={(val) => {
+                return (
+                  baseAnimalSchema
+                    .pick({ name: true })
+                    .safeParse({ name: val })
+                    .success.toString() !== "false"
+                );
+              }}
               placeholder="Nome do animal"
               value={inputs.name}
               onChangeText={(newName) => inputChangedHandler("name", newName)}
@@ -269,7 +279,9 @@ export default function AnimalRegister() {
             />
             <InputComponent
               lazy
-              rule={(val) => val !== ""}
+              rule={(val) =>
+                (!inputs.sick && val === "") || (inputs.sick && val !== "")
+              }
               placeholder="Doenças do animal"
               value={inputs.sickness}
               onChangeText={(enteredValue) =>
@@ -310,7 +322,14 @@ export default function AnimalRegister() {
             <Text style={styles.subtitle}>SOBRE O ANIMAL</Text>
             <InputComponent
               lazy
-              rule={(val) => val !== ""}
+              rule={(val) => {
+                return (
+                  baseAnimalSchema
+                    .pick({ about: true })
+                    .safeParse({ about: val })
+                    .success.toString() !== "false"
+                );
+              }}
               placeholder="Compartilhe a história do animal"
               value={inputs.about}
               onChangeText={(enteredValue) =>
