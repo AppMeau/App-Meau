@@ -31,12 +31,12 @@ export default function InputComponent(props: props) {
         secureTextEntry={props.type === "password"}
         style={[
           styles.input,
-          isValid ? { color: "#575757" } : { color: "red" },
+          isValid === null || isValid ? { color: "#575757" } : { color: "red" },
         ]}
         value={props.value}
         onChangeText={props.onChangeText}
         placeholder={props.placeholder}
-        placeholderTextColor={isValid || isValid === null ? "#bdbdbd" : "red"}
+        placeholderTextColor={isValid === null || isValid ? "#bdbdbd" : "red"}
         onFocus={() => {
           setFocus(true);
         }}

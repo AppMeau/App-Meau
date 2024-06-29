@@ -1,9 +1,8 @@
 import { MaterialIcons } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
 import { router } from "expo-router";
-import { collection, doc, setDoc, addDoc } from "firebase/firestore";
-import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
-import { lazy, useEffect, useState } from "react";
+import { collection, addDoc } from "firebase/firestore";
+import { useEffect, useState } from "react";
 import {
   Image,
   Pressable,
@@ -17,7 +16,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import CheckboxContainer from "../components/checkboxContainer";
 import CustomButton from "../components/customButton";
-import Header, { headerSize } from "../components/header";
+import { headerSize } from "../components/header";
 import InputComponent from "../components/input";
 import RadioContainer from "../components/radioContainer";
 import {
@@ -25,7 +24,7 @@ import {
   baseAnimalSchema,
 } from "../schemas/AnimalRegister/animalRegisterTypes";
 import Colors from "../util/Colors";
-import { db, storage } from "../util/firebase";
+import { db } from "../util/firebase";
 import imageHandler from "../util/functions/ImageHandler";
 
 export default function AnimalRegister() {
@@ -60,9 +59,7 @@ export default function AnimalRegister() {
     homePhotos: false,
     previousVisit: false,
     acompanyBeforeAdoption: false,
-    oneMonth: false,
-    threeMonths: false,
-    sixMonths: false,
+    periodToAcompany: "",
 
     about: "",
     disable: false,
@@ -73,9 +70,16 @@ export default function AnimalRegister() {
       inputChangedHandler("disable", false);
     } else {
       inputChangedHandler("acompanyBeforeAdoption", false);
+      inputChangedHandler("periodToAcompany", "");
       inputChangedHandler("disable", true);
     }
   }, [inputs.acompanyBeforeAdoption]);
+
+  useEffect(() => {
+    if (inputs.sick === false) {
+      inputChangedHandler("sickness", "");
+    }
+  }, [inputs.sick]);
 
   function inputChangedHandler(inputIdentifier: string, enteredValue: any) {
     setInputs((currentInput) => {
@@ -114,9 +118,7 @@ export default function AnimalRegister() {
       homePhotos: inputs.homePhotos,
       previousVisit: inputs.previousVisit,
       acompanyBeforeAdoption: inputs.acompanyBeforeAdoption,
-      oneMonth: inputs.oneMonth,
-      threeMonths: inputs.threeMonths,
-      sixMonths: inputs.sixMonths,
+      periodToAcompany: inputs.periodToAcompany,
       about: inputs.about,
       disable: inputs.disable,
     };
@@ -311,12 +313,14 @@ export default function AnimalRegister() {
                 "Acompanhamento pós adoção",
               ]}
             />
-            <CheckboxContainer
-              states={[inputs.oneMonth, inputs.threeMonths, inputs.sixMonths]}
-              onPress={inputChangedHandler}
-              keys={["oneMonth", "threeMonths", "sixMonths"]}
+
+            <RadioContainer
+              state={inputs.periodToAcompany}
+              onPress={(enteredValue: any) =>
+                inputChangedHandler("periodToAcompany", enteredValue)
+              }
+              labels={["1 Mês", "3 Meses", "6 Meses"]}
               disable={inputs.disable}
-              labels={["1 mês", "3 meses", "6 meses"]}
             />
 
             <Text style={styles.subtitle}>SOBRE O ANIMAL</Text>

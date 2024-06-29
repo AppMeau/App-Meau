@@ -7,10 +7,12 @@ function RadioContainer({
   labels,
   state,
   onPress,
+  disable,
 }: {
   labels: string[];
   state: string;
   onPress: any;
+  disable?: boolean;
 }) {
   return (
     <RadioButton.Group
@@ -25,6 +27,7 @@ function RadioContainer({
                 value={label}
                 color={Colors.textAuxSecondary}
                 uncheckedColor={Colors.textAuxSecondary}
+                disabled={disable}
               />
               <Text style={styles.textContainerPhoto}>{label}</Text>
             </View>

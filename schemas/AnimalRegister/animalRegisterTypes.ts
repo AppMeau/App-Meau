@@ -26,9 +26,10 @@ export const baseAnimalSchema = z.object({
   previousVisit: z.boolean(),
 
   acompanyBeforeAdoption: z.boolean(),
-  oneMonth: z.boolean(),
-  threeMonths: z.boolean(),
-  sixMonths: z.boolean(),
+  periodToAcompany: z.enum(["", "1 Mês", "3 Meses", "6 Meses"]),
+  // oneMonth: z.boolean(),
+  // threeMonths: z.boolean(),
+  // sixMonths: z.boolean(),
 
   about: z.string().optional(),
   disable: z.boolean(),
@@ -47,14 +48,8 @@ export const animalSchema = baseAnimalSchema
   .refine(
     (data) => {
       return (
-        (data.acompanyBeforeAdoption &&
-          ((data.oneMonth && !data.threeMonths && !data.sixMonths) ||
-            (!data.oneMonth && data.threeMonths && !data.sixMonths) ||
-            (!data.oneMonth && !data.threeMonths && data.sixMonths))) ||
-        (!data.acompanyBeforeAdoption &&
-          !data.oneMonth &&
-          !data.threeMonths &&
-          !data.sixMonths)
+        (data.acompanyBeforeAdoption && data.periodToAcompany !== "") ||
+        (!data.acompanyBeforeAdoption && data.periodToAcompany === "")
       );
     },
     {
@@ -78,9 +73,6 @@ export const animalSchema = baseAnimalSchema
       typeof data.homePhotos === "boolean" &&
       typeof data.previousVisit === "boolean" &&
       typeof data.acompanyBeforeAdoption === "boolean" &&
-      typeof data.oneMonth === "boolean" &&
-      typeof data.threeMonths === "boolean" &&
-      typeof data.sixMonths === "boolean" &&
       typeof data.disable === "boolean"
     );
   });
