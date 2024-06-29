@@ -1,8 +1,8 @@
-import { animalRegisterSchema } from "../../schemas/AnimalRegister/animalRegisterTypes";
+import { animalSchema } from "../../schemas/AnimalRegister/animalRegisterTypes";
 
 describe("Animal Schema", () => {
   it("all should be valid", () => {
-    const res = animalRegisterSchema.safeParse({
+    const res = animalSchema.safeParse({
       name: "Test",
       photo: "Test",
       species: "Gato",
@@ -24,9 +24,7 @@ describe("Animal Schema", () => {
       homePhotos: true,
       previousVisit: true,
       acompanyBeforeAdoption: true,
-      oneMonth: true,
-      threeMonths: false,
-      sixMonths: false,
+      periodToAcompany: "1 Mês",
       about: "Test",
       disable: false,
     });
@@ -34,7 +32,7 @@ describe("Animal Schema", () => {
   });
 
   it("name should not be blank", () => {
-    const res = animalRegisterSchema.safeParse({
+    const res = animalSchema.safeParse({
       name: "",
       photo: "Test",
       species: "Gato",
@@ -56,9 +54,7 @@ describe("Animal Schema", () => {
       homePhotos: true,
       previousVisit: true,
       acompanyBeforeAdoption: true,
-      oneMonth: true,
-      threeMonths: false,
-      sixMonths: false,
+      periodToAcompany: "1 Mês",
       about: "Test",
       disable: false,
     });
@@ -66,7 +62,7 @@ describe("Animal Schema", () => {
   });
 
   it("species' value should not be outside the options", () => {
-    const res = animalRegisterSchema.safeParse({
+    const res = animalSchema.safeParse({
       name: "Test",
       photo: "Test",
       species: "Pássaro",
@@ -88,9 +84,7 @@ describe("Animal Schema", () => {
       homePhotos: true,
       previousVisit: true,
       acompanyBeforeAdoption: true,
-      oneMonth: true,
-      threeMonths: false,
-      sixMonths: false,
+      periodToAcompany: "1 Mês",
       about: "Test",
       disable: false,
     });
@@ -98,7 +92,7 @@ describe("Animal Schema", () => {
   });
 
   it("gender's value should not be outside the options", () => {
-    const res = animalRegisterSchema.safeParse({
+    const res = animalSchema.safeParse({
       name: "Test",
       photo: "Test",
       species: "Gato",
@@ -120,9 +114,7 @@ describe("Animal Schema", () => {
       homePhotos: true,
       previousVisit: true,
       acompanyBeforeAdoption: true,
-      oneMonth: true,
-      threeMonths: false,
-      sixMonths: false,
+      periodToAcompany: "1 Mês",
       about: "Test",
       disable: false,
     });
@@ -130,7 +122,7 @@ describe("Animal Schema", () => {
   });
 
   it("size's value should not be outside the options", () => {
-    const res = animalRegisterSchema.safeParse({
+    const res = animalSchema.safeParse({
       name: "Test",
       photo: "Test",
       species: "Gato",
@@ -152,9 +144,7 @@ describe("Animal Schema", () => {
       homePhotos: true,
       previousVisit: true,
       acompanyBeforeAdoption: true,
-      oneMonth: true,
-      threeMonths: false,
-      sixMonths: false,
+      periodToAcompany: "1 Mês",
       about: "Test",
       disable: false,
     });
@@ -162,7 +152,7 @@ describe("Animal Schema", () => {
   });
 
   it("age's value should not be outside the options", () => {
-    const res = animalRegisterSchema.safeParse({
+    const res = animalSchema.safeParse({
       name: "Test",
       photo: "Test",
       species: "Gato",
@@ -184,9 +174,7 @@ describe("Animal Schema", () => {
       homePhotos: true,
       previousVisit: true,
       acompanyBeforeAdoption: true,
-      oneMonth: true,
-      threeMonths: false,
-      sixMonths: false,
+      periodToAcompany: "1 Mês",
       about: "Test",
       disable: false,
     });
@@ -194,7 +182,7 @@ describe("Animal Schema", () => {
   });
 
   it("playfull's value should not have type different than boolean", () => {
-    const res = animalRegisterSchema.safeParse({
+    const res = animalSchema.safeParse({
       name: "Test",
       photo: "Test",
       species: "Gato",
@@ -216,9 +204,7 @@ describe("Animal Schema", () => {
       homePhotos: true,
       previousVisit: true,
       acompanyBeforeAdoption: true,
-      oneMonth: true,
-      threeMonths: false,
-      sixMonths: false,
+      periodToAcompany: "1 Mês",
       about: "Test",
       disable: false,
     });
@@ -226,7 +212,7 @@ describe("Animal Schema", () => {
   });
 
   it("shy's value should not have type different than boolean", () => {
-    const res = animalRegisterSchema.safeParse({
+    const res = animalSchema.safeParse({
       name: "Test",
       photo: "Test",
       species: "Gato",
@@ -248,9 +234,7 @@ describe("Animal Schema", () => {
       homePhotos: true,
       previousVisit: true,
       acompanyBeforeAdoption: true,
-      oneMonth: true,
-      threeMonths: false,
-      sixMonths: false,
+      periodToAcompany: "1 Mês",
       about: "Test",
       disable: false,
     });
@@ -258,7 +242,7 @@ describe("Animal Schema", () => {
   });
 
   it("calm's value should not have type different than boolean", () => {
-    const res = animalRegisterSchema.safeParse({
+    const res = animalSchema.safeParse({
       name: "Test",
       photo: "Test",
       species: "Gato",
@@ -280,9 +264,7 @@ describe("Animal Schema", () => {
       homePhotos: true,
       previousVisit: true,
       acompanyBeforeAdoption: true,
-      oneMonth: true,
-      threeMonths: false,
-      sixMonths: false,
+      periodToAcompany: "1 Mês",
       about: "Test",
       disable: false,
     });
@@ -290,7 +272,7 @@ describe("Animal Schema", () => {
   });
 
   it("guard's value should not have type different than boolean", () => {
-    const res = animalRegisterSchema.safeParse({
+    const res = animalSchema.safeParse({
       name: "Test",
       photo: "Test",
       species: "Gato",
@@ -312,9 +294,7 @@ describe("Animal Schema", () => {
       homePhotos: true,
       previousVisit: true,
       acompanyBeforeAdoption: true,
-      oneMonth: true,
-      threeMonths: false,
-      sixMonths: false,
+      periodToAcompany: "1 Mês",
       about: "Test",
       disable: false,
     });
@@ -322,7 +302,7 @@ describe("Animal Schema", () => {
   });
 
   it("lovely's value should not have type different than boolean", () => {
-    const res = animalRegisterSchema.safeParse({
+    const res = animalSchema.safeParse({
       name: "Test",
       photo: "Test",
       species: "Gato",
@@ -344,9 +324,7 @@ describe("Animal Schema", () => {
       homePhotos: true,
       previousVisit: true,
       acompanyBeforeAdoption: true,
-      oneMonth: true,
-      threeMonths: false,
-      sixMonths: false,
+      periodToAcompany: "1 Mês",
       about: "Test",
       disable: false,
     });
@@ -354,7 +332,7 @@ describe("Animal Schema", () => {
   });
 
   it("lazy's value should not have type different than boolean", () => {
-    const res = animalRegisterSchema.safeParse({
+    const res = animalSchema.safeParse({
       name: "Test",
       photo: "Test",
       species: "Gato",
@@ -376,9 +354,7 @@ describe("Animal Schema", () => {
       homePhotos: true,
       previousVisit: true,
       acompanyBeforeAdoption: true,
-      oneMonth: true,
-      threeMonths: false,
-      sixMonths: false,
+      periodToAcompany: "1 Mês",
       about: "Test",
       disable: false,
     });
@@ -386,7 +362,7 @@ describe("Animal Schema", () => {
   });
 
   it("vaccinated's value should not have type different than boolean", () => {
-    const res = animalRegisterSchema.safeParse({
+    const res = animalSchema.safeParse({
       name: "Test",
       photo: "Test",
       species: "Gato",
@@ -408,9 +384,7 @@ describe("Animal Schema", () => {
       homePhotos: true,
       previousVisit: true,
       acompanyBeforeAdoption: true,
-      oneMonth: true,
-      threeMonths: false,
-      sixMonths: false,
+      periodToAcompany: "1 Mês",
       about: "Test",
       disable: false,
     });
@@ -418,7 +392,7 @@ describe("Animal Schema", () => {
   });
 
   it("dewormed's value should not have type different than boolean", () => {
-    const res = animalRegisterSchema.safeParse({
+    const res = animalSchema.safeParse({
       name: "Test",
       photo: "Test",
       species: "Gato",
@@ -440,9 +414,7 @@ describe("Animal Schema", () => {
       homePhotos: true,
       previousVisit: true,
       acompanyBeforeAdoption: true,
-      oneMonth: true,
-      threeMonths: false,
-      sixMonths: false,
+      periodToAcompany: "1 Mês",
       about: "Test",
       disable: false,
     });
@@ -450,7 +422,7 @@ describe("Animal Schema", () => {
   });
 
   it("castrated's value should not have type different than boolean", () => {
-    const res = animalRegisterSchema.safeParse({
+    const res = animalSchema.safeParse({
       name: "Test",
       photo: "Test",
       species: "Gato",
@@ -472,9 +444,7 @@ describe("Animal Schema", () => {
       homePhotos: true,
       previousVisit: true,
       acompanyBeforeAdoption: true,
-      oneMonth: true,
-      threeMonths: false,
-      sixMonths: false,
+      periodToAcompany: "1 Mês",
       about: "Test",
       disable: false,
     });
@@ -482,7 +452,7 @@ describe("Animal Schema", () => {
   });
 
   it("sick's value should not have type different than boolean", () => {
-    const res = animalRegisterSchema.safeParse({
+    const res = animalSchema.safeParse({
       name: "Test",
       photo: "Test",
       species: "Gato",
@@ -504,9 +474,7 @@ describe("Animal Schema", () => {
       homePhotos: true,
       previousVisit: true,
       acompanyBeforeAdoption: true,
-      oneMonth: true,
-      threeMonths: false,
-      sixMonths: false,
+      periodToAcompany: "1 Mês",
       about: "Test",
       disable: false,
     });
@@ -514,7 +482,7 @@ describe("Animal Schema", () => {
   });
 
   it("sickness should not be filled when sick is false", () => {
-    const res = animalRegisterSchema.safeParse({
+    const res = animalSchema.safeParse({
       name: "Test",
       photo: "Test",
       species: "Gato",
@@ -536,9 +504,7 @@ describe("Animal Schema", () => {
       homePhotos: true,
       previousVisit: true,
       acompanyBeforeAdoption: true,
-      oneMonth: true,
-      threeMonths: false,
-      sixMonths: false,
+      periodToAcompany: "1 Mês",
       about: "Test",
       disable: false,
     });
@@ -546,7 +512,7 @@ describe("Animal Schema", () => {
   });
 
   it("sickenss should be filled when sick is true", () => {
-    const res = animalRegisterSchema.safeParse({
+    const res = animalSchema.safeParse({
       name: "Test",
       photo: "Test",
       species: "Gato",
@@ -568,9 +534,7 @@ describe("Animal Schema", () => {
       homePhotos: true,
       previousVisit: true,
       acompanyBeforeAdoption: true,
-      oneMonth: true,
-      threeMonths: false,
-      sixMonths: false,
+      periodToAcompany: "1 Mês",
       about: "Test",
       disable: false,
     });
@@ -578,7 +542,7 @@ describe("Animal Schema", () => {
   });
 
   it("adoptionTerm's value should not have type different than boolean", () => {
-    const res = animalRegisterSchema.safeParse({
+    const res = animalSchema.safeParse({
       name: "Test",
       photo: "Test",
       species: "Gato",
@@ -600,9 +564,7 @@ describe("Animal Schema", () => {
       homePhotos: true,
       previousVisit: true,
       acompanyBeforeAdoption: true,
-      oneMonth: true,
-      threeMonths: false,
-      sixMonths: false,
+      periodToAcompany: "1 Mês",
       about: "Test",
       disable: false,
     });
@@ -610,7 +572,7 @@ describe("Animal Schema", () => {
   });
 
   it("homePhotos' value should not have type different than boolean", () => {
-    const res = animalRegisterSchema.safeParse({
+    const res = animalSchema.safeParse({
       name: "Test",
       photo: "Test",
       species: "Gato",
@@ -632,9 +594,7 @@ describe("Animal Schema", () => {
       homePhotos: "true",
       previousVisit: true,
       acompanyBeforeAdoption: true,
-      oneMonth: true,
-      threeMonths: false,
-      sixMonths: false,
+      periodToAcompany: "1 Mês",
       about: "Test",
       disable: false,
     });
@@ -642,7 +602,7 @@ describe("Animal Schema", () => {
   });
 
   it("previousVisit's value should not have type different than boolean", () => {
-    const res = animalRegisterSchema.safeParse({
+    const res = animalSchema.safeParse({
       name: "Test",
       photo: "Test",
       species: "Gato",
@@ -664,9 +624,7 @@ describe("Animal Schema", () => {
       homePhotos: true,
       previousVisit: "true",
       acompanyBeforeAdoption: true,
-      oneMonth: true,
-      threeMonths: false,
-      sixMonths: false,
+      periodToAcompany: "1 Mês",
       about: "Test",
       disable: false,
     });
@@ -674,7 +632,7 @@ describe("Animal Schema", () => {
   });
 
   it("acompanyBeforeAdoption's value should not have type different than boolean", () => {
-    const res = animalRegisterSchema.safeParse({
+    const res = animalSchema.safeParse({
       name: "Test",
       photo: "Test",
       species: "Gato",
@@ -696,113 +654,15 @@ describe("Animal Schema", () => {
       homePhotos: true,
       previousVisit: true,
       acompanyBeforeAdoption: "true",
-      oneMonth: true,
-      threeMonths: false,
-      sixMonths: false,
+      periodToAcompany: "1 Mês",
       about: "Test",
       disable: false,
     });
     expect(res.success).toBe(false);
   });
 
-  it("oneMonth's value should not have type different than boolean", () => {
-    const res = animalRegisterSchema.safeParse({
-      name: "Test",
-      photo: "Test",
-      species: "Gato",
-      gender: "Macho",
-      size: "Pequeno",
-      age: "Filhote",
-      playfull: true,
-      shy: true,
-      calm: true,
-      guard: true,
-      lovely: true,
-      lazy: true,
-      vaccinated: true,
-      dewormed: true,
-      castrated: true,
-      sick: true,
-      sickness: "Test",
-      adoptionTerm: true,
-      homePhotos: true,
-      previousVisit: true,
-      acompanyBeforeAdoption: true,
-      oneMonth: "true",
-      threeMonths: false,
-      sixMonths: false,
-      about: "Test",
-      disable: false,
-    });
-    expect(res.success).toBe(false);
-  });
-
-  it("threeMonths' value should not have type different than boolean", () => {
-    const res = animalRegisterSchema.safeParse({
-      name: "Test",
-      photo: "Test",
-      species: "Gato",
-      gender: "Macho",
-      size: "Pequeno",
-      age: "Filhote",
-      playfull: true,
-      shy: true,
-      calm: true,
-      guard: true,
-      lovely: true,
-      lazy: true,
-      vaccinated: true,
-      dewormed: true,
-      castrated: true,
-      sick: true,
-      sickness: "Test",
-      adoptionTerm: true,
-      homePhotos: true,
-      previousVisit: true,
-      acompanyBeforeAdoption: true,
-      oneMonth: true,
-      threeMonths: "false",
-      sixMonths: false,
-      about: "Test",
-      disable: false,
-    });
-    expect(res.success).toBe(false);
-  });
-
-  it("sixMonths' value should not have type different than boolean", () => {
-    const res = animalRegisterSchema.safeParse({
-      name: "Test",
-      photo: "Test",
-      species: "Gato",
-      gender: "Macho",
-      size: "Pequeno",
-      age: "Filhote",
-      playfull: true,
-      shy: true,
-      calm: true,
-      guard: true,
-      lovely: true,
-      lazy: true,
-      vaccinated: true,
-      dewormed: true,
-      castrated: true,
-      sick: true,
-      sickness: "Test",
-      adoptionTerm: true,
-      homePhotos: true,
-      previousVisit: true,
-      acompanyBeforeAdoption: true,
-      oneMonth: true,
-      threeMonths: false,
-      sixMonths: "false",
-      about: "Test",
-      disable: false,
-    });
-    expect(res.success).toBe(false);
-  });
-
-  it("oneMonth should not be true if acompanyBeforeAdoption is false", () => {
-    const res = animalRegisterSchema.safeParse({
+  it("periodToAcompany should not be filled if acompanyBeforeAdoption is false", () => {
+    const res = animalSchema.safeParse({
       name: "Test",
       photo: "Test",
       species: "Gato",
@@ -824,81 +684,15 @@ describe("Animal Schema", () => {
       homePhotos: true,
       previousVisit: true,
       acompanyBeforeAdoption: false,
-      oneMonth: true,
-      threeMonths: false,
-      sixMonths: false,
+      periodToAcompany: "1 Mês",
       about: "Test",
       disable: false,
     });
     expect(res.success).toBe(false);
   });
 
-  it("threeMonths should not be true if acompanyBeforeAdoption is false", () => {
-    const res = animalRegisterSchema.safeParse({
-      name: "Test",
-      photo: "Test",
-      species: "Gato",
-      gender: "Macho",
-      size: "Pequeno",
-      age: "Filhote",
-      playfull: true,
-      shy: true,
-      calm: true,
-      guard: true,
-      lovely: true,
-      lazy: true,
-      vaccinated: true,
-      dewormed: true,
-      castrated: true,
-      sick: true,
-      sickness: "Test",
-      adoptionTerm: true,
-      homePhotos: true,
-      previousVisit: true,
-      acompanyBeforeAdoption: false,
-      oneMonth: false,
-      threeMonths: true,
-      sixMonths: false,
-      about: "Test",
-      disable: false,
-    });
-    expect(res.success).toBe(false);
-  });
-
-  it("sixMonths should not be true if acompanyBeforeAdoption is false", () => {
-    const res = animalRegisterSchema.safeParse({
-      name: "Test",
-      photo: "Test",
-      species: "Gato",
-      gender: "Macho",
-      size: "Pequeno",
-      age: "Filhote",
-      playfull: true,
-      shy: true,
-      calm: true,
-      guard: true,
-      lovely: true,
-      lazy: true,
-      vaccinated: true,
-      dewormed: true,
-      castrated: true,
-      sick: true,
-      sickness: "Test",
-      adoptionTerm: true,
-      homePhotos: true,
-      previousVisit: true,
-      acompanyBeforeAdoption: false,
-      oneMonth: false,
-      threeMonths: false,
-      sixMonths: true,
-      about: "Test",
-      disable: false,
-    });
-    expect(res.success).toBe(false);
-  });
-
-  it("more than one checkbox to acompanyBeforeAdoption should not be true", () => {
-    const res = animalRegisterSchema.safeParse({
+  it("periodToAcompany should not be empty if acompanyBeforeAdoption is true", () => {
+    const res = animalSchema.safeParse({
       name: "Test",
       photo: "Test",
       species: "Gato",
@@ -920,9 +714,7 @@ describe("Animal Schema", () => {
       homePhotos: true,
       previousVisit: true,
       acompanyBeforeAdoption: true,
-      oneMonth: true,
-      threeMonths: true,
-      sixMonths: false,
+      periodToAcompany: "",
       about: "Test",
       disable: false,
     });
@@ -930,7 +722,7 @@ describe("Animal Schema", () => {
   });
 
   it("playfull's value should not have type different than boolean", () => {
-    const res = animalRegisterSchema.safeParse({
+    const res = animalSchema.safeParse({
       name: "Test",
       photo: "Test",
       species: "Gato",
@@ -952,9 +744,7 @@ describe("Animal Schema", () => {
       homePhotos: true,
       previousVisit: true,
       acompanyBeforeAdoption: true,
-      oneMonth: true,
-      threeMonths: false,
-      sixMonths: false,
+      periodToAcompany: "1 Mês",
       about: "Test",
       disable: "false",
     });

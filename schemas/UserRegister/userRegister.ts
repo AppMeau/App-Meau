@@ -10,10 +10,10 @@ export const userSchema = z.object({
   email: z.string().regex(emailFormat, "Email Inválido").min(1),
   state: z.string().min(1),
   city: z.string().min(1),
-  adress: z.string().min(1),
+  address: z.string().min(1),
   phone: z.string().regex(phoneFormat, "Telefone Inválido").min(1),
   user: z.string().min(1),
-  password: z.string().min(1),
+  password: z.string().min(6),
   photo: z.string().optional(),
 });
 
