@@ -3,7 +3,7 @@ import * as ImagePicker from "expo-image-picker";
 import { router } from "expo-router";
 import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
 import { collection, doc, setDoc, addDoc } from "firebase/firestore";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Image,
   Pressable,
@@ -12,6 +12,7 @@ import {
   Text,
   View,
 } from "react-native";
+import { Button, Dialog, Portal, Provider } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import CustomButton from "../components/customButton";
@@ -37,6 +38,37 @@ export default function Register() {
   const [password, setPassword] = useState("");
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
   const [photoUrl, setPhotoUrl] = useState<string | null>(null);
+
+  const [showPhotoDialog, setShowPhotoDialog] = useState(false);
+  const [isFromGallery, setIsFromGallery] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    const pickImageAsync = async () => {
+      let result;
+      if (isFromGallery) {
+        result = await ImagePicker.launchImageLibraryAsync({
+          allowsEditing: true,
+          quality: 1,
+        });
+      } else {
+        result = await ImagePicker.launchCameraAsync({
+          allowsEditing: true,
+          quality: 1,
+        });
+      }
+
+      if (!result.canceled) {
+        setPhotoUrl(result.assets[0].uri);
+      } else {
+        alert("You did not select any image.");
+      }
+    };
+
+    if (isFromGallery !== null) {
+      pickImageAsync();
+      setIsFromGallery(null);
+    }
+  }, [showPhotoDialog, isFromGallery]);
 
   const handleSubmit = async () => {
     const url = await imageHandler("images/users/", photoUrl, name);
@@ -77,141 +109,162 @@ export default function Register() {
     router.push("/login");
   };
 
-  const pickImageAsync = async () => {
-    const result = await ImagePicker.launchImageLibraryAsync({
-      allowsEditing: true,
-      quality: 1,
-    });
-
-    if (!result.canceled) {
-      setPhotoUrl(result.assets[0].uri);
-    } else {
-      alert("You did not select any image.");
-    }
-  };
+  const hideDialog = () => setShowPhotoDialog(false);
 
   return (
-    <View style={{ flex: 1 }}>
-      <ScrollView>
-        <View
-          style={[styles.container, { paddingTop: insets.top + headerSize }]}
-        >
-          <View style={styles.notice}>
-            <Text style={styles.textNotice}>
-              As informações preenchidas serão divulgadas apenas para a pessoa
-              com a qual você realizar o processo de adoção e/ou apadrinhamento,
-              após a formalização do processo.
-            </Text>
-          </View>
-          <View style={styles.formContainer}>
-            <Text style={styles.subtitle}>INFORMAÇÕES PESSOAIS</Text>
-            <InputComponent
-              lazy
-              rule={(val) => val !== ""}
-              placeholder="Nome Completo"
-              value={name}
-              onChangeText={setName}
-            />
-            <InputComponent
-              lazy
-              rule={(val) => val !== ""}
-              placeholder="Idade"
-              value={age}
-              onChangeText={setAge}
-            />
-            <InputComponent
-              lazy
-              rule={(val) => val !== ""}
-              placeholder="Email"
-              value={email}
-              onChangeText={setEmail}
-            />
-            <InputComponent
-              lazy
-              rule={(val) => val !== ""}
-              placeholder="Estado"
-              value={state}
-              onChangeText={setState}
-            />
-            <InputComponent
-              lazy
-              rule={(val) => val !== ""}
-              placeholder="Cidade"
-              value={city}
-              onChangeText={setCity}
-            />
-            <InputComponent
-              lazy
-              rule={(val) => val !== ""}
-              placeholder="Endereço"
-              value={adress}
-              onChangeText={setAdress}
-            />
-            <InputComponent
-              lazy
-              rule={(val) => val !== ""}
-              placeholder="Telefone"
-              value={phone}
-              onChangeText={setPhone}
-            />
-            <Text style={styles.subtitle}>INFORMAÇÕES DE PERFIL</Text>
-            <InputComponent
-              lazy
-              rule={(val) => val !== ""}
-              placeholder="Nome de Usuário"
-              value={user}
-              onChangeText={setUser}
-            />
-            <InputComponent
-              lazy
-              type="password"
-              rule={(val) => val !== ""}
-              placeholder="Senha"
-              value={password}
-              onChangeText={setPassword}
-            />
-            <InputComponent
-              lazy
-              type="password"
-              rule={(val) => val === password}
-              placeholder="Confirmação de Senha"
-              value={passwordConfirmation}
-              onChangeText={setPasswordConfirmation}
-            />
+    <Provider>
+      <View style={{ flex: 1 }}>
+        <ScrollView>
+          <View
+            style={[styles.container, { paddingTop: insets.top + headerSize }]}
+          >
+            <View style={styles.notice}>
+              <Text style={styles.textNotice}>
+                As informações preenchidas serão divulgadas apenas para a pessoa
+                com a qual você realizar o processo de adoção e/ou
+                apadrinhamento, após a formalização do processo.
+              </Text>
+            </View>
+            <View style={styles.formContainer}>
+              <Text style={styles.subtitle}>INFORMAÇÕES PESSOAIS</Text>
+              <InputComponent
+                lazy
+                rule={(val) => val !== ""}
+                placeholder="Nome Completo"
+                value={name}
+                onChangeText={setName}
+              />
+              <InputComponent
+                lazy
+                rule={(val) => val !== ""}
+                placeholder="Idade"
+                value={age}
+                onChangeText={setAge}
+              />
+              <InputComponent
+                lazy
+                rule={(val) => val !== ""}
+                placeholder="Email"
+                value={email}
+                onChangeText={setEmail}
+              />
+              <InputComponent
+                lazy
+                rule={(val) => val !== ""}
+                placeholder="Estado"
+                value={state}
+                onChangeText={setState}
+              />
+              <InputComponent
+                lazy
+                rule={(val) => val !== ""}
+                placeholder="Cidade"
+                value={city}
+                onChangeText={setCity}
+              />
+              <InputComponent
+                lazy
+                rule={(val) => val !== ""}
+                placeholder="Endereço"
+                value={adress}
+                onChangeText={setAdress}
+              />
+              <InputComponent
+                lazy
+                rule={(val) => val !== ""}
+                placeholder="Telefone"
+                value={phone}
+                onChangeText={setPhone}
+              />
+              <Text style={styles.subtitle}>INFORMAÇÕES DE PERFIL</Text>
+              <InputComponent
+                lazy
+                rule={(val) => val !== ""}
+                placeholder="Nome de Usuário"
+                value={user}
+                onChangeText={setUser}
+              />
+              <InputComponent
+                lazy
+                type="password"
+                rule={(val) => val !== ""}
+                placeholder="Senha"
+                value={password}
+                onChangeText={setPassword}
+              />
+              <InputComponent
+                lazy
+                type="password"
+                rule={(val) => val === password}
+                placeholder="Confirmação de Senha"
+                value={passwordConfirmation}
+                onChangeText={setPasswordConfirmation}
+              />
 
-            <Text style={styles.subtitle}>FOTO DE PERFIL</Text>
+              <Text style={styles.subtitle}>FOTO DE PERFIL</Text>
 
-            <View style={styles.container}>
-              <Pressable onPress={pickImageAsync}>
-                <View style={styles.containerPhoto}>
-                  {photoUrl !== null ? (
-                    <Image source={{ uri: photoUrl }} style={styles.img} />
-                  ) : (
-                    <>
-                      <MaterialIcons
-                        name="control-point"
-                        size={24}
-                        color={Colors.textAuxSecondary}
-                      />
-                      <Text style={styles.textContainerPhoto}>
-                        Adicionar foto
-                      </Text>
-                    </>
-                  )}
-                </View>
-              </Pressable>
+              <View style={styles.container}>
+                <Pressable onPress={() => setShowPhotoDialog(true)}>
+                  <View style={styles.containerPhoto}>
+                    {photoUrl !== null ? (
+                      <Image source={{ uri: photoUrl }} style={styles.img} />
+                    ) : (
+                      <>
+                        <MaterialIcons
+                          name="control-point"
+                          size={24}
+                          color={Colors.textAuxSecondary}
+                        />
+                        <Text style={styles.textContainerPhoto}>
+                          Adicionar foto
+                        </Text>
+                      </>
+                    )}
+                  </View>
+                </Pressable>
 
-              <CustomButton
-                backgroundColor={Colors.bluePrimary}
-                onPress={handleSubmit}
-              >
-                FAZER CADASTRO
-              </CustomButton>
+                <CustomButton
+                  backgroundColor={Colors.bluePrimary}
+                  onPress={handleSubmit}
+                >
+                  FAZER CADASTRO
+                </CustomButton>
+              </View>
             </View>
           </View>
-        </View>
-      </ScrollView>
-    </View>
+
+          <Portal>
+            <Dialog
+              visible={showPhotoDialog}
+              onDismiss={hideDialog}
+              style={styles.dialog}
+            >
+              <Dialog.Title>Escolha uma opção:</Dialog.Title>
+              <Dialog.Actions>
+                <Button
+                  onPress={() => {
+                    setIsFromGallery(false);
+                    hideDialog();
+                  }}
+                  textColor={Colors.bluePrimary}
+                >
+                  Câmera
+                </Button>
+                <Button
+                  onPress={() => {
+                    setIsFromGallery(true);
+                    hideDialog();
+                  }}
+                  textColor={Colors.bluePrimary}
+                >
+                  Galeria
+                </Button>
+              </Dialog.Actions>
+            </Dialog>
+          </Portal>
+        </ScrollView>
+      </View>
+    </Provider>
   );
 }
 
@@ -265,5 +318,10 @@ const styles = StyleSheet.create({
   img: {
     width: 128,
     height: 128,
+  },
+  dialog: {
+    borderRadius: 8,
+    backgroundColor: "white",
+    alignItems: "center",
   },
 });
