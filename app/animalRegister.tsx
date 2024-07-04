@@ -19,61 +19,79 @@ import CustomButton from "../components/customButton";
 import { headerSize } from "../components/header";
 import InputComponent from "../components/input";
 import RadioContainer from "../components/radioContainer";
+import {
+  animalSchema,
+  baseAnimalSchema,
+} from "../schemas/AnimalRegister/animalRegisterTypes";
 import Colors from "../util/Colors";
 import { db } from "../util/firebase";
 import imageHandler from "../util/functions/ImageHandler";
 
 export default function AnimalRegister() {
   const insets = useSafeAreaInsets();
+  const [inputs, setInputs] = useState({
+    name: "",
+    photoUrl: null,
+    photoDownloadUrl: "",
 
-  // const [goal, setGoal] = useState("Adoção");
-  const [name, setName] = useState("");
-  const [photoUrl, setPhotoUrl] = useState<string | null>(null);
-  const [photoDownloadUrl, setPhotoDowloadUrl] = useState("");
+    species: "Cachorro",
+    gender: "Macho",
+    size: "Pequeno",
+    age: "Filhote",
 
-  const [species, setSpecies] = useState("");
-  const [gender, setGender] = useState("");
-  const [size, setSize] = useState("");
-  const [age, setAge] = useState("");
+    // TEMPERAMENTO
+    playfull: false,
+    shy: false,
+    calm: false,
+    guard: false,
+    lovely: false,
+    lazy: false,
 
-  // TEMPERAMENTO
-  const [playfull, setPlayfull] = useState(false);
-  const [shy, setShy] = useState(false);
-  const [calm, setCalm] = useState(false);
-  const [guard, setGuard] = useState(false);
-  const [lovely, setLovely] = useState(false);
-  const [lazy, setLazy] = useState(false);
+    // SAÚDE
+    vaccinated: false,
+    dewormed: false,
+    castrated: false,
+    sick: false,
+    sickness: "",
 
-  // SAÚDE
-  const [vaccinated, setVaccinated] = useState(false);
-  const [dewormed, setDewormed] = useState(false);
-  const [castrated, setCastrated] = useState(false);
-  const [sick, setSick] = useState(false);
-  const [sickness, setSickness] = useState("");
+    // EXIGÊNCIAS PARA ADOÇÃO
+    adoptionTerm: false,
+    homePhotos: false,
+    previousVisit: false,
+    acompanyBeforeAdoption: false,
+    periodToAcompany: "",
 
-  // EXIGÊNCIAS PARA ADOÇÃO
-  const [adoptionTerm, setAdoptionTerm] = useState(false);
-  const [homePhotos, setHomePhotos] = useState(false);
-  const [previousVisit, setPreviousVisit] = useState(false);
-  const [acompanyBeforeAdoption, setAcompanyBeforeAdoption] = useState(false);
-  const [oneMonth, setOneMonth] = useState(false);
-  const [threeMonths, setThreeMonths] = useState(false);
-  const [sixMonths, setSixMonths] = useState(false);
-
-  const [about, setAbout] = useState("");
-  const [disable, setDisable] = useState(false);
+    about: "",
+    disable: false,
+  });
 
   const [showPhotoDialog, setShowPhotoDialog] = useState(false);
   const [isFromGallery, setIsFromGallery] = useState<boolean | null>(null);
 
   useEffect(() => {
-    if (acompanyBeforeAdoption === true) {
-      setDisable(false);
+    if (inputs.acompanyBeforeAdoption === true) {
+      inputChangedHandler("disable", false);
     } else {
-      setAcompanyBeforeAdoption(false);
-      setDisable(true);
+      inputChangedHandler("acompanyBeforeAdoption", false);
+      inputChangedHandler("periodToAcompany", "");
+      inputChangedHandler("disable", true);
     }
-  }, [acompanyBeforeAdoption]);
+  }, [inputs.acompanyBeforeAdoption]);
+
+  useEffect(() => {
+    if (inputs.sick === false) {
+      inputChangedHandler("sickness", "");
+    }
+  }, [inputs.sick]);
+
+  function inputChangedHandler(inputIdentifier: string, enteredValue: any) {
+    setInputs((currentInput) => {
+      return {
+        ...currentInput,
+        [inputIdentifier]: enteredValue,
+      };
+    });
+  }
 
   useEffect(() => {
     const pickImageAsync = async () => {
@@ -91,7 +109,7 @@ export default function AnimalRegister() {
       }
 
       if (!result.canceled) {
-        setPhotoUrl(result.assets[0].uri);
+        inputChangedHandler("photoUrl", result.assets[0].uri);
       } else {
         alert("You did not select any image.");
       }
@@ -106,42 +124,44 @@ export default function AnimalRegister() {
   const hideDialog = () => setShowPhotoDialog(false);
 
   const handleSubmit = async () => {
-    const url = await imageHandler("images/pets/", photoUrl, name);
-
+    const url = await imageHandler(
+      "images/pets/",
+      inputs.photoUrl,
+      inputs.name
+    );
     const docData = {
-      name,
+      name: inputs.name,
       photo: url,
-      species,
-      gender,
-      size,
-      age,
-      playfull,
-      shy,
-      calm,
-      guard,
-      lovely,
-      lazy,
-      vaccinated,
-      dewormed,
-      castrated,
-      sick,
-      sickness,
-      adoptionTerm,
-      homePhotos,
-      previousVisit,
-      acompanyBeforeAdoption,
-      oneMonth,
-      threeMonths,
-      sixMonths,
-      about,
-      disable,
+      species: inputs.species,
+      gender: inputs.gender,
+      size: inputs.size,
+      age: inputs.age,
+      playfull: inputs.playfull,
+      shy: inputs.shy,
+      calm: inputs.calm,
+      guard: inputs.guard,
+      lovely: inputs.lovely,
+      lazy: inputs.lazy,
+      vaccinated: inputs.vaccinated,
+      dewormed: inputs.dewormed,
+      castrated: inputs.castrated,
+      sick: inputs.sick,
+      sickness: inputs.sickness,
+      adoptionTerm: inputs.adoptionTerm,
+      homePhotos: inputs.homePhotos,
+      previousVisit: inputs.previousVisit,
+      acompanyBeforeAdoption: inputs.acompanyBeforeAdoption,
+      periodToAcompany: inputs.periodToAcompany,
+      about: inputs.about,
+      disable: inputs.disable,
     };
     try {
-      const newDoc = await addDoc(collection(db, "pets"), docData);
+      animalSchema.parse(docData);
+      await addDoc(collection(db, "pets"), docData);
+      router.navigate("/login");
     } catch (e) {
       console.log(e);
     }
-    router.navigate("/login");
   };
 
   return (
@@ -171,10 +191,17 @@ export default function AnimalRegister() {
               <Text style={styles.subtitle}>NOME DO ANIMAL</Text>
               <InputComponent
                 lazy
-                rule={(val) => val !== ""}
+                rule={(val) => {
+                  return (
+                    baseAnimalSchema
+                      .pick({ name: true })
+                      .safeParse({ name: val })
+                      .success.toString() !== "false"
+                  );
+                }}
                 placeholder="Nome do animal"
-                value={name}
-                onChangeText={(newName) => setName(newName)}
+                value={inputs.name}
+                onChangeText={(newName) => inputChangedHandler("name", newName)}
               />
 
               <Text style={styles.subtitle}>FOTOS DO ANIMAL</Text>
@@ -182,8 +209,11 @@ export default function AnimalRegister() {
               <View style={styles.container}>
                 <Pressable onPress={() => setShowPhotoDialog(true)}>
                   <View style={styles.containerPhoto}>
-                    {photoUrl !== null ? (
-                      <Image source={{ uri: photoUrl }} style={styles.img} />
+                    {inputs.photoUrl !== null ? (
+                      <Image
+                        source={{ uri: inputs.photoUrl }}
+                        style={styles.img}
+                      />
                     ) : (
                       <>
                         <MaterialIcons
@@ -202,43 +232,52 @@ export default function AnimalRegister() {
 
               <Text style={styles.subtitle}>ESPÉCIE</Text>
               <RadioContainer
-                state={species}
-                onPress={setSpecies}
+                state={inputs.species}
+                onPress={(enteredValue: any) =>
+                  inputChangedHandler("species", enteredValue)
+                }
                 labels={["Cachorro", "Gato"]}
               />
 
               <Text style={styles.subtitle}>SEXO</Text>
               <RadioContainer
-                state={gender}
-                onPress={setGender}
+                state={inputs.gender}
+                onPress={(enteredValue: any) =>
+                  inputChangedHandler("gender", enteredValue)
+                }
                 labels={["Macho", "Fêmea"]}
               />
 
               <Text style={styles.subtitle}>PORTE</Text>
               <RadioContainer
-                state={size}
-                onPress={setSize}
+                state={inputs.size}
+                onPress={(enteredValue: any) =>
+                  inputChangedHandler("size", enteredValue)
+                }
                 labels={["Pequeno", "Médio", "Grande"]}
               />
 
               <Text style={styles.subtitle}>IDADE</Text>
               <RadioContainer
-                state={age}
-                onPress={setAge}
+                state={inputs.age}
+                onPress={(enteredValue: any) =>
+                  inputChangedHandler("age", enteredValue)
+                }
                 labels={["Filhote", "Adulto", "Idoso"]}
               />
 
               <Text style={styles.subtitle}>TEMPERAMENTO</Text>
               <CheckboxContainer
-                states={[playfull, shy, calm, guard, lovely, lazy]}
-                onPress={[
-                  setPlayfull,
-                  setShy,
-                  setCalm,
-                  setGuard,
-                  setLovely,
-                  setLazy,
+                states={[
+                  inputs.playfull,
+                  inputs.shy,
+                  inputs.calm,
+                  inputs.guard,
+                  inputs.lovely,
+                  inputs.lazy,
                 ]}
+                onPress={inputChangedHandler}
+                keys={["playfull", "shy", "calm", "guard", "lovely", "lazy"]}
                 labels={[
                   "Brincalhão",
                   "Tímido",
@@ -251,31 +290,42 @@ export default function AnimalRegister() {
 
               <Text style={styles.subtitle}>SAÚDE</Text>
               <CheckboxContainer
-                states={[vaccinated, dewormed, castrated, sick]}
-                onPress={[setVaccinated, setDewormed, setCastrated, setSick]}
+                states={[
+                  inputs.vaccinated,
+                  inputs.dewormed,
+                  inputs.castrated,
+                  inputs.sick,
+                ]}
+                onPress={inputChangedHandler}
+                keys={["vaccinated", "dewormed", "castrated", "sick"]}
                 labels={["Vacinado", "Vermifugado", "Castrado", "Doente"]}
               />
               <InputComponent
                 lazy
-                rule={(val) => val !== ""}
+                rule={(val) =>
+                  (!inputs.sick && val === "") || (inputs.sick && val !== "")
+                }
                 placeholder="Doenças do animal"
-                value={sickness}
-                onChangeText={setSickness}
+                value={inputs.sickness}
+                onChangeText={(enteredValue) =>
+                  inputChangedHandler("sickness", enteredValue)
+                }
               />
 
               <Text style={styles.subtitle}>EXIGÊNCIAS PARA ADOÇÃO</Text>
               <CheckboxContainer
                 states={[
-                  adoptionTerm,
-                  homePhotos,
-                  previousVisit,
-                  acompanyBeforeAdoption,
+                  inputs.adoptionTerm,
+                  inputs.homePhotos,
+                  inputs.previousVisit,
+                  inputs.acompanyBeforeAdoption,
                 ]}
-                onPress={[
-                  setAdoptionTerm,
-                  setHomePhotos,
-                  setPreviousVisit,
-                  setAcompanyBeforeAdoption,
+                onPress={inputChangedHandler}
+                keys={[
+                  "adoptionTerm",
+                  "homePhotos",
+                  "previousVisit",
+                  "acompanyBeforeAdoption",
                 ]}
                 labels={[
                   "Termo de adoção",
@@ -284,20 +334,32 @@ export default function AnimalRegister() {
                   "Acompanhamento pós adoção",
                 ]}
               />
-              <CheckboxContainer
-                states={[oneMonth, threeMonths, sixMonths]}
-                onPress={[setOneMonth, setThreeMonths, setSixMonths]}
-                disable={disable}
-                labels={["1 mês", "3 meses", "6 meses"]}
+
+              <RadioContainer
+                state={inputs.periodToAcompany}
+                onPress={(enteredValue: any) =>
+                  inputChangedHandler("periodToAcompany", enteredValue)
+                }
+                labels={["1 Mês", "3 Meses", "6 Meses"]}
+                disable={inputs.disable}
               />
 
               <Text style={styles.subtitle}>SOBRE O ANIMAL</Text>
               <InputComponent
                 lazy
-                rule={(val) => val !== ""}
+                rule={(val) => {
+                  return (
+                    baseAnimalSchema
+                      .pick({ about: true })
+                      .safeParse({ about: val })
+                      .success.toString() !== "false"
+                  );
+                }}
                 placeholder="Compartilhe a história do animal"
-                value={about}
-                onChangeText={setAbout}
+                value={inputs.about}
+                onChangeText={(enteredValue) =>
+                  inputChangedHandler("about", enteredValue)
+                }
               />
 
               <View style={styles.container}>

@@ -26,18 +26,28 @@ import imageHandler from "../util/functions/ImageHandler";
 
 export default function Register() {
   const insets = useSafeAreaInsets();
+  const [inputs, setInputs] = useState({
+    name: "",
+    age: "",
+    email: "",
+    state: "",
+    city: "",
+    adress: "",
+    phone: "",
+    user: "",
+    password: "",
+    passwordConfirmation: "",
+    photoUrl: null,
+  });
 
-  const [name, setName] = useState("");
-  const [age, setAge] = useState("");
-  const [email, setEmail] = useState("");
-  const [state, setState] = useState("");
-  const [city, setCity] = useState("");
-  const [adress, setAdress] = useState("");
-  const [phone, setPhone] = useState("");
-  const [user, setUser] = useState("");
-  const [password, setPassword] = useState("");
-  const [passwordConfirmation, setPasswordConfirmation] = useState("");
-  const [photoUrl, setPhotoUrl] = useState<string | null>(null);
+  function inputChangedHandler(inputIdentifier: string, enteredValue: any) {
+    setInputs((currentInput) => {
+      return {
+        ...currentInput,
+        [inputIdentifier]: enteredValue,
+      };
+    });
+  }
 
   const [showPhotoDialog, setShowPhotoDialog] = useState(false);
   const [isFromGallery, setIsFromGallery] = useState<boolean | null>(null);
@@ -58,7 +68,7 @@ export default function Register() {
       }
 
       if (!result.canceled) {
-        setPhotoUrl(result.assets[0].uri);
+        inputChangedHandler("photoUrl", result.assets[0].uri);
       } else {
         alert("You did not select any image.");
       }
@@ -71,28 +81,33 @@ export default function Register() {
   }, [showPhotoDialog, isFromGallery]);
 
   const handleSubmit = async () => {
-    const url = await imageHandler("images/users/", photoUrl, name);
+    const url = await imageHandler(
+      "images/users/",
+      inputs.photoUrl,
+      inputs.name
+    );
 
     const docData: User = {
-      name,
-      age,
-      email,
-      state,
-      city,
-      adress,
-      phone,
-      user,
-      password,
-      photo: url,
+      name: inputs.name,
+      age: inputs.age,
+      email: inputs.email,
+      state: inputs.state,
+      city: inputs.city,
+      address: inputs.adress,
+      phone: inputs.phone,
+      user: inputs.user,
+      password: inputs.password,
+      photo: url ? url : "",
     };
     try {
       const auth = getAuth(firebase);
       const newUser = await createUserWithEmailAndPassword(
         auth,
-        email,
-        password,
+        inputs.email,
+        inputs.password
       );
       if (newUser) {
+        console.log(userSchema.parse(docData));
         userSchema.parse(docData);
         await addDoc(collection(db, "users"), {
           ...docData,
@@ -100,15 +115,12 @@ export default function Register() {
         });
       }
       console.log("antes");
-      router.navigate("/login");
+      router.navigate("login");
       console.log("depois");
     } catch (e) {
       console.log(e);
     }
-
-    router.push("/login");
   };
-
   const hideDialog = () => setShowPhotoDialog(false);
 
   return (
@@ -129,76 +141,160 @@ export default function Register() {
               <Text style={styles.subtitle}>INFORMAÇÕES PESSOAIS</Text>
               <InputComponent
                 lazy
-                rule={(val) => val !== ""}
+                rule={(val) => {
+                  return (
+                    userSchema
+                      .pick({ name: true })
+                      .safeParse({ name: val })
+                      .success.toString() !== "false"
+                  );
+                }}
                 placeholder="Nome Completo"
-                value={name}
-                onChangeText={setName}
+                value={inputs.name}
+                onChangeText={(enteredValue) =>
+                  inputChangedHandler("name", enteredValue)
+                }
               />
               <InputComponent
                 lazy
-                rule={(val) => val !== ""}
+                rule={(val) => {
+                  return (
+                    userSchema
+                      .pick({ age: true })
+                      .safeParse({ age: val })
+                      .success.toString() !== "false"
+                  );
+                }}
                 placeholder="Idade"
-                value={age}
-                onChangeText={setAge}
+                keyboardType="decimal-pad"
+                value={inputs.age}
+                onChangeText={(enteredValue) =>
+                  inputChangedHandler("age", enteredValue)
+                }
               />
               <InputComponent
                 lazy
-                rule={(val) => val !== ""}
+                rule={(val) => {
+                  return (
+                    userSchema
+                      .pick({ email: true })
+                      .safeParse({ email: val })
+                      .success.toString() !== "false"
+                  );
+                }}
                 placeholder="Email"
-                value={email}
-                onChangeText={setEmail}
+                value={inputs.email}
+                onChangeText={(enteredValue) =>
+                  inputChangedHandler("email", enteredValue)
+                }
               />
               <InputComponent
                 lazy
-                rule={(val) => val !== ""}
+                rule={(val) => {
+                  return (
+                    userSchema
+                      .pick({ state: true })
+                      .safeParse({ state: val })
+                      .success.toString() !== "false"
+                  );
+                }}
                 placeholder="Estado"
-                value={state}
-                onChangeText={setState}
+                value={inputs.state}
+                onChangeText={(enteredValue) =>
+                  inputChangedHandler("state", enteredValue)
+                }
               />
               <InputComponent
                 lazy
-                rule={(val) => val !== ""}
+                rule={(val) => {
+                  return (
+                    userSchema
+                      .pick({ city: true })
+                      .safeParse({ city: val })
+                      .success.toString() !== "false"
+                  );
+                }}
                 placeholder="Cidade"
-                value={city}
-                onChangeText={setCity}
+                value={inputs.city}
+                onChangeText={(enteredValue) =>
+                  inputChangedHandler("city", enteredValue)
+                }
               />
               <InputComponent
                 lazy
-                rule={(val) => val !== ""}
+                rule={(val) => {
+                  return (
+                    userSchema
+                      .pick({ address: true })
+                      .safeParse({ address: val })
+                      .success.toString() !== "false"
+                  );
+                }}
                 placeholder="Endereço"
-                value={adress}
-                onChangeText={setAdress}
+                value={inputs.adress}
+                onChangeText={(enteredValue) =>
+                  inputChangedHandler("adress", enteredValue)
+                }
               />
               <InputComponent
                 lazy
-                rule={(val) => val !== ""}
+                rule={(val) => {
+                  return (
+                    userSchema
+                      .pick({ phone: true })
+                      .safeParse({ phone: val })
+                      .success.toString() !== "false"
+                  );
+                }}
                 placeholder="Telefone"
-                value={phone}
-                onChangeText={setPhone}
+                value={inputs.phone}
+                onChangeText={(enteredValue) =>
+                  inputChangedHandler("phone", enteredValue)
+                }
               />
               <Text style={styles.subtitle}>INFORMAÇÕES DE PERFIL</Text>
               <InputComponent
                 lazy
-                rule={(val) => val !== ""}
+                rule={(val) => {
+                  return (
+                    userSchema
+                      .pick({ user: true })
+                      .safeParse({ user: val })
+                      .success.toString() !== "false"
+                  );
+                }}
                 placeholder="Nome de Usuário"
-                value={user}
-                onChangeText={setUser}
+                value={inputs.user}
+                onChangeText={(enteredValue) =>
+                  inputChangedHandler("user", enteredValue)
+                }
               />
               <InputComponent
                 lazy
                 type="password"
-                rule={(val) => val !== ""}
+                rule={(val) => {
+                  return (
+                    userSchema
+                      .pick({ password: true })
+                      .safeParse({ password: val })
+                      .success.toString() !== "false"
+                  );
+                }}
                 placeholder="Senha"
-                value={password}
-                onChangeText={setPassword}
+                value={inputs.password}
+                onChangeText={(enteredValue) =>
+                  inputChangedHandler("password", enteredValue)
+                }
               />
               <InputComponent
                 lazy
                 type="password"
-                rule={(val) => val === password}
+                rule={(val) => val === inputs.password}
                 placeholder="Confirmação de Senha"
-                value={passwordConfirmation}
-                onChangeText={setPasswordConfirmation}
+                value={inputs.passwordConfirmation}
+                onChangeText={(enteredValue) =>
+                  inputChangedHandler("passwordConfirmation", enteredValue)
+                }
               />
 
               <Text style={styles.subtitle}>FOTO DE PERFIL</Text>
@@ -206,8 +302,11 @@ export default function Register() {
               <View style={styles.container}>
                 <Pressable onPress={() => setShowPhotoDialog(true)}>
                   <View style={styles.containerPhoto}>
-                    {photoUrl !== null ? (
-                      <Image source={{ uri: photoUrl }} style={styles.img} />
+                    {inputs.photoUrl !== null ? (
+                      <Image
+                        source={{ uri: inputs.photoUrl }}
+                        style={styles.img}
+                      />
                     ) : (
                       <>
                         <MaterialIcons

@@ -1,18 +1,21 @@
-import { StyleSheet, Text, View } from "react-native";
-import Colors from "../util/Colors";
-import { Checkbox } from "react-native-paper";
 import { useEffect } from "react";
+import { StyleSheet, Text, View } from "react-native";
+import { Checkbox } from "react-native-paper";
+
+import Colors from "../util/Colors";
 
 function CheckboxContainer({
   labels,
   disable = false,
   onPress,
+  keys,
   states,
 }: {
-  labels: Array<string>;
+  labels: string[];
   disable?: boolean;
-  onPress: Array<any>;
-  states: Array<boolean>;
+  onPress: any;
+  keys: string[];
+  states: boolean[];
 }) {
   return (
     <View style={styles.container}>
@@ -24,7 +27,7 @@ function CheckboxContainer({
               disabled={disable}
               color={Colors.textAuxSecondary}
               uncheckedColor={Colors.textAuxSecondary}
-              onPress={() => onPress[index](!state)}
+              onPress={() => onPress(keys[index], !state)}
             />
             <Text style={styles.textContainerPhoto}>{labels[index]}</Text>
           </View>
