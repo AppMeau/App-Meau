@@ -6,13 +6,15 @@ function CustomButton({
   children,
   backgroundColor,
   onPress,
+  width
 }: {
   children: string;
   backgroundColor: string;
   onPress: any;
+  width ?: number;
 }) {
   return (
-    <View style={[styles.outerContainer, { backgroundColor }]}>
+    <View style={[styles.outerContainer, { backgroundColor, width }]}>
       <Pressable
         style={({ pressed }) =>
           pressed

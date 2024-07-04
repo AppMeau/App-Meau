@@ -39,6 +39,14 @@ export default function Layout() {
             header: ({navigation, options}) => <Header color={Colors.blueSecundary} title={options.title} search onDrawerClick={navigation.toggleDrawer}/>,
           }}
         />
+        <Drawer.Screen
+          name="animalDetails" 
+          options={{
+            drawerLabel: 'Detalhes do Animal',
+            title: 'Detalhes do Animal',
+            header: ({navigation, options}) => <Header color={Colors.blueSecundary} title={options.title} onDrawerClick={navigation.toggleDrawer}/>,
+          }}
+        />
       </Drawer>
     </GestureHandlerRootView>    
   );

@@ -10,6 +10,7 @@ type componentProps = {
   icon?: "googleplus" | "facebook";
   link: string;
   children: string | JSX.Element | JSX.Element[];
+  width ?: number;
 };
 export default function ButtonComponent(props: componentProps) {
   const [fontsLoaded, fontError] = useFonts({
@@ -28,6 +29,7 @@ export default function ButtonComponent(props: componentProps) {
           gap: 6,
           justifyContent: "center",
           alignItems: "center",
+          width: props.width
         }}
       >
         {props.icon ? (
