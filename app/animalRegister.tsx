@@ -168,9 +168,7 @@ export default function AnimalRegister() {
     <Provider>
       <View style={{ flex: 1 }}>
         <ScrollView>
-          <View
-            style={[styles.container, { paddingTop: insets.top + headerSize }]}
-          >
+          <View style={[styles.container]}>
             <View style={styles.formContainer}>
               <Text>Tenho interesse em cadastrar o animal para:</Text>
               <View style={styles.buttonsContainer}>

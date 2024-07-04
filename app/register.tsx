@@ -124,9 +124,7 @@ export default function Register() {
     <Provider>
       <View style={{ flex: 1 }}>
         <ScrollView>
-          <View
-            style={[styles.container, { paddingTop: insets.top + headerSize }]}
-          >
+          <View style={[styles.container]}>
             <View style={styles.notice}>
               <Text style={styles.textNotice}>
                 As informações preenchidas serão divulgadas apenas para a pessoa
