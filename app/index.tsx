@@ -1,23 +1,24 @@
-import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View, Image } from "react-native";
-import { Link, router } from "expo-router";
-import Colors from "../util/Colors";
 import { Ionicons } from "@expo/vector-icons";
 import { useFonts } from "expo-font";
-import ButtonComponent from "../components/button";
+import { Link, router } from "expo-router";
+import { StatusBar } from "expo-status-bar";
+import { getAuth } from "firebase/auth";
+import { StyleSheet, Text, View, Image } from "react-native";
+import { Button } from "react-native-paper";
 import {
   useSafeAreaInsets,
   SafeAreaProvider,
 } from "react-native-safe-area-context";
+
+import ButtonComponent from "../components/button";
 import { headerSize } from "../components/header";
-import { getAuth } from "firebase/auth";
+import Colors from "../util/Colors";
 import { firebase } from "../util/firebase";
-import { Button } from "react-native-paper";
 
 export default function App() {
   const insets = useSafeAreaInsets();
   const auth = getAuth(firebase);
-  let [fontsLoaded] = useFonts({
+  const [fontsLoaded] = useFonts({
     "roboto-regular": require("../assets/fonts/Roboto-Regular.ttf"),
     "roboto-medium": require("../assets/fonts/Roboto-Medium.ttf"),
     "courgette-regular": require("../assets/fonts/Courgette-Regular.ttf"),

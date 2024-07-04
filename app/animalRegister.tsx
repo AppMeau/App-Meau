@@ -1,8 +1,8 @@
 import { MaterialIcons } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
 import { router } from "expo-router";
-import { collection, addDoc } from "firebase/firestore";
-import { useEffect, useState } from "react";
+import { collection, doc, setDoc, addDoc } from "firebase/firestore";
+import { lazy, useEffect, useState } from "react";
 import {
   Image,
   Pressable,
@@ -11,7 +11,7 @@ import {
   Text,
   View,
 } from "react-native";
-import { Button } from "react-native-paper";
+import { Button, Dialog, Portal, Provider } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import CheckboxContainer from "../components/checkboxContainer";
@@ -65,6 +65,9 @@ export default function AnimalRegister() {
     disable: false,
   });
 
+  const [showPhotoDialog, setShowPhotoDialog] = useState(false);
+  const [isFromGallery, setIsFromGallery] = useState<boolean | null>(null);
+
   useEffect(() => {
     if (inputs.acompanyBeforeAdoption === true) {
       inputChangedHandler("disable", false);
@@ -90,11 +93,41 @@ export default function AnimalRegister() {
     });
   }
 
+  useEffect(() => {
+    const pickImageAsync = async () => {
+      let result;
+      if (isFromGallery) {
+        result = await ImagePicker.launchImageLibraryAsync({
+          allowsEditing: true,
+          quality: 1,
+        });
+      } else {
+        result = await ImagePicker.launchCameraAsync({
+          allowsEditing: true,
+          quality: 1,
+        });
+      }
+
+      if (!result.canceled) {
+        inputChangedHandler("photoUrl", result.assets[0].uri);
+      } else {
+        alert("You did not select any image.");
+      }
+    };
+
+    if (isFromGallery !== null) {
+      pickImageAsync();
+      setIsFromGallery(null);
+    }
+  }, [showPhotoDialog, isFromGallery]);
+
+  const hideDialog = () => setShowPhotoDialog(false);
+
   const handleSubmit = async () => {
     const url = await imageHandler(
       "images/pets/",
       inputs.photoUrl,
-      inputs.name,
+      inputs.name
     );
     const docData = {
       name: inputs.name,
@@ -131,228 +164,247 @@ export default function AnimalRegister() {
     }
   };
 
-  const pickImageAsync = async () => {
-    const result = await ImagePicker.launchImageLibraryAsync({
-      allowsEditing: true,
-      quality: 1,
-    });
-
-    if (!result.canceled) {
-      inputChangedHandler("photoUrl", result.assets[0].uri);
-    } else {
-      alert("You did not select any image.");
-    }
-  };
-
   return (
-    <View style={{ flex: 1 }}>
-      <ScrollView>
-        <View
-          style={[styles.container, { paddingTop: insets.top + headerSize }]}
-        >
-          <View style={styles.formContainer}>
-            <Text>Tenho interesse em cadastrar o animal para:</Text>
-            <View style={styles.buttonsContainer}>
-              <Button
-                mode="elevated"
-                buttonColor={Colors.yellowPrimary}
-                textColor={Colors.textAuxPrimary}
-                contentStyle={styles.buttons}
-                theme={{ roundness: 1 }}
-                labelStyle={styles.buttonsText}
-              >
-                ADOÇÃO
-              </Button>
-            </View>
+    <Provider>
+      <View style={{ flex: 1 }}>
+        <ScrollView>
+          <View
+            style={[styles.container, { paddingTop: insets.top + headerSize }]}
+          >
+            <View style={styles.formContainer}>
+              <Text>Tenho interesse em cadastrar o animal para:</Text>
+              <View style={styles.buttonsContainer}>
+                <Button
+                  mode="elevated"
+                  buttonColor={Colors.yellowPrimary}
+                  textColor={Colors.textAuxPrimary}
+                  contentStyle={styles.buttons}
+                  theme={{ roundness: 1 }}
+                  labelStyle={styles.buttonsText}
+                >
+                  ADOÇÃO
+                </Button>
+              </View>
 
-            <Text style={styles.sectionText}>Adoção</Text>
+              <Text style={styles.sectionText}>Adoção</Text>
 
-            <Text style={styles.subtitle}>NOME DO ANIMAL</Text>
-            <InputComponent
-              lazy
-              rule={(val) => {
-                return (
-                  baseAnimalSchema
-                    .pick({ name: true })
-                    .safeParse({ name: val })
-                    .success.toString() !== "false"
-                );
-              }}
-              placeholder="Nome do animal"
-              value={inputs.name}
-              onChangeText={(newName) => inputChangedHandler("name", newName)}
-            />
+              <Text style={styles.subtitle}>NOME DO ANIMAL</Text>
+              <InputComponent
+                lazy
+                rule={(val) => {
+                  return (
+                    baseAnimalSchema
+                      .pick({ name: true })
+                      .safeParse({ name: val })
+                      .success.toString() !== "false"
+                  );
+                }}
+                placeholder="Nome do animal"
+                value={inputs.name}
+                onChangeText={(newName) => inputChangedHandler("name", newName)}
+              />
 
-            <Text style={styles.subtitle}>FOTOS DO ANIMAL</Text>
+              <Text style={styles.subtitle}>FOTOS DO ANIMAL</Text>
 
-            <View style={styles.container}>
-              <Pressable onPress={pickImageAsync}>
-                <View style={styles.containerPhoto}>
-                  {inputs.photoUrl !== null ? (
-                    <Image
-                      source={{ uri: inputs.photoUrl }}
-                      style={styles.img}
-                    />
-                  ) : (
-                    <>
-                      <MaterialIcons
-                        name="control-point"
-                        size={24}
-                        color={Colors.textAuxSecondary}
+              <View style={styles.container}>
+                <Pressable onPress={() => setShowPhotoDialog(true)}>
+                  <View style={styles.containerPhoto}>
+                    {inputs.photoUrl !== null ? (
+                      <Image
+                        source={{ uri: inputs.photoUrl }}
+                        style={styles.img}
                       />
-                      <Text style={styles.textContainerPhoto}>
-                        Adicionar foto
-                      </Text>
-                    </>
-                  )}
-                </View>
-              </Pressable>
-            </View>
+                    ) : (
+                      <>
+                        <MaterialIcons
+                          name="control-point"
+                          size={24}
+                          color={Colors.textAuxSecondary}
+                        />
+                        <Text style={styles.textContainerPhoto}>
+                          Adicionar foto
+                        </Text>
+                      </>
+                    )}
+                  </View>
+                </Pressable>
+              </View>
 
-            <Text style={styles.subtitle}>ESPÉCIE</Text>
-            <RadioContainer
-              state={inputs.species}
-              onPress={(enteredValue: any) =>
-                inputChangedHandler("species", enteredValue)
-              }
-              labels={["Cachorro", "Gato"]}
-            />
+              <Text style={styles.subtitle}>ESPÉCIE</Text>
+              <RadioContainer
+                state={inputs.species}
+                onPress={(enteredValue: any) =>
+                  inputChangedHandler("species", enteredValue)
+                }
+                labels={["Cachorro", "Gato"]}
+              />
 
-            <Text style={styles.subtitle}>SEXO</Text>
-            <RadioContainer
-              state={inputs.gender}
-              onPress={(enteredValue: any) =>
-                inputChangedHandler("gender", enteredValue)
-              }
-              labels={["Macho", "Fêmea"]}
-            />
+              <Text style={styles.subtitle}>SEXO</Text>
+              <RadioContainer
+                state={inputs.gender}
+                onPress={(enteredValue: any) =>
+                  inputChangedHandler("gender", enteredValue)
+                }
+                labels={["Macho", "Fêmea"]}
+              />
 
-            <Text style={styles.subtitle}>PORTE</Text>
-            <RadioContainer
-              state={inputs.size}
-              onPress={(enteredValue: any) =>
-                inputChangedHandler("size", enteredValue)
-              }
-              labels={["Pequeno", "Médio", "Grande"]}
-            />
+              <Text style={styles.subtitle}>PORTE</Text>
+              <RadioContainer
+                state={inputs.size}
+                onPress={(enteredValue: any) =>
+                  inputChangedHandler("size", enteredValue)
+                }
+                labels={["Pequeno", "Médio", "Grande"]}
+              />
 
-            <Text style={styles.subtitle}>IDADE</Text>
-            <RadioContainer
-              state={inputs.age}
-              onPress={(enteredValue: any) =>
-                inputChangedHandler("age", enteredValue)
-              }
-              labels={["Filhote", "Adulto", "Idoso"]}
-            />
+              <Text style={styles.subtitle}>IDADE</Text>
+              <RadioContainer
+                state={inputs.age}
+                onPress={(enteredValue: any) =>
+                  inputChangedHandler("age", enteredValue)
+                }
+                labels={["Filhote", "Adulto", "Idoso"]}
+              />
 
-            <Text style={styles.subtitle}>TEMPERAMENTO</Text>
-            <CheckboxContainer
-              states={[
-                inputs.playfull,
-                inputs.shy,
-                inputs.calm,
-                inputs.guard,
-                inputs.lovely,
-                inputs.lazy,
-              ]}
-              onPress={inputChangedHandler}
-              keys={["playfull", "shy", "calm", "guard", "lovely", "lazy"]}
-              labels={[
-                "Brincalhão",
-                "Tímido",
-                "Calmo",
-                "Guarda",
-                "Amoroso",
-                "Preguiçoso",
-              ]}
-            />
+              <Text style={styles.subtitle}>TEMPERAMENTO</Text>
+              <CheckboxContainer
+                states={[
+                  inputs.playfull,
+                  inputs.shy,
+                  inputs.calm,
+                  inputs.guard,
+                  inputs.lovely,
+                  inputs.lazy,
+                ]}
+                onPress={inputChangedHandler}
+                keys={["playfull", "shy", "calm", "guard", "lovely", "lazy"]}
+                labels={[
+                  "Brincalhão",
+                  "Tímido",
+                  "Calmo",
+                  "Guarda",
+                  "Amoroso",
+                  "Preguiçoso",
+                ]}
+              />
 
-            <Text style={styles.subtitle}>SAÚDE</Text>
-            <CheckboxContainer
-              states={[
-                inputs.vaccinated,
-                inputs.dewormed,
-                inputs.castrated,
-                inputs.sick,
-              ]}
-              onPress={inputChangedHandler}
-              keys={["vaccinated", "dewormed", "castrated", "sick"]}
-              labels={["Vacinado", "Vermifugado", "Castrado", "Doente"]}
-            />
-            <InputComponent
-              lazy
-              rule={(val) =>
-                (!inputs.sick && val === "") || (inputs.sick && val !== "")
-              }
-              placeholder="Doenças do animal"
-              value={inputs.sickness}
-              onChangeText={(enteredValue) =>
-                inputChangedHandler("sickness", enteredValue)
-              }
-            />
+              <Text style={styles.subtitle}>SAÚDE</Text>
+              <CheckboxContainer
+                states={[
+                  inputs.vaccinated,
+                  inputs.dewormed,
+                  inputs.castrated,
+                  inputs.sick,
+                ]}
+                onPress={inputChangedHandler}
+                keys={["vaccinated", "dewormed", "castrated", "sick"]}
+                labels={["Vacinado", "Vermifugado", "Castrado", "Doente"]}
+              />
+              <InputComponent
+                lazy
+                rule={(val) =>
+                  (!inputs.sick && val === "") || (inputs.sick && val !== "")
+                }
+                placeholder="Doenças do animal"
+                value={inputs.sickness}
+                onChangeText={(enteredValue) =>
+                  inputChangedHandler("sickness", enteredValue)
+                }
+              />
 
-            <Text style={styles.subtitle}>EXIGÊNCIAS PARA ADOÇÃO</Text>
-            <CheckboxContainer
-              states={[
-                inputs.adoptionTerm,
-                inputs.homePhotos,
-                inputs.previousVisit,
-                inputs.acompanyBeforeAdoption,
-              ]}
-              onPress={inputChangedHandler}
-              keys={[
-                "adoptionTerm",
-                "homePhotos",
-                "previousVisit",
-                "acompanyBeforeAdoption",
-              ]}
-              labels={[
-                "Termo de adoção",
-                "Fotos da casa",
-                "Visita prévia ao animal",
-                "Acompanhamento pós adoção",
-              ]}
-            />
+              <Text style={styles.subtitle}>EXIGÊNCIAS PARA ADOÇÃO</Text>
+              <CheckboxContainer
+                states={[
+                  inputs.adoptionTerm,
+                  inputs.homePhotos,
+                  inputs.previousVisit,
+                  inputs.acompanyBeforeAdoption,
+                ]}
+                onPress={inputChangedHandler}
+                keys={[
+                  "adoptionTerm",
+                  "homePhotos",
+                  "previousVisit",
+                  "acompanyBeforeAdoption",
+                ]}
+                labels={[
+                  "Termo de adoção",
+                  "Fotos da casa",
+                  "Visita prévia ao animal",
+                  "Acompanhamento pós adoção",
+                ]}
+              />
 
-            <RadioContainer
-              state={inputs.periodToAcompany}
-              onPress={(enteredValue: any) =>
-                inputChangedHandler("periodToAcompany", enteredValue)
-              }
-              labels={["1 Mês", "3 Meses", "6 Meses"]}
-              disable={inputs.disable}
-            />
+              <RadioContainer
+                state={inputs.periodToAcompany}
+                onPress={(enteredValue: any) =>
+                  inputChangedHandler("periodToAcompany", enteredValue)
+                }
+                labels={["1 Mês", "3 Meses", "6 Meses"]}
+                disable={inputs.disable}
+              />
 
-            <Text style={styles.subtitle}>SOBRE O ANIMAL</Text>
-            <InputComponent
-              lazy
-              rule={(val) => {
-                return (
-                  baseAnimalSchema
-                    .pick({ about: true })
-                    .safeParse({ about: val })
-                    .success.toString() !== "false"
-                );
-              }}
-              placeholder="Compartilhe a história do animal"
-              value={inputs.about}
-              onChangeText={(enteredValue) =>
-                inputChangedHandler("about", enteredValue)
-              }
-            />
+              <Text style={styles.subtitle}>SOBRE O ANIMAL</Text>
+              <InputComponent
+                lazy
+                rule={(val) => {
+                  return (
+                    baseAnimalSchema
+                      .pick({ about: true })
+                      .safeParse({ about: val })
+                      .success.toString() !== "false"
+                  );
+                }}
+                placeholder="Compartilhe a história do animal"
+                value={inputs.about}
+                onChangeText={(enteredValue) =>
+                  inputChangedHandler("about", enteredValue)
+                }
+              />
 
-            <View style={styles.container}>
-              <CustomButton
-                backgroundColor={Colors.yellowPrimary}
-                onPress={handleSubmit}
-              >
-                COLOCAR PARA ADOÇÃO
-              </CustomButton>
+              <View style={styles.container}>
+                <CustomButton
+                  backgroundColor={Colors.yellowPrimary}
+                  onPress={handleSubmit}
+                >
+                  COLOCAR PARA ADOÇÃO
+                </CustomButton>
+              </View>
             </View>
           </View>
-        </View>
-      </ScrollView>
-    </View>
+
+          <Portal>
+            <Dialog
+              visible={showPhotoDialog}
+              onDismiss={hideDialog}
+              style={styles.dialog}
+            >
+              <Dialog.Title>Escolha uma opção:</Dialog.Title>
+              <Dialog.Actions>
+                <Button
+                  onPress={() => {
+                    setIsFromGallery(false);
+                    hideDialog();
+                  }}
+                  textColor={Colors.bluePrimary}
+                >
+                  Câmera
+                </Button>
+                <Button
+                  onPress={() => {
+                    setIsFromGallery(true);
+                    hideDialog();
+                  }}
+                  textColor={Colors.bluePrimary}
+                >
+                  Galeria
+                </Button>
+              </Dialog.Actions>
+            </Dialog>
+          </Portal>
+        </ScrollView>
+      </View>
+    </Provider>
   );
 }
 
@@ -428,6 +480,11 @@ const styles = StyleSheet.create({
   radioButtonContainer: {
     flex: 1,
     flexDirection: "row",
+    alignItems: "center",
+  },
+  dialog: {
+    borderRadius: 8,
+    backgroundColor: "white",
     alignItems: "center",
   },
 });
