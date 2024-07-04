@@ -107,16 +107,13 @@ export default function Register() {
         inputs.password
       );
       if (newUser) {
-        console.log(userSchema.parse(docData));
         userSchema.parse(docData);
         await addDoc(collection(db, "users"), {
           ...docData,
           uid: newUser.user.uid,
         });
       }
-      console.log("antes");
       router.navigate("login");
-      console.log("depois");
     } catch (e) {
       console.log(e);
     }
