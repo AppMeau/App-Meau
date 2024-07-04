@@ -1,6 +1,5 @@
 import {
   Image,
-  Pressable,
   ScrollView,
   StyleSheet,
   Text,
@@ -25,7 +24,7 @@ export default function AnimalDetails() {
   
   useEffect(() => {
     async function fetchPets(){
-        const colSnap = await getDocs(query (colRef, where("__name__",  "==", "LtQfVoA5m3jDsYgGVzo0")))
+        const colSnap = await getDocs(query (colRef, where("__name__",  "==", "I4qkfZ42Ijf1OHs6yzxq")))
         const petinfo = colSnap.docs.map((doc) => doc.data());
         console.log(petinfo)
         setPet(petinfo[0]);
@@ -85,7 +84,7 @@ export default function AnimalDetails() {
      return (
         <View style={{ flex: 1 }}>
         <ScrollView>
-            <View style={[styles.container]}>
+            <View style={styles.container}>
             <View style={styles.pictureContainer}>
                 <Image style={styles.picture} source={{ uri: pet.photo}} />
             </View>
@@ -152,14 +151,14 @@ export default function AnimalDetails() {
               <CustomButton
                 backgroundColor={Colors.yellowPrimary}
                 onPress={null}
-                width={150}
+                width={175}
               >
                 VER INTERESSADOS
               </CustomButton>
               <CustomButton
                 backgroundColor={Colors.yellowPrimary}
                 onPress={null}
-                width={150}
+                width={175}
               >
                 REMOVER PET
               </CustomButton>
@@ -177,12 +176,14 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     width: "100%",
+    height:"100%",
     alignItems: "flex-start",
     gap: 28,
+    paddingBottom: 50,
   },
   pictureContainer:{
     width: "100%",
-    height: "30%"
+    height: 250
   },
   picture:{
     width: "100%",
@@ -209,6 +210,5 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-around",
     width: "100%",
-    
   }
 });
