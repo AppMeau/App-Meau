@@ -94,7 +94,7 @@ export default function AnimalRegister() {
     const url = await imageHandler(
       "images/pets/",
       inputs.photoUrl,
-      inputs.name,
+      inputs.name
     );
     const docData = {
       name: inputs.name,
@@ -147,9 +147,7 @@ export default function AnimalRegister() {
   return (
     <View style={{ flex: 1 }}>
       <ScrollView>
-        <View
-          style={[styles.container, { paddingTop: insets.top + headerSize }]}
-        >
+        <View style={[styles.container]}>
           <View style={styles.formContainer}>
             <Text>Tenho interesse em cadastrar o animal para:</Text>
             <View style={styles.buttonsContainer}>

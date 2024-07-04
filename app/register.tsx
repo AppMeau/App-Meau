@@ -52,7 +52,7 @@ export default function Register() {
     const url = await imageHandler(
       "images/users/",
       inputs.photoUrl,
-      inputs.name,
+      inputs.name
     );
 
     const docData: User = {
@@ -72,7 +72,7 @@ export default function Register() {
       const newUser = await createUserWithEmailAndPassword(
         auth,
         inputs.email,
-        inputs.password,
+        inputs.password
       );
       if (newUser) {
         console.log(userSchema.parse(docData));
@@ -106,9 +106,7 @@ export default function Register() {
   return (
     <View style={{ flex: 1 }}>
       <ScrollView>
-        <View
-          style={[styles.container, { paddingTop: insets.top + headerSize }]}
-        >
+        <View style={[styles.container]}>
           <View style={styles.notice}>
             <Text style={styles.textNotice}>
               As informações preenchidas serão divulgadas apenas para a pessoa
