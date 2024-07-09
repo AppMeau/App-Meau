@@ -1,4 +1,5 @@
-import { useEffect } from "react";
+import { Roboto_400Regular } from "@expo-google-fonts/roboto";
+import { useFonts } from "expo-font";
 import { StyleSheet, Text, View } from "react-native";
 import { Checkbox } from "react-native-paper";
 
@@ -17,6 +18,9 @@ function CheckboxContainer({
   keys: string[];
   states: boolean[];
 }) {
+  useFonts({
+    Roboto_400Regular,
+  });
   return (
     <View style={styles.container}>
       {states.map((state, index) => {
@@ -51,7 +55,7 @@ const styles = StyleSheet.create({
   },
   textContainerPhoto: {
     color: Colors.textAuxSecondary,
-    fontFamily: "roboto-regular",
+    fontFamily: "Roboto_400Regular",
     fontSize: 14,
   },
 });

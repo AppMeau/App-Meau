@@ -1,18 +1,15 @@
-import { Alert, StyleSheet, Text, View } from "react-native";
-import ButtonComponent from "../components/button";
-import InputComponent from "../components/input";
-import React from "react";
-import Header, { headerSize } from "../components/header";
-import Colors from "../util/Colors";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-import { firebase } from "../util/firebase";
-import CustomButton from "../components/customButton";
 import { router } from "expo-router";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import React from "react";
+import { Alert, StyleSheet, View } from "react-native";
+
+import ButtonComponent from "../components/button";
+import CustomButton from "../components/customButton";
+import InputComponent from "../components/input";
+import Colors from "../util/Colors";
+import { firebase } from "../util/firebase";
 
 export default function Page() {
-  const insets = useSafeAreaInsets();
 
   const [user, setUser] = React.useState("");
   const [password, setPassword] = React.useState("");
@@ -20,7 +17,7 @@ export default function Page() {
   const auth = () => {
     signInWithEmailAndPassword(getAuth(firebase), user, password)
       .then((userCredential) => {
-        const user = userCredential.user;
+        // const user = userCredential.user;
         Alert.alert("logado com sucesso");
         router.navigate("/");
       })
