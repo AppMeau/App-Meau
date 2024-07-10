@@ -32,7 +32,7 @@ export default function AnimalRegister() {
   useFonts({
     Roboto_400Regular,
   });
-  const insets = useSafeAreaInsets();
+
   const [inputs, setInputs] = useState({
     name: "",
     photoUrl: null,
@@ -71,6 +71,7 @@ export default function AnimalRegister() {
 
   const [showPhotoDialog, setShowPhotoDialog] = useState(false);
   const [isFromGallery, setIsFromGallery] = useState<boolean | null>(null);
+  const [disableSickness, setDisableSickness] = useState(false);
 
   useEffect(() => {
     if (inputs.acompanyBeforeAdoption === true) {
@@ -85,6 +86,9 @@ export default function AnimalRegister() {
   useEffect(() => {
     if (inputs.sick === false) {
       inputChangedHandler("sickness", "");
+      setDisableSickness(true);
+    } else {
+      setDisableSickness(false);
     }
   }, [inputs.sick]);
 
@@ -312,6 +316,7 @@ export default function AnimalRegister() {
                 onChangeText={(enteredValue) =>
                   inputChangedHandler("sickness", enteredValue)
                 }
+                disabled={disableSickness}
               />
 
               <Text style={styles.subtitle}>EXIGÊNCIAS PARA ADOÇÃO</Text>

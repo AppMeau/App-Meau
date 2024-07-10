@@ -1,12 +1,21 @@
 import { Ionicons } from "@expo/vector-icons";
 import { Roboto_400Regular } from "@expo-google-fonts/roboto";
 import { useFonts } from "expo-font";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { StyleSheet, View, TextInput, KeyboardTypeOptions } from "react-native";
-// import { TextInput } from "react-native-paper";
 
 type textContentType = "password" | "username" | "name";
-type props = {
+
+export default function InputComponent({
+  type,
+  keyboardType,
+  lazy,
+  rule,
+  placeholder,
+  value,
+  onChangeText,
+  disabled,
+}: {
   type?: textContentType;
   keyboardType?: KeyboardTypeOptions;
   lazy?: boolean;
@@ -14,14 +23,17 @@ type props = {
   placeholder: string;
   value: string;
   onChangeText: React.Dispatch<React.SetStateAction<string>>;
-};
-
-export default function InputComponent(props: props) {
+  disabled?: boolean;
+}) {
   useFonts({
     Roboto_400Regular,
   });
   const [focused, setFocus] = useState(false);
   const [isValid, setValid] = useState<null | boolean>(null);
+
+  useEffect(() => {
+    if (disabled) setValid(null);
+  }, [disabled]);
 
   return (
     <View
@@ -32,32 +44,33 @@ export default function InputComponent(props: props) {
       }}
     >
       <TextInput
-        textContentType={props.type ? props.type : "none"}
-        secureTextEntry={props.type === "password"}
+        editable={!disabled}
+        textContentType={type ? type : "none"}
+        secureTextEntry={type === "password"}
         style={[
           styles.input,
           isValid === null || isValid ? { color: "#575757" } : { color: "red" },
         ]}
-        value={props.value}
-        onChangeText={props.onChangeText}
-        placeholder={props.placeholder}
+        value={value}
+        onChangeText={onChangeText}
+        placeholder={placeholder}
         placeholderTextColor={isValid === null || isValid ? "#bdbdbd" : "red"}
         onFocus={() => {
           setFocus(true);
         }}
         onChange={(e) => {
-          if (!props.lazy) {
-            if (props.rule) {
-              setValid(props.rule(e.nativeEvent.text));
+          if (!lazy) {
+            if (rule) {
+              setValid(rule(e.nativeEvent.text));
             }
           }
         }}
-        keyboardType={props.keyboardType ? props.keyboardType : "default"}
+        keyboardType={keyboardType ? keyboardType : "default"}
         onEndEditing={(e) => {
           setFocus(false);
-          if (props.lazy) {
-            if (props.rule) {
-              setValid(props.rule(e.nativeEvent.text));
+          if (lazy) {
+            if (rule) {
+              setValid(rule(e.nativeEvent.text));
             }
           }
         }}
