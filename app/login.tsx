@@ -10,7 +10,6 @@ import Colors from "../util/Colors";
 import { firebase } from "../util/firebase";
 
 export default function Page() {
-
   const [user, setUser] = React.useState("");
   const [password, setPassword] = React.useState("");
 
