@@ -28,6 +28,7 @@ export default function Layout() {
           options={{
             drawerLabel: "Login",
             title: "Login",
+            unmountOnBlur: true,
             header: ({ navigation, options }) => (
               <Header
                 color={Colors.blueSecundary}
@@ -42,6 +43,7 @@ export default function Layout() {
           options={{
             drawerLabel: "Cadastro Pessoal",
             title: "Cadastro Pessoal",
+            unmountOnBlur: true,
             header: ({ navigation, options }) => (
               <Header
                 color={Colors.blueSecundary}
@@ -57,6 +59,7 @@ export default function Layout() {
           options={{
             drawerLabel: "Cadastro Animal",
             title: "Cadastro Animal",
+            unmountOnBlur: true,
             header: ({ navigation, options }) => (
               <Header
                 color={Colors.blueSecundary}
