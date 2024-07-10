@@ -15,7 +15,7 @@ export default function InputComponent({
   value,
   onChangeText,
   disabled,
-  valid,
+  valid = true,
 }: {
   type?: textContentType;
   keyboardType?: KeyboardTypeOptions;

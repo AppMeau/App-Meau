@@ -324,7 +324,6 @@ export default function AnimalRegister() {
                   inputChangedHandler("sickness", enteredValue)
                 }
                 disabled={disableSickness}
-                valid
               />
 
               <Text style={styles.subtitle}>EXIGÊNCIAS PARA ADOÇÃO</Text>
