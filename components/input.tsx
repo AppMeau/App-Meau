@@ -15,6 +15,7 @@ export default function InputComponent({
   value,
   onChangeText,
   disabled,
+  valid,
 }: {
   type?: textContentType;
   keyboardType?: KeyboardTypeOptions;
@@ -24,6 +25,7 @@ export default function InputComponent({
   value: string;
   onChangeText: React.Dispatch<React.SetStateAction<string>>;
   disabled?: boolean;
+  valid?: boolean;
 }) {
   useFonts({
     Roboto_400Regular,
@@ -32,8 +34,8 @@ export default function InputComponent({
   const [isValid, setValid] = useState<null | boolean>(null);
 
   useEffect(() => {
-    if (disabled) setValid(null);
-  }, [disabled]);
+    if (disabled || !valid) setValid(null);
+  }, [disabled, valid]);
 
   return (
     <View
@@ -75,7 +77,7 @@ export default function InputComponent({
           }
         }}
       />
-      {isValid ? (
+      {isValid && valid ? (
         <Ionicons
           name="checkmark"
           style={{ padding: 0 }}
