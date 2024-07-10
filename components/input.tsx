@@ -1,5 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
-import React, { Key, useState } from "react";
+import { Roboto_400Regular } from "@expo-google-fonts/roboto";
+import { useFonts } from "expo-font";
+import React, { useState } from "react";
 import { StyleSheet, View, TextInput, KeyboardTypeOptions } from "react-native";
 // import { TextInput } from "react-native-paper";
 
@@ -15,6 +17,9 @@ type props = {
 };
 
 export default function InputComponent(props: props) {
+  useFonts({
+    Roboto_400Regular,
+  });
   const [focused, setFocus] = useState(false);
   const [isValid, setValid] = useState<null | boolean>(null);
 
@@ -88,6 +93,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     justifyContent: "center",
     includeFontPadding: false,
-    fontFamily: "roboto-regular",
+    fontFamily: "Roboto_400Regular",
   },
 });

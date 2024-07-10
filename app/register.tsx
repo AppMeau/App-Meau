@@ -1,8 +1,10 @@
 import { MaterialIcons } from "@expo/vector-icons";
+import { Roboto_400Regular } from "@expo-google-fonts/roboto";
+import { useFonts } from "expo-font";
 import * as ImagePicker from "expo-image-picker";
 import { router } from "expo-router";
 import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
-import { collection, doc, setDoc, addDoc } from "firebase/firestore";
+import { collection, addDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import {
   Image,
@@ -13,10 +15,8 @@ import {
   View,
 } from "react-native";
 import { Button, Dialog, Portal, Provider } from "react-native-paper";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import CustomButton from "../components/customButton";
-import Header, { headerSize } from "../components/header";
 import InputComponent from "../components/input";
 import type { User } from "../schemas/UserRegister/userRegister";
 import { userSchema } from "../schemas/UserRegister/userRegister";
@@ -25,7 +25,9 @@ import { db, firebase } from "../util/firebase";
 import imageHandler from "../util/functions/ImageHandler";
 
 export default function Register() {
-  const insets = useSafeAreaInsets();
+  const [fontsLoaded, fontError] = useFonts({
+    Roboto_400Regular,
+  });
   const [inputs, setInputs] = useState({
     name: "",
     age: "",
@@ -84,7 +86,7 @@ export default function Register() {
     const url = await imageHandler(
       "images/users/",
       inputs.photoUrl,
-      inputs.name
+      inputs.name,
     );
 
     const docData: User = {
@@ -104,7 +106,7 @@ export default function Register() {
       const newUser = await createUserWithEmailAndPassword(
         auth,
         inputs.email,
-        inputs.password
+        inputs.password,
       );
       if (newUser) {
         userSchema.parse(docData);
@@ -382,7 +384,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontSize: 14,
     color: Colors.textAuxPrimary,
-    fontFamily: "roboto-regular",
+    fontFamily: "Roboto_400Regular",
   },
   subtitle: {
     color: Colors.blueHighlight,
@@ -406,7 +408,7 @@ const styles = StyleSheet.create({
   },
   textContainerPhoto: {
     color: Colors.textAuxSecondary,
-    fontFamily: "roboto-regular",
+    fontFamily: "Roboto_400Regular",
     fontSize: 14,
   },
   img: {

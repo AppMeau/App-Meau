@@ -1,33 +1,25 @@
-import { Ionicons } from "@expo/vector-icons";
+import { Courgette_400Regular } from "@expo-google-fonts/courgette";
 import { useFonts } from "expo-font";
 import { Link, router } from "expo-router";
-import { StatusBar } from "expo-status-bar";
 import { getAuth } from "firebase/auth";
 import { StyleSheet, Text, View, Image } from "react-native";
 import { Button } from "react-native-paper";
-import {
-  useSafeAreaInsets,
-  SafeAreaProvider,
-} from "react-native-safe-area-context";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 
 import ButtonComponent from "../components/button";
-import { headerSize } from "../components/header";
 import Colors from "../util/Colors";
 import { firebase } from "../util/firebase";
 
 export default function App() {
-  const insets = useSafeAreaInsets();
   const auth = getAuth(firebase);
+
   const [fontsLoaded] = useFonts({
-    "roboto-regular": require("../assets/fonts/Roboto-Regular.ttf"),
-    "roboto-medium": require("../assets/fonts/Roboto-Medium.ttf"),
-    "courgette-regular": require("../assets/fonts/Courgette-Regular.ttf"),
+    Courgette_400Regular,
   });
 
   if (!fontsLoaded) {
     return null;
   }
-
   return (
     <SafeAreaProvider>
       <View style={[styles.container]}>
@@ -101,7 +93,7 @@ const styles = StyleSheet.create({
   h1: {
     fontSize: 72,
     color: Colors.yellowPrimary,
-    fontFamily: "courgette-regular",
+    fontFamily: "Courgette_400Regular",
   },
   paragraph: {
     color: Colors.textAuxSecondary,

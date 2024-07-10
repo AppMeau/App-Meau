@@ -1,8 +1,10 @@
 import { MaterialIcons } from "@expo/vector-icons";
+import { Roboto_400Regular } from "@expo-google-fonts/roboto";
+import { useFonts } from "expo-font";
 import * as ImagePicker from "expo-image-picker";
 import { router } from "expo-router";
-import { collection, doc, setDoc, addDoc } from "firebase/firestore";
-import { lazy, useEffect, useState } from "react";
+import { collection, addDoc } from "firebase/firestore";
+import { useEffect, useState } from "react";
 import {
   Image,
   Pressable,
@@ -16,7 +18,6 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import CheckboxContainer from "../components/checkboxContainer";
 import CustomButton from "../components/customButton";
-import { headerSize } from "../components/header";
 import InputComponent from "../components/input";
 import RadioContainer from "../components/radioContainer";
 import {
@@ -28,6 +29,9 @@ import { db } from "../util/firebase";
 import imageHandler from "../util/functions/ImageHandler";
 
 export default function AnimalRegister() {
+  useFonts({
+    Roboto_400Regular,
+  });
   const insets = useSafeAreaInsets();
   const [inputs, setInputs] = useState({
     name: "",
@@ -127,7 +131,7 @@ export default function AnimalRegister() {
     const url = await imageHandler(
       "images/pets/",
       inputs.photoUrl,
-      inputs.name
+      inputs.name,
     );
     const docData = {
       name: inputs.name,
@@ -441,7 +445,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontSize: 14,
     color: Colors.textAuxPrimary,
-    fontFamily: "roboto-regular",
+    fontFamily: "Roboto_400Regular",
   },
   subtitle: {
     color: Colors.yellowSecondary,
@@ -468,7 +472,7 @@ const styles = StyleSheet.create({
   },
   textContainerPhoto: {
     color: Colors.textAuxSecondary,
-    fontFamily: "roboto-regular",
+    fontFamily: "Roboto_400Regular",
     fontSize: 14,
   },
   img: {
