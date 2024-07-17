@@ -1,35 +1,28 @@
-import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View, Image } from "react-native";
-import { Link, router } from "expo-router";
-import Colors from "../util/Colors";
-import { Ionicons } from "@expo/vector-icons";
+import { Courgette_400Regular } from "@expo-google-fonts/courgette";
 import { useFonts } from "expo-font";
-import ButtonComponent from "../components/button";
-import {
-  useSafeAreaInsets,
-  SafeAreaProvider,
-} from "react-native-safe-area-context";
-import { headerSize } from "../components/header";
+import { Link, router } from "expo-router";
 import { getAuth } from "firebase/auth";
-import { firebase } from "../util/firebase";
+import { StyleSheet, Text, View, Image } from "react-native";
 import { Button } from "react-native-paper";
+import { SafeAreaProvider } from "react-native-safe-area-context";
+
+import ButtonComponent from "../components/button";
+import Colors from "../util/Colors";
+import { firebase } from "../util/firebase";
 
 export default function App() {
-  const insets = useSafeAreaInsets();
   const auth = getAuth(firebase);
-  let [fontsLoaded] = useFonts({
-    "roboto-regular": require("../assets/fonts/Roboto-Regular.ttf"),
-    "roboto-medium": require("../assets/fonts/Roboto-Medium.ttf"),
-    "courgette-regular": require("../assets/fonts/Courgette-Regular.ttf"),
+
+  const [fontsLoaded] = useFonts({
+    Courgette_400Regular,
   });
 
   if (!fontsLoaded) {
     return null;
   }
-
   return (
     <SafeAreaProvider>
-      <View style={[styles.container, { paddingTop: insets.top + headerSize }]}>
+      <View style={[styles.container]}>
         {/* <Link href="/login">Login</Link>
       <Text>Open up App.tsx to start working on your app!</Text>
       <StatusBar style="auto" /> */}
@@ -100,7 +93,7 @@ const styles = StyleSheet.create({
   h1: {
     fontSize: 72,
     color: Colors.yellowPrimary,
-    fontFamily: "courgette-regular",
+    fontFamily: "Courgette_400Regular",
   },
   paragraph: {
     color: Colors.textAuxSecondary,

@@ -1,3 +1,5 @@
+import { Roboto_400Regular } from "@expo-google-fonts/roboto";
+import { useFonts } from "expo-font";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
 import Colors from "../util/Colors";
@@ -11,6 +13,9 @@ function CustomButton({
   backgroundColor: string;
   onPress: any;
 }) {
+  useFonts({
+    Roboto_400Regular,
+  });
   return (
     <View style={[styles.outerContainer, { backgroundColor }]}>
       <Pressable
@@ -44,7 +49,7 @@ const styles = StyleSheet.create({
   text: {
     color: Colors.textAuxPrimary,
     textAlign: "center",
-    fontFamily: "roboto-regular",
+    fontFamily: "Roboto_400Regular",
   },
   pressed: {
     opacity: 0.5,

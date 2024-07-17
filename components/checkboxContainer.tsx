@@ -1,19 +1,26 @@
+import { Roboto_400Regular } from "@expo-google-fonts/roboto";
+import { useFonts } from "expo-font";
 import { StyleSheet, Text, View } from "react-native";
-import Colors from "../util/Colors";
 import { Checkbox } from "react-native-paper";
-import { useEffect } from "react";
+
+import Colors from "../util/Colors";
 
 function CheckboxContainer({
   labels,
   disable = false,
   onPress,
+  keys,
   states,
 }: {
-  labels: Array<string>;
+  labels: string[];
   disable?: boolean;
-  onPress: Array<any>;
-  states: Array<boolean>;
+  onPress: any;
+  keys: string[];
+  states: boolean[];
 }) {
+  useFonts({
+    Roboto_400Regular,
+  });
   return (
     <View style={styles.container}>
       {states.map((state, index) => {
@@ -24,7 +31,7 @@ function CheckboxContainer({
               disabled={disable}
               color={Colors.textAuxSecondary}
               uncheckedColor={Colors.textAuxSecondary}
-              onPress={() => onPress[index](!state)}
+              onPress={() => onPress(keys[index], !state)}
             />
             <Text style={styles.textContainerPhoto}>{labels[index]}</Text>
           </View>
@@ -48,7 +55,7 @@ const styles = StyleSheet.create({
   },
   textContainerPhoto: {
     color: Colors.textAuxSecondary,
-    fontFamily: "roboto-regular",
+    fontFamily: "Roboto_400Regular",
     fontSize: 14,
   },
 });

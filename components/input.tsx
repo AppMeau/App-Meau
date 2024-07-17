@@ -1,10 +1,14 @@
 import { Ionicons } from "@expo/vector-icons";
+import { Roboto_400Regular } from "@expo-google-fonts/roboto";
+import { useFonts } from "expo-font";
 import React, { useState } from "react";
-import { TextInput, StyleSheet, View } from "react-native";
+import { StyleSheet, View, TextInput, KeyboardTypeOptions } from "react-native";
+// import { TextInput } from "react-native-paper";
 
 type textContentType = "password" | "username" | "name";
 type props = {
   type?: textContentType;
+  keyboardType?: KeyboardTypeOptions;
   lazy?: boolean;
   rule?: (value: any) => boolean;
   placeholder: string;
@@ -13,6 +17,9 @@ type props = {
 };
 
 export default function InputComponent(props: props) {
+  useFonts({
+    Roboto_400Regular,
+  });
   const [focused, setFocus] = useState(false);
   const [isValid, setValid] = useState<null | boolean>(null);
 
@@ -27,11 +34,14 @@ export default function InputComponent(props: props) {
       <TextInput
         textContentType={props.type ? props.type : "none"}
         secureTextEntry={props.type === "password"}
-        style={styles.input}
+        style={[
+          styles.input,
+          isValid === null || isValid ? { color: "#575757" } : { color: "red" },
+        ]}
         value={props.value}
         onChangeText={props.onChangeText}
         placeholder={props.placeholder}
-        placeholderTextColor="#bdbdbd"
+        placeholderTextColor={isValid === null || isValid ? "#bdbdbd" : "red"}
         onFocus={() => {
           setFocus(true);
         }}
@@ -42,6 +52,7 @@ export default function InputComponent(props: props) {
             }
           }
         }}
+        keyboardType={props.keyboardType ? props.keyboardType : "default"}
         onEndEditing={(e) => {
           setFocus(false);
           if (props.lazy) {
@@ -82,7 +93,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     justifyContent: "center",
     includeFontPadding: false,
-    fontFamily: "roboto-regular",
-    color: "#575757",
+    fontFamily: "Roboto_400Regular",
   },
 });

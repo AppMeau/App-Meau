@@ -12,35 +12,65 @@ export default function Layout() {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <Drawer>
         <Drawer.Screen
-          name="index" 
+          name="index"
           options={{
-            drawerLabel: 'Inicio',
-            title: '',
-            header: ({navigation, options}) => <Header color={"#fff"} title={options.title} onDrawerClick={navigation.toggleDrawer} iconColor={Colors.bluePrimary}/>,
+            drawerLabel: "Inicio",
+            title: "",
+            header: ({ navigation, options }) => (
+              <Header
+                color="#fff"
+                title={options.title}
+                onDrawerClick={navigation.toggleDrawer}
+                iconColor={Colors.bluePrimary}
+              />
+            ),
           }}
         />
         <Drawer.Screen
-          name="login" 
+          name="login"
           options={{
-            drawerLabel: 'Login',
-            title: 'Login',
-            header: ({navigation, options}) => <Header color={Colors.blueSecundary} title={options.title} onDrawerClick={navigation.toggleDrawer}/>,
+            drawerLabel: "Login",
+            title: "Login",
+            unmountOnBlur: true,
+            header: ({ navigation, options }) => (
+              <Header
+                color={Colors.blueSecundary}
+                title={options.title}
+                onDrawerClick={navigation.toggleDrawer}
+              />
+            ),
           }}
         />
         <Drawer.Screen
-          name="register" 
+          name="register"
           options={{
-            drawerLabel: 'Cadastro Pessoal',
-            title: 'Cadastro Pessoal',
-            header: ({navigation, options}) => <Header color={Colors.blueSecundary} title={options.title} search onDrawerClick={navigation.toggleDrawer}/>,
+            drawerLabel: "Cadastro Pessoal",
+            title: "Cadastro Pessoal",
+            unmountOnBlur: true,
+            header: ({ navigation, options }) => (
+              <Header
+                color={Colors.blueSecundary}
+                title={options.title}
+                search
+                onDrawerClick={navigation.toggleDrawer}
+              />
+            ),
           }}
         />
         <Drawer.Screen
-          name="animalRegister" 
+          name="animalRegister"
           options={{
-            drawerLabel: 'Cadastro Animal',
-            title: 'Cadastro Animal',
-            header: ({navigation, options}) => <Header color={Colors.blueSecundary} title={options.title} search onDrawerClick={navigation.toggleDrawer}/>,
+            drawerLabel: "Cadastro Animal",
+            title: "Cadastro Animal",
+            unmountOnBlur: true,
+            header: ({ navigation, options }) => (
+              <Header
+                color={Colors.blueSecundary}
+                title={options.title}
+                search
+                onDrawerClick={navigation.toggleDrawer}
+              />
+            ),
           }}
         />
       </Drawer>
