@@ -5,14 +5,12 @@ import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyAhx8hIEcABwbOJt7LfAGMbvFzYA803urk",
-  authDomain: "app-meau-f213c.firebaseapp.com",
-  // The value of `databaseURL` depends on the location of the database
-  projectId: "app-meau-f213c",
-  storageBucket: "app-meau-f213c.appspot.com",
-  appId: "1:959727693777:web:80b8566de8a37de6da7af0",
+  apiKey: process.env.EXPO_PUBLIC_API_KEY,
+  authDomain: process.env.EXPO_PUBLIC_AUTH_DOMAIN,
+  projectId: process.env.EXPO_PUBLIC_PROJECT_ID,
+  storageBucket: process.env.EXPO_PUBLIC_STORAGE_BUCKET,
+  appId: process.env.EXPO_PUBLIC_APP_ID,
 };
-
 export const firebase = initializeApp(firebaseConfig);
 
 // Initialize Cloud Firestore and get a reference to the service
