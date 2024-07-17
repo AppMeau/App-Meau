@@ -32,7 +32,7 @@ export default function AnimalRegister() {
   useFonts({
     Roboto_400Regular,
   });
-  const insets = useSafeAreaInsets();
+
   const [inputs, setInputs] = useState({
     name: "",
     photoUrl: null,
@@ -71,6 +71,8 @@ export default function AnimalRegister() {
 
   const [showPhotoDialog, setShowPhotoDialog] = useState(false);
   const [isFromGallery, setIsFromGallery] = useState<boolean | null>(null);
+  const [disableSickness, setDisableSickness] = useState(false);
+  const [isValidAbout, setIsValidAbout] = useState(true);
 
   useEffect(() => {
     if (inputs.acompanyBeforeAdoption === true) {
@@ -85,8 +87,17 @@ export default function AnimalRegister() {
   useEffect(() => {
     if (inputs.sick === false) {
       inputChangedHandler("sickness", "");
+      setDisableSickness(true);
+    } else {
+      setDisableSickness(false);
     }
-  }, [inputs.sick]);
+
+    if (inputs.about === "") {
+      setIsValidAbout(false);
+    } else {
+      setIsValidAbout(true);
+    }
+  }, [inputs.sick, inputs.about]);
 
   function inputChangedHandler(inputIdentifier: string, enteredValue: any) {
     setInputs((currentInput) => {
@@ -312,6 +323,7 @@ export default function AnimalRegister() {
                 onChangeText={(enteredValue) =>
                   inputChangedHandler("sickness", enteredValue)
                 }
+                disabled={disableSickness}
               />
 
               <Text style={styles.subtitle}>EXIGÊNCIAS PARA ADOÇÃO</Text>
@@ -362,6 +374,7 @@ export default function AnimalRegister() {
                 onChangeText={(enteredValue) =>
                   inputChangedHandler("about", enteredValue)
                 }
+                valid={isValidAbout}
               />
 
               <View style={styles.container}>
