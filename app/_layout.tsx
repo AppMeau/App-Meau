@@ -73,6 +73,22 @@ export default function Layout() {
               ),
             }}
           />
+          <Drawer.Screen
+            name="animalListing"
+            options={{
+              drawerLabel: "Meus Pets",
+              title: "Meus Pets",
+              unmountOnBlur: true,
+              header: ({ navigation, options }) => (
+                <Header
+                  color={Colors.blueSecundary}
+                  title={options.title}
+                  search
+                  onDrawerClick={navigation.toggleDrawer}
+                />
+              ),
+            }}
+          />
         </Drawer>
       </GestureHandlerRootView>  
     </Provider>  
