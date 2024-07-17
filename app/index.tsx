@@ -20,62 +20,70 @@ export default function App() {
   if (!fontsLoaded) {
     return null;
   }
+
   return (
     <SafeAreaProvider>
-      <View style={[styles.container]}>
-        {/* <Link href="/login">Login</Link>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" /> */}
-        {/* <RegisterComponent /> */}
-        <View style={{ justifyContent: "center" }}>
-          <View
-            style={[
-              styles.container,
-              {
-                paddingHorizontal: 36,
-                paddingTop: 20,
-                paddingBottom: 48,
-                gap: 52,
-              },
-            ]}
-          >
-            <Text style={styles.h1}>Olá!</Text>
-            <Text style={styles.paragraph}>
-              Bem vindo ao Meau! {"\n"}
-              Aqui você pode adotar, doar e ajudar cães e gatos com facilidade.
-              {"\n"}
-              Qual o seu interesse?
-            </Text>
-          </View>
-          <View style={{ gap: 12, alignItems: "center", paddingBottom: 44 }}>
-            <ButtonComponent type="warn" link="/register">
-              ADOTAR
-            </ButtonComponent>
-            <ButtonComponent type="warn" link="/register">
-              AJUDAR
-            </ButtonComponent>
-            <ButtonComponent type="warn" link="/animalRegister">
-              CADASTRAR ANIMAL
-            </ButtonComponent>
-          </View>
-          <View style={{ alignItems: "center", paddingBottom: 68 }}>
-            {auth.currentUser ? (
-              <Button
-                onPress={async () => {
-                  await auth.signOut();
-                  router.navigate("/login");
-                }}
-              >
-                logout
-              </Button>
-            ) : (
-              <Link
-                style={{ color: Colors.bluePrimary, fontSize: 16 }}
-                href="/login"
-              >
-                login
-              </Link>
-            )}
+      <View style={[styles.container, {height: "100%"}]}>
+        <View style={{ 
+          justifyContent: "space-between", 
+          flexDirection: 'column', 
+          display: 'flex', 
+          height: '100%', 
+          paddingBottom: 48
+        }}>
+          <View style={{gap: 48}}>
+            <View
+              style={[
+                styles.container,
+                {
+                  paddingHorizontal: 36,
+                  paddingTop: 20,
+                  // paddingBottom: 48,
+                  gap: 52,
+                },
+              ]}
+            >
+              <Text style={styles.h1}>Olá!</Text>
+              <Text style={styles.paragraph}>
+                Bem vindo ao Meau! {"\n"}
+                Aqui você pode adotar, doar e ajudar cães e gatos com facilidade.
+                {"\n"}
+                {"\n"}
+                Qual o seu interesse?
+              </Text>
+            </View>
+            <View style={{gap: 48}}>
+              <View style={{ gap: 12, alignItems: "center" }}>
+                <ButtonComponent type="warn" link="/register">
+                  ADOTAR
+                </ButtonComponent>
+                <ButtonComponent type="warn" link="/register">
+                  AJUDAR
+                </ButtonComponent>
+                <ButtonComponent type="warn" link="/animalRegister">
+                  CADASTRAR ANIMAL
+                </ButtonComponent>
+              </View>
+              <View style={{ alignItems: "center" }}>
+                {auth.currentUser ? (
+                  <Button
+                    onPress={async () => {
+                      await auth.signOut();
+                      router.navigate("/login");
+                    }}
+                  >
+                    logout
+                  </Button>
+                ) : (
+                  <Link
+                    style={{ color: Colors.bluePrimary, fontSize: 16 }}
+                    href="/login"
+                  >
+                    login
+                  </Link>
+                )}
+              </View>
+            </View>
           </View>
           <View style={{ alignItems: "center" }}>
             <Image
