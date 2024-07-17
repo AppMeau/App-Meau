@@ -11,7 +11,6 @@ const firebaseConfig = {
   storageBucket: process.env.EXPO_PUBLIC_STORAGE_BUCKET,
   appId: process.env.EXPO_PUBLIC_APP_ID,
 };
-console.log(process.env.API_KEY)
 export const firebase = initializeApp(firebaseConfig);
 
 // Initialize Cloud Firestore and get a reference to the service
