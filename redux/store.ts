@@ -1,9 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit';
-import LoginReducer from './Slice';
+import LoginReducer, { Slice } from './Slice';
 import { TypedUseSelectorHook, useSelector } from 'react-redux';
 
 const store = configureStore({
-	reducer: LoginReducer,
+	// reducer: LoginReducer,
+	reducer: {
+		animals: Slice.reducer
+	}
 });
 
 export default store;

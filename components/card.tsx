@@ -35,7 +35,8 @@ export default function CardComponent({
       <Card>
         <Card.Title title={animal.name} />
         <Card.Content>
-          {cardContent}
+          {/* {cardContent} */}
+          <Text>TESTES</Text>
         </Card.Content>
         <Card.Cover source={{ uri: animal.photo }} />
       </Card>
