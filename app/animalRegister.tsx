@@ -33,6 +33,8 @@ export default function AnimalRegister() {
     Roboto_400Regular,
   });
 
+  const [loading, setLoading] = useState(false);
+
   const [inputs, setInputs] = useState({
     name: "",
     photoUrl: null,
@@ -139,6 +141,7 @@ export default function AnimalRegister() {
   const hideDialog = () => setShowPhotoDialog(false);
 
   const handleSubmit = async () => {
+    setLoading(true);
     const url = await imageHandler(
       "images/pets/",
       inputs.photoUrl,
@@ -173,8 +176,10 @@ export default function AnimalRegister() {
     try {
       animalSchema.parse(docData);
       await addDoc(collection(db, "pets"), docData);
+      setLoading(false);
       router.navigate("/login");
     } catch (e) {
+      setLoading(false);
       console.log(e);
     }
   };
@@ -381,6 +386,7 @@ export default function AnimalRegister() {
                 <CustomButton
                   backgroundColor={Colors.yellowPrimary}
                   onPress={handleSubmit}
+                  loading={loading}
                 >
                   COLOCAR PARA ADOÇÃO
                 </CustomButton>

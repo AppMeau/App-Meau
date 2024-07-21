@@ -28,6 +28,7 @@ export default function Register() {
   const [fontsLoaded, fontError] = useFonts({
     Roboto_400Regular,
   });
+  const [loading, setLoading] = useState(false);
   const [inputs, setInputs] = useState({
     name: "",
     age: "",
@@ -83,6 +84,7 @@ export default function Register() {
   }, [showPhotoDialog, isFromGallery]);
 
   const handleSubmit = async () => {
+    setLoading(true);
     const url = await imageHandler(
       "images/users/",
       inputs.photoUrl,
@@ -115,8 +117,10 @@ export default function Register() {
           uid: newUser.user.uid,
         });
       }
+      setLoading(false);
       router.navigate("login");
     } catch (e) {
+      setLoading(false);
       console.log(e);
     }
   };
@@ -322,6 +326,7 @@ export default function Register() {
                 <CustomButton
                   backgroundColor={Colors.bluePrimary}
                   onPress={handleSubmit}
+                  loading={loading}
                 >
                   FAZER CADASTRO
                 </CustomButton>
