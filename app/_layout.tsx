@@ -57,6 +57,13 @@ export default function Layout() {
             }}
           />
           <Drawer.Screen
+            name="userDetails"
+            options={{
+              drawerLabel: "Meus Dados",
+              title: "Meus Dados",
+            }}
+          />
+          <Drawer.Screen
             name="animalRegister"
             options={{
               drawerLabel: "Cadastro Animal",
@@ -75,18 +82,10 @@ export default function Layout() {
           <Drawer.Screen
             name="animalListing"
             options={{
-              drawerLabel: "Meus Pets",
-              title: "Meus Pets",
+              drawerLabel: "Adotar",
               unmountOnBlur: true,
-              header: ({ navigation, options }) => (
-                <Header
-                  color={Colors.blueSecundary}
-                  title={options.title}
-                  search
-                  onDrawerClick={navigation.toggleDrawer}
-                />
-              ),
             }}
+            initialParams={{ isToAdopt: true }}
           />
         </Drawer>
       </GestureHandlerRootView>  

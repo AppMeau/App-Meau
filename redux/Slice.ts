@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { collection, DocumentData, DocumentReference, getDoc, getDocs, query } from 'firebase/firestore';
 import { db } from '../util/firebase';
 import { FirebaseError } from 'firebase/app';
-import { animalRegisterType } from '../schemas/AnimalRegister/animalRegisterTypes';
+import { animalRegisterType, animalSchema } from '../schemas/AnimalRegister/animalRegisterTypes';
 
 type SliceState = {state12: String}
 
@@ -23,15 +23,25 @@ const initialState: StateType = {
 export const getAllAnimals = createAsyncThunk('animals/getAllAnimals', async (_, thunkAPI) => {
 	try {
 		const allAnimals = await getDocs(collection(db, "pets"))
-		const allAnimalsData = allAnimals.docs.map(doc => doc.data() as animalRegisterType)
+		const allAnimalsData = allAnimals.docs.map(doc => {
+			try {
+				const parse = animalSchema.parse({id: doc.id, ...doc.data()})
+				// console.log('PARSE', parse)
+				return parse
+			} catch (error: any | undefined) {
+				throw new Error('Error parsing data', error)
+			}
+		})
+		console.log('ALL ANIMALS', allAnimalsData)
 		return allAnimalsData as animalRegisterType[]
 	} catch (error: any) {
+		// console.error('Error fetching data', error)
 		return thunkAPI.rejectWithValue({ error: error.message })
 	}
 })
 
 export const animalSlice = createSlice({
-	name: 'slice',
+	name: 'animalSlice',
 	initialState,
 	reducers: {
 		reducer: (state, action) => {
@@ -42,7 +52,7 @@ export const animalSlice = createSlice({
 			state.status = 'loading'
 		})
 		builder.addCase(getAllAnimals.fulfilled, (state, action) => {
-			// console.log(action.payload)
+			console.log('PAYLOAD', action.payload)
 			state.status = 'succeeded'
 			state.animals = action.payload
 		})
