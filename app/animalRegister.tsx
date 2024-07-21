@@ -5,6 +5,7 @@ import * as ImagePicker from "expo-image-picker";
 import { router } from "expo-router";
 import { collection, addDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
+import { useSelector, useDispatch } from 'react-redux';
 import {
   Image,
   Pressable,
@@ -27,19 +28,21 @@ import {
 import Colors from "../util/Colors";
 import { db } from "../util/firebase";
 import imageHandler from "../util/functions/ImageHandler";
+import { SetLoading } from '../redux/loadingButton';
+
 
 export default function AnimalRegister() {
   useFonts({
     Roboto_400Regular,
   });
 
-  const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
+  const loadingButton = useSelector((state: any) => state.SetLoading.value);
 
   const [inputs, setInputs] = useState({
     name: "",
     photoUrl: null,
     photoDownloadUrl: "",
-
     species: "Cachorro",
     gender: "Macho",
     size: "Pequeno",
@@ -141,7 +144,7 @@ export default function AnimalRegister() {
   const hideDialog = () => setShowPhotoDialog(false);
 
   const handleSubmit = async () => {
-    setLoading(true);
+    dispatch(SetLoading(true));
     const url = await imageHandler(
       "images/pets/",
       inputs.photoUrl,
@@ -176,10 +179,10 @@ export default function AnimalRegister() {
     try {
       animalSchema.parse(docData);
       await addDoc(collection(db, "pets"), docData);
-      setLoading(false);
+      dispatch(SetLoading(false));
       router.navigate("/login");
     } catch (e) {
-      setLoading(false);
+      dispatch(SetLoading(false));
       console.log(e);
     }
   };
@@ -386,7 +389,7 @@ export default function AnimalRegister() {
                 <CustomButton
                   backgroundColor={Colors.yellowPrimary}
                   onPress={handleSubmit}
-                  loading={loading}
+                  loading={loadingButton}
                 >
                   COLOCAR PARA ADOÇÃO
                 </CustomButton>

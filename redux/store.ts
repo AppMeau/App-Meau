@@ -1,9 +1,15 @@
 import { configureStore } from '@reduxjs/toolkit';
 import LoginReducer from './Slice';
 import { TypedUseSelectorHook, useSelector } from 'react-redux';
+import LoadingReducer from './loadingButton';
 
 const store = configureStore({
-	reducer: LoginReducer,
+	reducer: {
+		LoginReducer,
+		SetLoading: LoadingReducer,
+	}
+
+
 });
 
 export default store;
