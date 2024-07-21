@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { collection, DocumentData, DocumentReference, getDoc } from 'firebase/firestore';
+import { collection, DocumentData, DocumentReference, getDoc, getDocs, query } from 'firebase/firestore';
 import { db } from '../util/firebase';
 import { FirebaseError } from 'firebase/app';
 import { animalRegisterType } from '../schemas/AnimalRegister/animalRegisterTypes';
@@ -22,19 +22,19 @@ const initialState: StateType = {
 
 export const getAllAnimals = createAsyncThunk('animals/getAllAnimals', async (_, thunkAPI) => {
 	try {
-		const allAnimals = await getDoc(collection(db, "pets") as unknown as DocumentReference<DocumentData, DocumentData>)
-		return allAnimals.data() as animalRegisterType[]
+		const allAnimals = await getDocs(collection(db, "pets"))
+		const allAnimalsData = allAnimals.docs.map(doc => doc.data() as animalRegisterType)
+		return allAnimalsData as animalRegisterType[]
 	} catch (error: any) {
 		return thunkAPI.rejectWithValue({ error: error.message })
 	}
 })
 
-export const Slice = createSlice({
+export const animalSlice = createSlice({
 	name: 'slice',
 	initialState,
 	reducers: {
 		reducer: (state, action) => {
-      
 		},
 	},
 	extraReducers: (builder) => {
@@ -42,9 +42,9 @@ export const Slice = createSlice({
 			state.status = 'loading'
 		})
 		builder.addCase(getAllAnimals.fulfilled, (state, action) => {
-			console.log(action.payload)
+			// console.log(action.payload)
 			state.status = 'succeeded'
-			state.animals = action.payload || []
+			state.animals = action.payload
 		})
 		builder.addCase(getAllAnimals.rejected, (state, action) => {
 			state.status = 'failed'
@@ -53,8 +53,8 @@ export const Slice = createSlice({
 	}
 	});
 
-const LoginReducer = Slice.reducer
+const LoginReducer = animalSlice.reducer
 
-export const { reducer } = Slice.actions;
+export const { reducer } = animalSlice.actions;
 
 export default LoginReducer;

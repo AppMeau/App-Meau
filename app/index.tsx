@@ -8,11 +8,12 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 
 import ButtonComponent from "../components/button";
 import Colors from "../util/Colors";
-import { firebase } from "../util/firebase";
+import { db, firebase } from "../util/firebase";
+import { useEffect } from "react";
+import { collection, doc, getDoc, getDocs, query } from "firebase/firestore";
 
 export default function App() {
   const auth = getAuth(firebase);
-
   const [fontsLoaded] = useFonts({
     Courgette_400Regular,
   });
