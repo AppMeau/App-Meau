@@ -1,6 +1,5 @@
 import Zocial from "@expo/vector-icons/Zocial";
 import { useFonts, Roboto_400Regular } from "@expo-google-fonts/roboto";
-// import { Link } from "expo-router";
 import { StyleSheet, View, Text } from "react-native";
 import { Button } from 'react-native-paper';
 

@@ -2,7 +2,6 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import { auth, firebase } from '../util/firebase';
 import { Credential } from '../schemas/UserRegister/userRegister';
-import { Redirect, router } from 'expo-router';
 import { useAppDispatch } from './store';
 import { set } from 'zod';
 

@@ -1,7 +1,6 @@
 {
   "name": "appmeau",
   "version": "1.0.0",
-  "main": "expo-router/entry",
   "scripts": {
     "start": "expo start",
     "wsl": "expo --tunnel",
@@ -24,6 +23,8 @@
     "@expo/vector-icons": "^14.0.2",
     "@react-native-async-storage/async-storage": "^1.23.1",
     "@react-navigation/drawer": "^6.6.15",
+    "@react-navigation/native": "^6.1.18",
+    "@react-navigation/native-stack": "^6.10.1",
     "@reduxjs/toolkit": "^2.2.5",
     "@testing-library/jest-native": "^5.4.3",
     "expo": "^51.0.21",
@@ -31,9 +32,10 @@
     "expo-font": "~12.0.9",
     "expo-image-picker": "~15.0.7",
     "expo-linking": "~6.3.1",
-    "expo-router": "~3.5.18",
     "expo-status-bar": "~1.12.1",
     "firebase": "^10.11.0",
+    "install": "^0.13.0",
+    "npm": "^10.8.2",
     "react": "18.2.0",
     "react-native": "0.74.3",
     "react-native-async-storage": "^0.0.1",
