@@ -9,14 +9,14 @@ import Colors from '../../util/Colors';
 
 export default function Layout() {
     const isLoading = false;
-    const session = true;
+    const session = useAppSelector((state) => state.auth.status);
 
     if (isLoading) {
         return <Text>a{session}</Text>;
     }
 
     if (!session) {
-        return <Redirect href="/login" />;
+        return <Redirect href="/401" />;
     }
     return (
         <Drawer>

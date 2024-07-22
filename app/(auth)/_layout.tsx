@@ -52,7 +52,21 @@ export default function Layout() {
             <Header
               color={Colors.blueSecundary}
               title={options.title}
-              search
+              onDrawerClick={navigation.toggleDrawer}
+            />
+          ),
+        }}
+      />
+      <Drawer.Screen
+        name="401"
+        options={{
+          drawerItemStyle: { display: 'none' },
+          title: "Cadastro",
+          unmountOnBlur: true,
+          header: ({ navigation, options }) => (
+            <Header
+              color={Colors.blueSecundary}
+              title={options.title}
               onDrawerClick={navigation.toggleDrawer}
             />
           ),

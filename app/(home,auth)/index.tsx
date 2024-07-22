@@ -8,11 +8,13 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 
 import Colors from "../../util/Colors";
 import { firebase } from "../../util/firebase";
+import { useAppDispatch, useAppSelector } from "../../redux/store";
+import { logout } from "../../redux/auth";
 // import redirect from "../util/functions/redirect";
 
 export default function App() {
-  const auth = getAuth(firebase);
-
+  const dispatch = useAppDispatch()
+  const isLogged = useAppSelector((state) => state.auth.status);
   const [fontsLoaded] = useFonts({
     Courgette_400Regular,
   });
@@ -57,21 +59,17 @@ export default function App() {
                 <Button type="warn" mode="contained" onPress={()=>router.navigate("/register")} loading={false}>
                   ADOTAR
                 </Button>
-                <Button type="warn" mode="contained" onPress={()=>router.navigate("/register")}  loading={false}>
-                  AJUDAR
-                </Button>
                 <Button type="warn" mode="contained" onPress={()=>router.navigate("/animalRegister")}  loading={false}>
                   CADASTRAR ANIMAL
                 </Button>
               </View>
               <View style={{ alignItems: "center" }}>
-                {auth.currentUser ? (
+                {isLogged ? (
                   <Button
                     type="transparent"
                     mode="text"
                     onPress={async () => {
-                      await auth.signOut();
-                      router.navigate("/login");
+                      dispatch(logout())
                     }}
                   >
                     logout

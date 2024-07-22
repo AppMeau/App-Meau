@@ -11,7 +11,7 @@ import { transparent } from "react-native-paper/lib/typescript/styles/themes/v2/
 type componentProps = {
   type: "warn" | "positive" | "google" | "facebook" | "transparent";
   icon?: string;
-  onPress: () => void;
+  onPress?: () => void;
   mode: "text" | "outlined" | "contained" | "elevated" | "contained-tonal" | undefined;
   loading?: boolean;
   children: string | JSX.Element | JSX.Element[];

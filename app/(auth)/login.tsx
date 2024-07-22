@@ -1,22 +1,33 @@
-import { router } from "expo-router";
+import { Redirect, router } from "expo-router";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import React from "react";
 import { Alert, StyleSheet, View } from "react-native";
 
-import ButtonComponent from "../../components/button";
-import CustomButton from "../../components/customButton";
+import Buttom from "../../components/button";
 import InputComponent from "../../components/input";
 import Colors from "../../util/Colors";
-import { useAppDispatch } from "../../redux/store";
+import { useAppDispatch, useAppSelector } from "../../redux/store";
 import { login } from "../../redux/auth";
 import { credentialSchema } from "../../schemas/UserRegister/userRegister";
 
 export default function Page() {
   const [user, setUser] = React.useState("");
   const [password, setPassword] = React.useState("");
-  const dispatch = useAppDispatch();
+  const isLoading = useAppSelector((state) => state.auth.isLoading);
+
+  const dispatch = useAppDispatch()
   const auth = async () => {
-    dispatch(login(credentialSchema.parse({ email: user, password })));
+    try{
+      dispatch(login(credentialSchema.parse({ email: user, password }))).then((res) => {
+        if (res.payload) {
+          router.navigate("/");
+        } else {
+          Alert.alert("Erro", "Usuário ou senha inválidos");
+        }
+      });
+    } catch (e) {
+      Alert.alert("Erro", "Usuário ou senha inválidos");
+    }
   };
 
   return (
@@ -43,22 +54,24 @@ export default function Page() {
           />
         </View>
         <View style={{ marginBottom: 72 }}>
-          <CustomButton
-            backgroundColor={Colors.bluePrimary}
+          <Buttom
+            mode="contained"
+            type="positive"
+            loading={isLoading}
             onPress={() => {
               auth();
             }}
           >
             ENTRAR
-          </CustomButton>
+          </Buttom>
         </View>
         <View style={{ flexDirection: "column", gap: 8 }}>
-          <ButtonComponent link="/login" type="google" icon="googleplus">
+          <Buttom mode="contained" type="google" icon="googleplus">
             ENTRAR COM GOOGLE
-          </ButtonComponent>
-          <ButtonComponent link="/login" type="facebook" icon="facebook">
+          </Buttom>
+          <Buttom mode="contained" type="facebook" icon="facebook">
             ENTRAR COM FACEBOOK
-          </ButtonComponent>
+          </Buttom>
         </View>
       </View>
     </>
