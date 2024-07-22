@@ -2,6 +2,7 @@
   "expo": {
     "name": "appmeau",
     "slug": "appmeau",
+    "owner": "app-meau",
     "version": "1.0.0",
     "scheme": "your-app-scheme",
     "orientation": "portrait",
