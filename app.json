@@ -4,6 +4,7 @@
     "slug": "appmeau",
     "owner": "app-meau",
     "version": "1.0.0",
+    "package": "com.appmeau.appmeau",
     "scheme": "your-app-scheme",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
