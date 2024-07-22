@@ -5,7 +5,7 @@ module.exports = {
     // Ensures props and state inside functions are always up-to-date
     "react-hooks/exhaustive-deps": "warn",
     rules: {
-      'linebreak-style': ['error', process.platform === 'win32' ? 'windows' : 'unix'],
+      'linebreak-style': process.platform === 'win32' ? 0 : 2,
 }
   },
 };
