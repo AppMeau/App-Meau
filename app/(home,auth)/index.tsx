@@ -3,12 +3,12 @@ import { useFonts } from "expo-font";
 import { Link, router } from "expo-router";
 import { getAuth } from "firebase/auth";
 import { StyleSheet, Text, View, Image } from "react-native";
-import { Button } from "react-native-paper";
+import Button from "../../components/button";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
-import ButtonComponent from "../components/button";
-import Colors from "../util/Colors";
-import { firebase } from "../util/firebase";
+import Colors from "../../util/Colors";
+import { firebase } from "../../util/firebase";
+// import redirect from "../util/functions/redirect";
 
 export default function App() {
   const auth = getAuth(firebase);
@@ -54,19 +54,21 @@ export default function App() {
             </View>
             <View style={{gap: 48}}>
               <View style={{ gap: 12, alignItems: "center" }}>
-                <ButtonComponent type="warn" link="/register">
+                <Button type="warn" mode="contained" onPress={()=>router.navigate("/register")} loading={false}>
                   ADOTAR
-                </ButtonComponent>
-                <ButtonComponent type="warn" link="/register">
+                </Button>
+                <Button type="warn" mode="contained" onPress={()=>router.navigate("/register")}  loading={false}>
                   AJUDAR
-                </ButtonComponent>
-                <ButtonComponent type="warn" link="/animalRegister">
+                </Button>
+                <Button type="warn" mode="contained" onPress={()=>router.navigate("/animalRegister")}  loading={false}>
                   CADASTRAR ANIMAL
-                </ButtonComponent>
+                </Button>
               </View>
               <View style={{ alignItems: "center" }}>
                 {auth.currentUser ? (
                   <Button
+                    type="transparent"
+                    mode="text"
                     onPress={async () => {
                       await auth.signOut();
                       router.navigate("/login");
@@ -87,7 +89,7 @@ export default function App() {
           </View>
           <View style={{ alignItems: "center" }}>
             <Image
-              source={require("../assets/logo.png")}
+              source={require("../../assets/logo.png")}
               style={{ width: 122, height: 44 }}
             />
           </View>
