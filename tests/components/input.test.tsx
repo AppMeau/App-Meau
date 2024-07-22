@@ -1,7 +1,7 @@
 import React from "react";
 import { render, screen, userEvent } from "@testing-library/react-native";
 
-import InputComponent from "../../components/input";
+import InputComponent from "../../src/components/input";
 
 jest.mock("@expo/vector-icons", () => ({
   Ionicons: "",

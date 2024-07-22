@@ -1,4 +1,4 @@
-import { userSchema } from "../../schemas/UserRegister/userRegister";
+import { userSchema } from "../../src/schemas/UserRegister/userRegister";
 
 describe("User Schema", () => {
   it("all should be valid", () => {
