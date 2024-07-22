@@ -60,5 +60,8 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.facebook,
     color: Colors.grey1,
   },
-  transparent: {}
+  transparent: {
+    color: Colors.bluePrimary,
+    fontFamily: "Roboto_400Regular",
+  }
 });

@@ -23,6 +23,12 @@ export default function App() {
     return null;
   }
 
+  const signout = async () => {
+    dispatch(logout()).then(()=>{
+      router.navigate("/")
+    })
+  }
+
   return (
     <SafeAreaProvider>
       <View style={[styles.container, {height: "100%"}]}>
@@ -69,18 +75,19 @@ export default function App() {
                     type="transparent"
                     mode="text"
                     onPress={async () => {
-                      dispatch(logout())
+                      signout()
                     }}
                   >
                     logout
                   </Button>
                 ) : (
-                  <Link
-                    style={{ color: Colors.bluePrimary, fontSize: 16 }}
-                    href="/login"
+                  <Button
+                    type="transparent"
+                    mode="text"
+                    onPress={() => router.navigate("/login")}
                   >
                     login
-                  </Link>
+                  </Button>
                 )}
               </View>
             </View>

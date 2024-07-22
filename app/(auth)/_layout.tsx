@@ -62,7 +62,7 @@ export default function Layout() {
         options={{
           drawerItemStyle: { display: 'none' },
           title: "Cadastro",
-          unmountOnBlur: true,
+          // unmountOnBlur: true,
           header: ({ navigation, options }) => (
             <Header
               color={Colors.blueSecundary}
