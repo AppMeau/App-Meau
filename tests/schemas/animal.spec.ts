@@ -1,4 +1,4 @@
-import { animalSchema } from "../../schemas/AnimalRegister/animalRegisterTypes";
+import { animalSchema } from "../../src/schemas/AnimalRegister/animalRegisterTypes";
 
 describe("Animal Schema", () => {
   it("all should be valid", () => {
