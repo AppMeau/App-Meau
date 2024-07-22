@@ -3,31 +3,20 @@ import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import React from "react";
 import { Alert, StyleSheet, View } from "react-native";
 
-import ButtonComponent from "../components/button";
-import CustomButton from "../components/customButton";
-import InputComponent from "../components/input";
-import Colors from "../util/Colors";
-import { firebase } from "../util/firebase";
+import ButtonComponent from "../../components/button";
+import CustomButton from "../../components/customButton";
+import InputComponent from "../../components/input";
+import Colors from "../../util/Colors";
+import { useAppDispatch } from "../../redux/store";
+import { login } from "../../redux/auth";
+import { credentialSchema } from "../../schemas/UserRegister/userRegister";
 
 export default function Page() {
   const [user, setUser] = React.useState("");
   const [password, setPassword] = React.useState("");
-
-  const auth = () => {
-    signInWithEmailAndPassword(getAuth(firebase), user, password)
-      .then((userCredential) => {
-        // const user = userCredential.user;
-        Alert.alert("logado com sucesso");
-        router.navigate("/");
-      })
-      .catch((error): void => {
-        if (
-          error.code === "auth/invalid-email" ||
-          error.code === "auth/invalid-credential"
-        ) {
-          Alert.alert("Email ou senha invalidos");
-        }
-      });
+  const dispatch = useAppDispatch();
+  const auth = async () => {
+    dispatch(login(credentialSchema.parse({ email: user, password })));
   };
 
   return (

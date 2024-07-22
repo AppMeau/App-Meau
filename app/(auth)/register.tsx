@@ -16,13 +16,13 @@ import {
 } from "react-native";
 import { Button, Dialog, Portal, Provider } from "react-native-paper";
 
-import CustomButton from "../components/customButton";
-import InputComponent from "../components/input";
-import type { User } from "../schemas/UserRegister/userRegister";
-import { userSchema } from "../schemas/UserRegister/userRegister";
-import Colors from "../util/Colors";
-import { db, firebase } from "../util/firebase";
-import imageHandler from "../util/functions/ImageHandler";
+import CustomButton from "../../components/customButton";
+import InputComponent from "../../components/input";
+import type { User } from "../../schemas/UserRegister/userRegister";
+import { userSchema } from "../../schemas/UserRegister/userRegister";
+import Colors from "../../util/Colors";
+import { db, firebase } from "../../util/firebase";
+import imageHandler from "../../util/functions/ImageHandler";
 
 export default function Register() {
   const [fontsLoaded, fontError] = useFonts({
@@ -115,7 +115,7 @@ export default function Register() {
           uid: newUser.user.uid,
         });
       }
-      router.navigate("login");
+      router.navigate("/login");
     } catch (e) {
       console.log(e);
     }

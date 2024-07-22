@@ -14,19 +14,18 @@ import {
   View,
 } from "react-native";
 import { Button, Dialog, Portal, Provider } from "react-native-paper";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-import CheckboxContainer from "../components/checkboxContainer";
-import CustomButton from "../components/customButton";
-import InputComponent from "../components/input";
-import RadioContainer from "../components/radioContainer";
+import CheckboxContainer from "../../../components/checkboxContainer";
+import CustomButton from "../../../components/customButton";
+import InputComponent from "../../../components/input";
+import RadioContainer from "../../../components/radioContainer";
 import {
   animalSchema,
   baseAnimalSchema,
-} from "../schemas/AnimalRegister/animalRegisterTypes";
-import Colors from "../util/Colors";
-import { db } from "../util/firebase";
-import imageHandler from "../util/functions/ImageHandler";
+} from "../../../schemas/AnimalRegister/animalRegisterTypes";
+import Colors from "../../../util/Colors";
+import { db } from "../../../util/firebase";
+import imageHandler from "../../../util/functions/ImageHandler";
 
 export default function AnimalRegister() {
   useFonts({
