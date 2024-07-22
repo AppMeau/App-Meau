@@ -24,6 +24,7 @@ jobs:
 
       - name: 📦 Install dependencies
         run: yarn install
-
+      - name: Intall expo-dev-client
+        run: npx expo install expo-dev-client
       - name: 🚀 Build app
         run: eas build --non-interactive --platform android --profile development
