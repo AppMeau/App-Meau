@@ -4,7 +4,7 @@ import Colors from "../../util/Colors";
 import { NavigationProp } from "@react-navigation/native";
 
 
-export default function notAuthorized({navigation}: {navigation: NavigationProp<any>}) {
+export default function NotAuthorized({navigation}: {navigation: NavigationProp<any>}) {
     return (
         <>
             <View style={{...styles.container, height: '100%'}}>
@@ -13,11 +13,11 @@ export default function notAuthorized({navigation}: {navigation: NavigationProp<
                 </View>
                 <View style={styles.container}>
                     <Text style={styles.paragraph}>Você não pode realizar esta ação sem possuir um cadastro</Text>
-                    <Button type="positive" mode="contained" onPress={()=>navigation.navigate('/register')}>FAZER CADASTRO</Button>
+                    <Button type="positive" mode="contained" onPress={()=>navigation.navigate('register')}>FAZER CADASTRO</Button>
                 </View>
                 <View style={styles.container}>
                     <Text style={styles.paragraph}>Já possui um cadastro?</Text>
-                    <Button type="positive" mode="contained" onPress={()=>navigation.navigate('/login')}>FAZER LOGIN</Button>
+                    <Button type="positive" mode="contained" onPress={()=>navigation.navigate('login')}>FAZER LOGIN</Button>
                 </View>
 
             </View>

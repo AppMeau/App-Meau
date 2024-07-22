@@ -1,5 +1,5 @@
 import React from "react";
-import { Alert, StyleSheet, View } from "react-native";
+import { Alert, StyleSheet, View, Text } from "react-native";
 
 import Buttom from "../../components/button";
 import InputComponent from "../../components/input";
@@ -7,6 +7,8 @@ import { useAppDispatch, useAppSelector } from "../../redux/store";
 import { login } from "../../redux/auth";
 import { credentialSchema } from "../../schemas/UserRegister/userRegister";
 import { NavigationProp } from "@react-navigation/native";
+import Colors from "../../util/Colors";
+import Button from "../../components/button";
 
 export default function Login({navigation}: {navigation: NavigationProp<any>}) {
   const [user, setUser] = React.useState("");
@@ -36,7 +38,7 @@ export default function Login({navigation}: {navigation: NavigationProp<any>}) {
         onDrawerClick={() => {}}
       /> */}
       <View style={styles.container}>
-        <View style={{ flexDirection: "column", gap: 20, marginBottom: 52 }}>
+        <View style={{ flexDirection: "column", gap: 20, marginBottom: 52, justifyContent: "center", alignItems: "center"}}>
           <InputComponent
             lazy
             rule={(val) => val !== ""}
@@ -50,6 +52,7 @@ export default function Login({navigation}: {navigation: NavigationProp<any>}) {
             value={password}
             onChangeText={setPassword}
           />
+          <Button type="transparent" mode="text" onPress={()=>navigation.navigate('register')}>Cadastre-se aqui</Button>
         </View>
         <View style={{ marginBottom: 72 }}>
           <Buttom

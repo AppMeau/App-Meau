@@ -7,7 +7,7 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import Colors from "../util/Colors";
 import { useAppDispatch, useAppSelector } from "../redux/store";
 import { logout } from "../redux/auth";
-// import redirect from "../util/functions/redirect";
+// import redirect from "util/functions/redirect";
 
 import { NavigationProp } from "@react-navigation/native";
 
@@ -24,7 +24,7 @@ export default function App({navigation}: {navigation: NavigationProp<any>}) {
 
   const signout = async () => {
     dispatch(logout()).then(()=>{
-      navigation.navigate("inicio")
+      navigation.navigate("login")
     })
   }
 
@@ -93,7 +93,7 @@ export default function App({navigation}: {navigation: NavigationProp<any>}) {
           </View>
           <View style={{ alignItems: "center" }}>
             <Image
-              source={require("../assets/logo.png")}
+              source={require("../../assets/logo.png")}
               style={{ width: 122, height: 44 }}
             />
           </View>
