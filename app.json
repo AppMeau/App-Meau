@@ -2,6 +2,7 @@
   "expo": {
     "name": "appmeau",
     "slug": "appmeau",
+    "owner": "app-meau",
     "version": "1.0.0",
     "scheme": "your-app-scheme",
     "orientation": "portrait",
@@ -19,6 +20,7 @@
       "supportsTablet": true
     },
     "android": {
+      "package": "com.appmeau.appmeau",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
@@ -30,8 +32,20 @@
     "plugins": [
       [
         "expo-font",
-        { "fonts": ["node_modules/@expo-google-fonts/roboto/Roboto_400Regular.ttf"]}
+        {
+          "fonts": [
+            "node_modules/@expo-google-fonts/roboto/Roboto_400Regular.ttf"
+          ]
+        }
       ]
-    ]
+    ],
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "8af45675-5aa4-42b7-a145-e9132bb85aec"
+      }
+    }
   }
 }
