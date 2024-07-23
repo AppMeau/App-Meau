@@ -1,4 +1,4 @@
-import { userSchema } from "../../schemas/UserRegister/userRegister";
+import { userSchema } from "../../src/schemas/UserRegister/userRegister";
 
 describe("User Schema", () => {
   it("all should be valid", () => {
@@ -13,6 +13,7 @@ describe("User Schema", () => {
       user: "Test",
       password: "Teste123",
       photo: "phototest",
+      uid: "uidtest",
     });
     expect(res.success).toBe(true);
   });
@@ -28,6 +29,8 @@ describe("User Schema", () => {
       phone: "99999999999",
       user: "Test",
       password: "Test",
+      uid: "uidtest",
+
     });
     expect(res.success).toBe(false);
   });
@@ -43,6 +46,8 @@ describe("User Schema", () => {
       phone: "99999999999",
       user: "Test",
       password: "Test",
+      uid: "uidtest",
+
     });
     expect(res.success).toBe(false);
   });
@@ -58,6 +63,8 @@ describe("User Schema", () => {
       phone: "99999999999",
       user: "Test",
       password: "Test",
+      uid: "uidtest",
+
     });
     expect(res.success).toBe(false);
   });
@@ -73,6 +80,8 @@ describe("User Schema", () => {
       phone: "99999999999",
       user: "Test",
       password: "Test",
+      uid: "uidtest",
+
     });
     expect(res.success).toBe(false);
   });
@@ -88,6 +97,8 @@ describe("User Schema", () => {
       phone: "99999999999",
       user: "Test",
       password: "Test",
+      uid: "uidtest",
+
     });
     expect(res.success).toBe(false);
   });
@@ -103,6 +114,8 @@ describe("User Schema", () => {
       phone: "99999999999",
       user: "Test",
       password: "Test",
+      uid: "uidtest",
+
     });
     expect(res.success).toBe(false);
   });
@@ -118,6 +131,8 @@ describe("User Schema", () => {
       phone: "99999999999",
       user: "Test",
       password: "Test",
+      uid: "uidtest",
+
     });
     expect(res.success).toBe(false);
   });
@@ -133,6 +148,8 @@ describe("User Schema", () => {
       phone: "",
       user: "Test",
       password: "Test",
+      uid: "uidtest",
+
     });
     expect(res.success).toBe(false);
   });
@@ -148,6 +165,8 @@ describe("User Schema", () => {
       phone: "9",
       user: "Test",
       password: "Test",
+      uid: "uidtest",
+
     });
     expect(res.success).toBe(false);
   });
@@ -163,6 +182,8 @@ describe("User Schema", () => {
       phone: "99999999999",
       user: "",
       password: "Test",
+      uid: "uidtest",
+
     });
     expect(res.success).toBe(false);
   });
@@ -178,6 +199,8 @@ describe("User Schema", () => {
       phone: "99999999999",
       user: "Test",
       password: "",
+      uid: "uidtest",
+
     });
     expect(res.success).toBe(false);
   });
