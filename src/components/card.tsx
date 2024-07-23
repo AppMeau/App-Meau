@@ -32,14 +32,14 @@ export default function CardComponent({
     </View>
   )
 
-  // const navigateToDetails = () => {
-  //   navigation.navigate('AnimalDetails', {
-  //     animal: animal
-  //   })
-  // }
+  const navigateToDetails = () => {
+    (navigation as any).navigate('animalDetails', {
+      animal: animal
+    })
+  }
 
   return (
-    <Pressable style={styles.container} /*onPress={navigateToDetails}*/ >
+    <Pressable style={styles.container} onPress={navigateToDetails} >
       <Card style={[styles.cardContainer, {backgroundColor: isToAdopt ? Colors.yellowTerceary : Colors.blueSecundary}]}>
         <Card.Title 
           title={animal.name} 

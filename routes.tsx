@@ -9,6 +9,7 @@ import notAuthorized from "./src/pages/exceptions/notAuthorized";
 import AnimalListing from "./src/pages/home/animalListing";
 import { useEffect } from "react";
 import { checkAuthStatus } from "./src/redux/auth";
+import AnimalDetails from "./src/pages/home/animalDetails";
 
 export default function Routes() {
   const Drawer = createDrawerNavigator();
@@ -35,6 +36,11 @@ export default function Routes() {
                       component={AnimalListing} 
                       options={{ title: 'Meus Pets', unmountOnBlur: true }} 
                       initialParams={{isToAdopt: false}}
+                    />
+                    <Drawer.Screen 
+                      name="animalDetails" 
+                      component={AnimalDetails} 
+                      options={{ title: 'Detalhes', unmountOnBlur: true }} 
                     />
                 </>
             ):(
