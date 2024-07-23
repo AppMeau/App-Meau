@@ -5,6 +5,7 @@ import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
 import { collection, addDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import {
+  Alert,
   Image,
   Pressable,
   ScrollView,
@@ -23,11 +24,12 @@ import { db, firebase } from "../../util/firebase";
 import imageHandler from "../../util/functions/ImageHandler";
 import { NavigationProp } from "@react-navigation/native";
 import { useDispatch, useSelector } from "react-redux";
-import { SetLoading } from "../../redux/loadingButton";
+import { registerUser } from "../../redux/userRegisterSlice";
+import { AppDispatch } from "../../redux/store";
 
 export default function Register({navigation}: {navigation: NavigationProp<any>}) {
-  const dispatch = useDispatch();
-  const loadingButton = useSelector((state: any) => state.SetLoading.value);
+  const dispatch = useDispatch<AppDispatch>();
+  const { status, isLoading, error } = useSelector((state: any) => state.userRegister);
 
   const [inputs, setInputs] = useState({
     name: "",
@@ -35,7 +37,7 @@ export default function Register({navigation}: {navigation: NavigationProp<any>}
     email: "",
     state: "",
     city: "",
-    adress: "",
+    address: "",
     phone: "",
     user: "",
     password: "",
@@ -84,46 +86,14 @@ export default function Register({navigation}: {navigation: NavigationProp<any>}
   }, [showPhotoDialog, isFromGallery]);
 
   const handleSubmit = async () => {
-    dispatch(SetLoading(true));
-    const url = await imageHandler(
-      "images/users/",
-      inputs.photoUrl,
-      inputs.name,
-    );
-
-    const docData = {
-      name: inputs.name,
-      age: inputs.age,
-      email: inputs.email,
-      state: inputs.state,
-      city: inputs.city,
-      address: inputs.adress,
-      phone: inputs.phone,
-      user: inputs.user,
-      password: inputs.password,
-      photo: url ? url : "",
-    };
-    try {
-      const auth = getAuth(firebase);
-      const newUser = await createUserWithEmailAndPassword(
-        auth,
-        inputs.email,
-        inputs.password,
-      );
-      if (newUser) {
-        userSchema.parse(docData);
-        await addDoc(collection(db, "users"), {
-          ...docData,
-          uid: newUser.user.uid,
-        });
+    dispatch(registerUser(inputs)).then(() => {
+      if (status === "failed") {
+        Alert.alert("Erro", error);
+      } else if (status === "succeeded") {
+        navigation.navigate("login");
       }
-      dispatch(SetLoading(false));
-      navigation.navigate("login");
-    } catch (e) {
-      dispatch(SetLoading(false));
-      console.log(e);
-    }
-  };
+    });
+  }
   const hideDialog = () => setShowPhotoDialog(false);
 
   return (
@@ -232,9 +202,9 @@ export default function Register({navigation}: {navigation: NavigationProp<any>}
                   );
                 }}
                 placeholder="Endereço"
-                value={inputs.adress}
+                value={inputs.address}
                 onChangeText={(enteredValue) =>
-                  inputChangedHandler("adress", enteredValue)
+                  inputChangedHandler("address", enteredValue)
                 }
               />
               <InputComponent
@@ -326,7 +296,7 @@ export default function Register({navigation}: {navigation: NavigationProp<any>}
                 <CustomButton
                   backgroundColor={Colors.bluePrimary}
                   onPress={handleSubmit}
-                  loading={loadingButton}
+                  loading={isLoading}
                 >
                   FAZER CADASTRO
                 </CustomButton>
