@@ -3,9 +3,11 @@ import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 import authReducer from './auth';
 import { FLUSH, PAUSE, PERSIST, persistReducer, PURGE, REGISTER, REHYDRATE } from 'redux-persist';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { animalSlice } from './Slice';
 
 const reducers = combineReducers({
-	auth: authReducer
+	auth: authReducer,
+	animals: animalSlice.reducer
 })
 
 const persistConfig = {
@@ -30,5 +32,6 @@ export default store;
 export type RootState = ReturnType<typeof store.getState>
 export type AppDispatch = typeof store.dispatch
 
+ // Export a hook that can be reused to resolve types
 export const useAppSelector : TypedUseSelectorHook<RootState> = useSelector
 export const useAppDispatch = () => useDispatch<AppDispatch>()

@@ -32,11 +32,8 @@
     "plugins": [
       [
         "expo-font",
-        {
-          "fonts": [
-            "node_modules/@expo-google-fonts/roboto/Roboto_400Regular.ttf"
-          ]
-        }
+        { "fonts": ["node_modules/@expo-google-fonts/roboto/Roboto_400Regular.ttf",
+                    "node_modules/@expo-google-fonts/roboto/Roboto_500Medium.ttf"] }
       ]
     ],
     "extra": {

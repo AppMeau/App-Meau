@@ -86,7 +86,7 @@ export default function Register({navigation}: {navigation: NavigationProp<any>}
       inputs.name,
     );
 
-    const docData: User = {
+    const docData = {
       name: inputs.name,
       age: inputs.age,
       email: inputs.email,

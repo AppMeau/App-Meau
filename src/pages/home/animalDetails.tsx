@@ -5,32 +5,11 @@ import {
   Text,
   View,
 } from "react-native";
-import Header, { headerSize } from "../components/header";
-import Colors from "../util/Colors";
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-// import { Image } from 'expo-image';
-import { db, storage } from '../util/firebase';
-import { QuerySnapshot, collection, doc, getDocs, query, where } from "firebase/firestore";
-import { useEffect, useState } from "react";
-import CustomButton from "../components/customButton";
+import Colors from "../../util/Colors";
+import Button from "../../components/customButton";
 
-
-
-export default function AnimalDetails() {
-  const insets = useSafeAreaInsets();
-  const colRef = collection(db, "pets")
-
-  const [pet, setPet] = useState<any>();
-  
-  useEffect(() => {
-    async function fetchPets(){
-        const colSnap = await getDocs(query (colRef, where("__name__",  "==", "I4qkfZ42Ijf1OHs6yzxq")))
-        const petinfo = colSnap.docs.map((doc) => doc.data());
-        console.log(petinfo)
-        setPet(petinfo[0]);
-    }
-    fetchPets().catch(e => console.error(e))
-  }, [setPet])
+export default function AnimalDetails({route}: any) {
+  const pet = route.params.animal;
 
   function displayinfosBehavior(){
     const behaviors = []
@@ -158,20 +137,20 @@ export default function AnimalDetails() {
               </View> 
             </View>
             <View style={styles.containerButton}>
-              <CustomButton
+              <Button
                 backgroundColor={Colors.yellowPrimary}
                 onPress={null}
                 width={175}
               >
                 VER INTERESSADOS
-              </CustomButton>
-              <CustomButton
+              </Button>
+              <Button
                 backgroundColor={Colors.yellowPrimary}
                 onPress={null}
                 width={175}
               >
                 REMOVER PET
-              </CustomButton>
+              </Button>
             </View>
             </View>
         </ScrollView>

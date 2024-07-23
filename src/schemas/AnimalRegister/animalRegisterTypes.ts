@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 export const baseAnimalSchema = z.object({
+  id: z.string().optional(),
   name: z.string().min(1),
   photo: z.string().optional(),
   species: z.enum(["Gato", "Cachorro"]),
@@ -33,6 +34,9 @@ export const baseAnimalSchema = z.object({
 
   about: z.string().optional(),
   disable: z.boolean(),
+
+  availableToAdoption: z.boolean(),
+  userId: z.string().optional(),
 });
 
 export const animalSchema = baseAnimalSchema

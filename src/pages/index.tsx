@@ -52,7 +52,7 @@ export default function App({navigation}: {navigation: NavigationProp<any>}) {
             </View>
             <View style={{gap: 48}}>
               <View style={{ gap: 12, alignItems: "center" }}>
-                <Button type="warn" mode="contained" onPress={()=>navigation.navigate("register")} loading={false}>
+                <Button type="warn" mode="contained" onPress={()=>navigation.navigate("animalListingAdoption", {isToAdopt: true})} loading={false}>
                   ADOTAR
                 </Button>
                 <Button type="warn" mode="contained" onPress={()=>navigation.navigate("animalRegister")}  loading={false}>
