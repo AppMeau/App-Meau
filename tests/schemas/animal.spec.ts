@@ -27,6 +27,8 @@ describe("Animal Schema", () => {
       periodToAcompany: "1 Mês",
       about: "Test",
       disable: false,
+      availableToAdoption: true,
+      userId: "Test",
     });
     expect(res.success).toBe(true);
   });
@@ -57,6 +59,8 @@ describe("Animal Schema", () => {
       periodToAcompany: "1 Mês",
       about: "Test",
       disable: false,
+      availableToAdoption: true,
+      userId: "Test",
     });
     expect(res.success).toBe(false);
   });
@@ -87,6 +91,8 @@ describe("Animal Schema", () => {
       periodToAcompany: "1 Mês",
       about: "Test",
       disable: false,
+      availableToAdoption: true,
+      userId: "Test",
     });
     expect(res.success).toBe(false);
   });
@@ -117,6 +123,8 @@ describe("Animal Schema", () => {
       periodToAcompany: "1 Mês",
       about: "Test",
       disable: false,
+      availableToAdoption: true,
+      userId: "Test",
     });
     expect(res.success).toBe(false);
   });
@@ -147,6 +155,8 @@ describe("Animal Schema", () => {
       periodToAcompany: "1 Mês",
       about: "Test",
       disable: false,
+      availableToAdoption: true,
+      userId: "Test",
     });
     expect(res.success).toBe(false);
   });
@@ -177,6 +187,8 @@ describe("Animal Schema", () => {
       periodToAcompany: "1 Mês",
       about: "Test",
       disable: false,
+      availableToAdoption: true,
+      userId: "Test",
     });
     expect(res.success).toBe(false);
   });
@@ -207,6 +219,8 @@ describe("Animal Schema", () => {
       periodToAcompany: "1 Mês",
       about: "Test",
       disable: false,
+      availableToAdoption: true,
+      userId: "Test",
     });
     expect(res.success).toBe(false);
   });
@@ -237,6 +251,8 @@ describe("Animal Schema", () => {
       periodToAcompany: "1 Mês",
       about: "Test",
       disable: false,
+      availableToAdoption: true,
+      userId: "Test",
     });
     expect(res.success).toBe(false);
   });
@@ -267,6 +283,8 @@ describe("Animal Schema", () => {
       periodToAcompany: "1 Mês",
       about: "Test",
       disable: false,
+      availableToAdoption: true,
+      userId: "Test",
     });
     expect(res.success).toBe(false);
   });
@@ -297,6 +315,8 @@ describe("Animal Schema", () => {
       periodToAcompany: "1 Mês",
       about: "Test",
       disable: false,
+      availableToAdoption: true,
+      userId: "Test",
     });
     expect(res.success).toBe(false);
   });
@@ -327,6 +347,8 @@ describe("Animal Schema", () => {
       periodToAcompany: "1 Mês",
       about: "Test",
       disable: false,
+      availableToAdoption: true,
+      userId: "Test",
     });
     expect(res.success).toBe(false);
   });
@@ -357,6 +379,8 @@ describe("Animal Schema", () => {
       periodToAcompany: "1 Mês",
       about: "Test",
       disable: false,
+      availableToAdoption: true,
+      userId: "Test",
     });
     expect(res.success).toBe(false);
   });
@@ -387,6 +411,8 @@ describe("Animal Schema", () => {
       periodToAcompany: "1 Mês",
       about: "Test",
       disable: false,
+      availableToAdoption: true,
+      userId: "Test",
     });
     expect(res.success).toBe(false);
   });
@@ -417,6 +443,8 @@ describe("Animal Schema", () => {
       periodToAcompany: "1 Mês",
       about: "Test",
       disable: false,
+      availableToAdoption: true,
+      userId: "Test",
     });
     expect(res.success).toBe(false);
   });
@@ -447,6 +475,8 @@ describe("Animal Schema", () => {
       periodToAcompany: "1 Mês",
       about: "Test",
       disable: false,
+      availableToAdoption: true,
+      userId: "Test",
     });
     expect(res.success).toBe(false);
   });
@@ -477,6 +507,8 @@ describe("Animal Schema", () => {
       periodToAcompany: "1 Mês",
       about: "Test",
       disable: false,
+      availableToAdoption: true,
+      userId: "Test",
     });
     expect(res.success).toBe(false);
   });
@@ -507,6 +539,8 @@ describe("Animal Schema", () => {
       periodToAcompany: "1 Mês",
       about: "Test",
       disable: false,
+      availableToAdoption: true,
+      userId: "Test",
     });
     expect(res.success).toBe(false);
   });
@@ -537,6 +571,8 @@ describe("Animal Schema", () => {
       periodToAcompany: "1 Mês",
       about: "Test",
       disable: false,
+      availableToAdoption: true,
+      userId: "Test",
     });
     expect(res.success).toBe(false);
   });
@@ -567,6 +603,8 @@ describe("Animal Schema", () => {
       periodToAcompany: "1 Mês",
       about: "Test",
       disable: false,
+      availableToAdoption: true,
+      userId: "Test",
     });
     expect(res.success).toBe(false);
   });
@@ -597,6 +635,8 @@ describe("Animal Schema", () => {
       periodToAcompany: "1 Mês",
       about: "Test",
       disable: false,
+      availableToAdoption: true,
+      userId: "Test",
     });
     expect(res.success).toBe(false);
   });
@@ -627,6 +667,8 @@ describe("Animal Schema", () => {
       periodToAcompany: "1 Mês",
       about: "Test",
       disable: false,
+      availableToAdoption: true,
+      userId: "Test",
     });
     expect(res.success).toBe(false);
   });
@@ -657,6 +699,8 @@ describe("Animal Schema", () => {
       periodToAcompany: "1 Mês",
       about: "Test",
       disable: false,
+      availableToAdoption: true,
+      userId: "Test",
     });
     expect(res.success).toBe(false);
   });
@@ -687,6 +731,8 @@ describe("Animal Schema", () => {
       periodToAcompany: "1 Mês",
       about: "Test",
       disable: false,
+      availableToAdoption: true,
+      userId: "Test",
     });
     expect(res.success).toBe(false);
   });
@@ -717,6 +763,8 @@ describe("Animal Schema", () => {
       periodToAcompany: "",
       about: "Test",
       disable: false,
+      availableToAdoption: true,
+      userId: "Test",
     });
     expect(res.success).toBe(false);
   });
@@ -747,6 +795,8 @@ describe("Animal Schema", () => {
       periodToAcompany: "1 Mês",
       about: "Test",
       disable: "false",
+      availableToAdoption: true,
+      userId: "Test",
     });
     expect(res.success).toBe(false);
   });
