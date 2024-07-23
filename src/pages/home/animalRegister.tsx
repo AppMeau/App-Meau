@@ -1,5 +1,4 @@
 import { MaterialIcons } from "@expo/vector-icons";
-import { Roboto_400Regular } from "@expo-google-fonts/roboto";
 import { useFonts } from "expo-font";
 import * as ImagePicker from "expo-image-picker";
 import { collection, addDoc } from "firebase/firestore";
@@ -28,9 +27,6 @@ import imageHandler from "../../util/functions/ImageHandler";
 import { NavigationProp } from "@react-navigation/native";
 
 export default function AnimalRegister({navigation}: {navigation: NavigationProp<any>}) {
-  useFonts({
-    Roboto_400Regular,
-  });
 
   const [inputs, setInputs] = useState({
     name: "",

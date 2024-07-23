@@ -1,12 +1,10 @@
-import { Courgette_400Regular } from "@expo-google-fonts/courgette";
-import { useFonts } from "expo-font";
 import { StyleSheet, Text, View, Image } from "react-native";
 import Button from "../components/button";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
 import Colors from "../util/Colors";
 import { useAppDispatch, useAppSelector } from "../redux/store";
-import { logout } from "../redux/auth";
+import { logout, selectUser } from "../redux/auth";
 // import redirect from "util/functions/redirect";
 
 import { NavigationProp } from "@react-navigation/native";
@@ -14,13 +12,7 @@ import { NavigationProp } from "@react-navigation/native";
 export default function App({navigation}: {navigation: NavigationProp<any>}) {
   const dispatch = useAppDispatch()
   const isLogged = useAppSelector((state) => state.auth.status);
-  const [fontsLoaded] = useFonts({
-    Courgette_400Regular,
-  });
-
-  if (!fontsLoaded) {
-    return null;
-  }
+  const user = useAppSelector(selectUser);
 
   const signout = async () => {
     dispatch(logout()).then(()=>{

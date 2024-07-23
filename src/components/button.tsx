@@ -1,6 +1,5 @@
 import Zocial from "@expo/vector-icons/Zocial";
-import { useFonts, Roboto_400Regular } from "@expo-google-fonts/roboto";
-import { StyleSheet, View, Text } from "react-native";
+import { StyleSheet, Text } from "react-native";
 import { Button } from 'react-native-paper';
 
 
@@ -16,13 +15,6 @@ type componentProps = {
   children: string | JSX.Element | JSX.Element[];
 };
 export default function ButtonComponent(props: componentProps) {
-  const [fontsLoaded, fontError] = useFonts({
-    Roboto_400Regular,
-  });
-
-  if (!fontsLoaded && !fontError) {
-    return null;
-  }
   return (
     <Button style={{ ...styles[props.type], ...styles.button }} onPress={props.onPress} mode={props.mode} loading={props.loading}>
         <Text style={styles[props.type]}>{props.children}</Text>
