@@ -1,10 +1,10 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import { auth, db, firebase, storage } from '../util/firebase';
-import { Credential } from '../schemas/UserRegister/userRegister';
+import { Credential, User, userSchema } from '../schemas/UserRegister/userRegister';
 import { collection, doc, getDocs, query, where } from 'firebase/firestore';
 
-type initialStateType = { status: boolean | null, isLoading?: boolean, user: any | null}
+type initialStateType = { status: boolean | null, isLoading?: boolean, user: User | null}
 const initialState: initialStateType = {status: null, user: null}
 
 export const login = createAsyncThunk(
@@ -60,7 +60,7 @@ export const Slice = createSlice({
 		builder.addCase(login.fulfilled, (state, action) => {
 			state.status = true
 			state.isLoading = false
-			state.user = action.payload
+			state.user = userSchema.parse(action.payload)
 		})
 		builder.addCase(login.pending, (state, action) => {
 			state.isLoading = true

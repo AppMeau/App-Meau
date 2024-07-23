@@ -12,7 +12,6 @@ import { NavigationProp } from "@react-navigation/native";
 export default function App({navigation}: {navigation: NavigationProp<any>}) {
   const dispatch = useAppDispatch()
   const isLogged = useAppSelector((state) => state.auth.status);
-  const user = useAppSelector(selectUser);
 
   const signout = async () => {
     dispatch(logout()).then(()=>{
