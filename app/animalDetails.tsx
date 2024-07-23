@@ -88,64 +88,74 @@ export default function AnimalDetails() {
             <View style={styles.pictureContainer}>
                 <Image style={styles.picture} source={{ uri: pet.photo}} />
             </View>
-            <View style={styles.infosContainer}>
+            <View style={styles.infosTitleContainer}>
                 <Text style={[{fontWeight: "bold"}]}>{pet.name}</Text>
             </View>
-            <View style={styles.infosContainer}>
-                <Text style={styles.subtitle}>SEXO</Text>
-                <Text style={styles.subtitle}>PORTE</Text>
-                <Text style={styles.subtitle}>IDADE</Text>
+            <View style={styles.infosTitleContainer}>
+               <View style={styles.infosContainer}>
+                  <Text style={styles.subtitle}>SEXO</Text>
+                  <Text style={styles.infos}>{pet.gender}</Text>
+               </View>
+               <View style={styles.infosContainer}>
+                   <Text style={styles.subtitle}>PORTE</Text>
+                  <Text style={styles.infos}>{pet.size}</Text>
+               </View>        
+               <View style={styles.infosContainer}>
+                  <Text style={styles.subtitle}>IDADE</Text>
+                  <Text style={styles.infos}>{pet.age}</Text>
+               </View>          
             </View>
-            <View style={styles.infosContainer}>
-                <Text style={styles.infos}>{pet.gender}</Text>
-                <Text style={styles.infos}>{pet.size}</Text>
-                <Text style={styles.infos}>{pet.age}</Text>
-            </View>
-            <View style={styles.infosContainer}>
+            <View style={styles.infosTitleContainer}>
+              <View style={styles.infosContainer}>
                 <Text style={styles.subtitle}>LOCALIZAÇÃO</Text>
-            </View>
-            <View style={styles.infosContainer}>
                 <Text style={styles.infos}></Text>
+               </View>
             </View>
-            <View style={styles.infosContainer}>
+            <View style={styles.infosTitleContainer}>
+               <View style={styles.infosContainer}>
                 <Text style={styles.subtitle}>CASTRADO</Text>
-                <Text style={styles.subtitle}>VERMIFUGADO</Text>
-            </View>
-            <View style={styles.infosContainer}>
                 <Text style={styles.infos}>{pet.castrated ? "Sim" : "Não"}</Text>
+               </View>
+               <View style={styles.infosContainer}>
+                <Text style={styles.subtitle}>VERMIFUGADO</Text>
                 <Text style={styles.infos}>{pet.dewormed ? "Sim" : "Não"}</Text>
+               </View>
             </View>
-            <View style={styles.infosContainer}>
+    
+            <View style={styles.infosTitleContainer}>
+              <View style={styles.infosContainer}>
                 <Text style={styles.subtitle}>VACINADO</Text>
-                <Text style={styles.subtitle}>DOENÇAS</Text>
-            </View>
-            <View style={styles.infosContainer}>
                 <Text style={styles.infos}>{pet.vaccinated ? "Sim" : "Não"}</Text>
+              </View>
+              <View style={styles.infosContainer}>
+                <Text style={styles.subtitle}>DOENÇAS</Text>
                 <Text style={styles.infos}>{pet.sick ? pet.sickness : "Não"}</Text>
+              </View>                
             </View>
-             <View style={styles.infosContainer}>
+            
+             <View style={styles.infosTitleContainer}>
+              <View style={styles.infosContainer}>
                 <Text style={styles.subtitle}>TEMPERAMENTO</Text>
+                <Text style={styles.infos}>{displayinfosBehavior()}</Text>
+              </View> 
             </View>
-            <View style={styles.infosContainer}>
-                <Text style={styles.infos}>{displayinfosBehavior()}</Text>                
-            </View>
-            <View style={styles.infosContainer}>
+            {/* <View style={styles.infosTitleContainer}>
+              <View style={styles.infosContainer}>
                 <Text style={styles.subtitle}>O {pet.name.toUpperCase()} PRECISA DE</Text>
-            </View>
-            <View style={styles.infosContainer}>
-                <Text style={styles.infos}></Text>                
-            </View>
-            <View style={styles.infosContainer}>
+                <Text style={styles.infos}>{}</Text>
+              </View>
+            </View> */}
+            <View style={styles.infosTitleContainer}>
+              <View style={styles.infosContainer}>
                 <Text style={styles.subtitle}>EXIGÊNCIAS DO DOADOR</Text>
+                <Text style={styles.infos}>{displayinfosAdoptionRequirements()}</Text>
+              </View>
             </View>
-            <View style={styles.infosContainer}>
-                <Text style={styles.infos}>{displayinfosAdoptionRequirements()}</Text>                
-            </View>
-            <View style={styles.infosContainer}>
+            <View style={styles.infosTitleContainer}>
+              <View style={styles.infosContainer}>
                 <Text style={styles.subtitle}>MAIS SOBRE</Text>
-            </View>
-            <View style={styles.infosContainer}>
-                <Text style={styles.infos}>{pet.about}</Text>                
+                <Text style={styles.infos}>{pet.about}</Text>
+              </View> 
             </View>
             <View style={styles.containerButton}>
               <CustomButton
@@ -189,14 +199,20 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "100%"
   },
-  infosContainer:{
+  infosTitleContainer:{
     paddingLeft: 16,
     display: "flex",
-    width: "100%",
+    // width: "100%",
     paddingHorizontal: 8,
     flexWrap: "wrap",
     flexDirection: "row",
-    gap:80,
+    gap:40,
+  },
+  infosContainer:{
+    display: "flex",
+    flexWrap: "wrap",
+    flexDirection: "column",
+    gap:30,
   },
   subtitle: {
     color: Colors.bluePrimary,
