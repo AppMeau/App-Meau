@@ -1,23 +1,19 @@
 import { FlatList, View } from "react-native";
 import CardComponent from "../../components/card";
-import { useSelector } from "react-redux";
-import { getAllAnimals, StateType } from "../../redux/Slice";
+import { getAllAnimals } from "../../redux/Slice";
 import { useAppDispatch, useAppSelector } from "../../redux/store";
 import { useEffect } from "react";
 import { Text } from "react-native-paper";
-import { useLocalSearchParams, useNavigation } from "expo-router";
 import Header from "../../components/header";
 import Colors from "../../util/Colors";
 
-export default function AnimalListing() {
+export default function AnimalListing({ navigation, route }: any) {
   const dispatch = useAppDispatch()
   const {animals, status, error} = useAppSelector((state) => state.animals);
 
   let content = <View></View>
 
-  const navigation = useNavigation()
-  const params = useLocalSearchParams()
-  const isToAdopt = Boolean(params.isToAdopt)
+  const isToAdopt = route.params.isToAdopt
   console.log('isToAdopt', isToAdopt)
 
   useEffect(() => {

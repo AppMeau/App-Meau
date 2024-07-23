@@ -168,6 +168,7 @@ export default function AnimalRegister({navigation}: {navigation: NavigationProp
       periodToAcompany: inputs.periodToAcompany,
       about: inputs.about,
       disable: inputs.disable,
+      availableToAdoption: true,
     };
     try {
       animalSchema.parse(docData);

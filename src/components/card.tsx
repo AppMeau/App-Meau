@@ -6,7 +6,7 @@ import Colors from '../util/Colors';
 import { useFonts } from 'expo-font';
 import { Roboto_400Regular, Roboto_500Medium } from '@expo-google-fonts/roboto';
 import { MaterialIcons } from '@expo/vector-icons';
-import { useNavigation } from 'expo-router';
+import { useNavigation } from '@react-navigation/native';
 
 export default function CardComponent({
   icon,

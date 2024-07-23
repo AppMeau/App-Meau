@@ -35,8 +35,8 @@ export const baseAnimalSchema = z.object({
   about: z.string().optional(),
   disable: z.boolean(),
 
-  // availableToAdoption: z.boolean(),
-  // user: z.string().optional(),
+  availableToAdoption: z.boolean(),
+  user: z.string().optional(),
 });
 
 export const animalSchema = baseAnimalSchema

@@ -26,7 +26,6 @@ export const getAllAnimals = createAsyncThunk('animals/getAllAnimals', async (_,
 		const allAnimalsData = allAnimals.docs.map(doc => {
 			try {
 				const parse = animalSchema.parse({id: doc.id, ...doc.data()})
-				// console.log('PARSE', parse)
 				return parse
 			} catch (error: any | undefined) {
 				throw new Error('Error parsing data', error)
@@ -35,7 +34,6 @@ export const getAllAnimals = createAsyncThunk('animals/getAllAnimals', async (_,
 		console.log('ALL ANIMALS', allAnimalsData)
 		return allAnimalsData as animalRegisterType[]
 	} catch (error: any) {
-		// console.error('Error fetching data', error)
 		return thunkAPI.rejectWithValue({ error: error.message })
 	}
 })
