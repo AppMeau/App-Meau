@@ -1,5 +1,4 @@
 import { Ionicons } from "@expo/vector-icons";
-import { Roboto_400Regular } from "@expo-google-fonts/roboto";
 import { useFonts } from "expo-font";
 import React, { useEffect, useState } from "react";
 import { StyleSheet, View, TextInput, KeyboardTypeOptions } from "react-native";
@@ -27,9 +26,7 @@ export default function InputComponent({
   disabled?: boolean;
   valid?: boolean;
 }) {
-  useFonts({
-    Roboto_400Regular,
-  });
+
   const [focused, setFocus] = useState(false);
   const [isValid, setValid] = useState<null | boolean>(null);
 

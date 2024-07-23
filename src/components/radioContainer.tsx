@@ -1,4 +1,3 @@
-import { Roboto_400Regular } from "@expo-google-fonts/roboto";
 import { useFonts } from "expo-font";
 import { StyleSheet, Text, View } from "react-native";
 import { RadioButton } from "react-native-paper";
@@ -16,9 +15,7 @@ function RadioContainer({
   onPress: any;
   disable?: boolean;
 }) {
-  useFonts({
-    Roboto_400Regular,
-  });
+
   return (
     <RadioButton.Group
       onValueChange={(newValue) => onPress(newValue)}

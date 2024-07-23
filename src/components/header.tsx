@@ -7,7 +7,6 @@ import {
   useSafeAreaInsets,
 } from "react-native-safe-area-context";
 import { useFonts } from "expo-font";
-import { Roboto_400Regular } from "@expo-google-fonts/roboto";
 
 export default function Header({
   color,
@@ -23,13 +22,7 @@ export default function Header({
   onDrawerClick: () => void;
 }) {
   const insets = useSafeAreaInsets();
-  const [fontsLoaded, fontError] = useFonts({
-    Roboto_400Regular,
-  });
 
-  if (!fontsLoaded && !fontError) {
-    return null;
-  }
   return (
     <>
       <View

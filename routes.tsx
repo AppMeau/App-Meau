@@ -1,15 +1,20 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import Index from "./src/pages/index";
-import { useAppSelector } from "./src/redux/store";
+import { useAppDispatch, useAppSelector } from "./src/redux/store";
 import Login from "./src/pages/auth/login";
 import Register from "./src/pages/auth/register";
 import AnimalRegister from "./src/pages/home/animalRegister";
-import notAuthorized from "./src/pages/exceptions/notAuthorized";
+import { useEffect } from "react";
+import { checkAuthStatus } from "./src/redux/auth";
 
 export default function Routes() {
-    const Drawer = createDrawerNavigator();
-    const status = useAppSelector((state) => state.auth.status);
+  const Drawer = createDrawerNavigator();
+  const status = useAppSelector((state) => state.auth.status);
+  const dispatch = useAppDispatch()
+  useEffect(() => {
+    dispatch(checkAuthStatus());
+  }, []);
     return (
         <NavigationContainer>
           <Drawer.Navigator>
