@@ -1,10 +1,8 @@
-import Zocial from "@expo/vector-icons/Zocial";
 import { StyleSheet, Text } from "react-native";
 import { Button } from 'react-native-paper';
 
 
 import Colors from "../util/Colors";
-import { transparent } from "react-native-paper/lib/typescript/styles/themes/v2/colors";
 
 type componentProps = {
   type: "warn" | "positive" | "google" | "facebook" | "transparent";
@@ -13,6 +11,7 @@ type componentProps = {
   mode: "text" | "outlined" | "contained" | "elevated" | "contained-tonal" | undefined;
   loading?: boolean;
   children: string | JSX.Element | JSX.Element[];
+  width ?: number;
 };
 export default function ButtonComponent(props: componentProps) {
   return (
