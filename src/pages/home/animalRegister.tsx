@@ -1,5 +1,4 @@
 import { MaterialIcons } from "@expo/vector-icons";
-import { Roboto_400Regular } from "@expo-google-fonts/roboto";
 import { useFonts } from "expo-font";
 import * as ImagePicker from "expo-image-picker";
 import { collection, addDoc } from "firebase/firestore";
@@ -26,11 +25,10 @@ import Colors from "../../util/Colors";
 import { db } from "../../util/firebase";
 import imageHandler from "../../util/functions/ImageHandler";
 import { NavigationProp } from "@react-navigation/native";
+import { useSelector } from "react-redux";
+import { selectUser } from "../../redux/auth";
 
 export default function AnimalRegister({navigation}: {navigation: NavigationProp<any>}) {
-  useFonts({
-    Roboto_400Regular,
-  });
 
   const [inputs, setInputs] = useState({
     name: "",
@@ -72,6 +70,8 @@ export default function AnimalRegister({navigation}: {navigation: NavigationProp
   const [isFromGallery, setIsFromGallery] = useState<boolean | null>(null);
   const [disableSickness, setDisableSickness] = useState(false);
   const [isValidAbout, setIsValidAbout] = useState(true);
+
+  const {uid} = useSelector(selectUser)
 
   useEffect(() => {
     if (inputs.acompanyBeforeAdoption === true) {
@@ -169,6 +169,7 @@ export default function AnimalRegister({navigation}: {navigation: NavigationProp
       about: inputs.about,
       disable: inputs.disable,
       availableToAdoption: true,
+      ownerId: uid,
     };
     try {
       animalSchema.parse(docData);

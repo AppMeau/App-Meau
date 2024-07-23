@@ -1,20 +1,22 @@
 import { FlatList, View } from "react-native";
 import CardComponent from "../../components/card";
-import { getAllAnimals } from "../../redux/Slice";
+import { getAllAnimals, getAvailablePets, getUserPets } from "../../redux/Slice";
 import { useAppDispatch, useAppSelector } from "../../redux/store";
 import { useEffect } from "react";
 import { Text } from "react-native-paper";
 import Header from "../../components/header";
 import Colors from "../../util/Colors";
+import { useSelector } from "react-redux";
+import { selectUser } from "../../redux/auth";
 
 export default function AnimalListing({ navigation, route }: any) {
   const dispatch = useAppDispatch()
   const {animals, status, error} = useAppSelector((state) => state.animals);
+  const {uid} = useSelector(selectUser)
 
   let content = <View></View>
 
   const isToAdopt = route.params.isToAdopt
-  console.log('isToAdopt', isToAdopt)
 
   useEffect(() => {
     navigation.setOptions({
@@ -28,17 +30,12 @@ export default function AnimalListing({ navigation, route }: any) {
       ),
       title: isToAdopt ? "Adotar" : 'Meus Pets',
     })
-
-    if(status === 'idle') {
-      dispatch(getAllAnimals())
+    
+    if(isToAdopt) {
+      dispatch(getAvailablePets())
+    } else {
+      dispatch(getUserPets(uid))
     }
-
-    // let filteredAnimals = animals
-    // if(isToAdopt) {
-    //   filteredAnimals = animals.filter((animal) => animal.availableToAdoption === true)
-    // } else {
-    //   filteredAnimals = animals.filter((animal) => animal.user === '')
-    // }
   }, [dispatch])
 
   if(status === 'loading') {

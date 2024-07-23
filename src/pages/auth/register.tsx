@@ -1,5 +1,4 @@
 import { MaterialIcons } from "@expo/vector-icons";
-import { Roboto_400Regular } from "@expo-google-fonts/roboto";
 import { useFonts } from "expo-font";
 import * as ImagePicker from "expo-image-picker";
 import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
@@ -25,9 +24,7 @@ import imageHandler from "../../util/functions/ImageHandler";
 import { NavigationProp } from "@react-navigation/native";
 
 export default function Register({navigation}: {navigation: NavigationProp<any>}) {
-  const [fontsLoaded, fontError] = useFonts({
-    Roboto_400Regular,
-  });
+
   const [inputs, setInputs] = useState({
     name: "",
     age: "",
@@ -89,7 +86,7 @@ export default function Register({navigation}: {navigation: NavigationProp<any>}
       inputs.name,
     );
 
-    const docData: User = {
+    const docData = {
       name: inputs.name,
       age: inputs.age,
       email: inputs.email,

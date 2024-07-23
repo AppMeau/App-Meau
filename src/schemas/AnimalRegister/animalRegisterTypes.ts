@@ -36,7 +36,7 @@ export const baseAnimalSchema = z.object({
   disable: z.boolean(),
 
   availableToAdoption: z.boolean(),
-  user: z.string().optional(),
+  userId: z.string().optional(),
 });
 
 export const animalSchema = baseAnimalSchema

@@ -1,10 +1,8 @@
 import * as React from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
-import { Avatar, Card, Text } from 'react-native-paper';
+import { Card, Text } from 'react-native-paper';
 import { animalRegisterType } from '../schemas/AnimalRegister/animalRegisterTypes';
 import Colors from '../util/Colors';
-import { useFonts } from 'expo-font';
-import { Roboto_400Regular, Roboto_500Medium } from '@expo-google-fonts/roboto';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 
@@ -18,11 +16,6 @@ export default function CardComponent({
   animal: animalRegisterType;
 }) {
   const navigation = useNavigation();
-
-  useFonts({
-    Roboto_500Medium,
-    Roboto_400Regular,
-  });
 
   const cardContent = isToAdopt ? (
     <View>
@@ -51,7 +44,7 @@ export default function CardComponent({
         <Card.Title 
           title={animal.name} 
           titleStyle={styles.title} 
-          right={({ size }) => <MaterialIcons name={isToAdopt ? 'favorite-border' : 'error'} size={size} color={Colors.textAuxPrimary} style={{marginRight: 10}} />}
+          right={({ size }) => <MaterialIcons name={isToAdopt ? 'favorite-border' : undefined} size={size} color={Colors.textAuxPrimary} style={{marginRight: 10}} />}
         />
         <Card.Cover source={{ uri: animal.photo }} style={styles.cover}/>
         <Card.Content style={styles.contentCard}>
@@ -75,7 +68,7 @@ const styles = StyleSheet.create({
   },
   title: {
     color: Colors.textAuxPrimary,
-    fontFamily: "Roboto-500Medium",
+    fontFamily: "Roboto_500Medium",
     fontSize: 16,
   },
   cover: {
@@ -88,13 +81,13 @@ const styles = StyleSheet.create({
     color: 'white'
   },
   text: {
-    fontFamily: "Roboto-400Regular",
+    fontFamily: "Roboto_400Regular",
     color: Colors.textAuxPrimary,
   },
   centerText: {
     textAlign: 'center',
     fontSize: 12,
-    fontFamily: "Roboto-400Regular",
+    fontFamily: "Roboto_400Regular",
     color: Colors.textAuxPrimary,
   },
   contentCard: {

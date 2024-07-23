@@ -1,4 +1,3 @@
-import { Roboto_400Regular } from "@expo-google-fonts/roboto";
 import { useFonts } from "expo-font";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
@@ -13,9 +12,7 @@ function CustomButton({
   backgroundColor: string;
   onPress: any;
 }) {
-  useFonts({
-    Roboto_400Regular,
-  });
+
   return (
     <View style={[styles.outerContainer, { backgroundColor }]}>
       <Pressable
