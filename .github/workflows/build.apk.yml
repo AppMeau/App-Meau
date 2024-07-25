@@ -31,4 +31,6 @@ jobs:
     - name: Setup Android SDK
       uses: android-actions/setup-android@v3
     - run: yarn
+    - run: npm install eas-cli -g
+    - run: npm install expo -g
     - run: EXPO_TOKEN=${{ secrets.EXPO_TOKEN }} eas build --platform android --profile development --local
