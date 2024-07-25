@@ -34,3 +34,10 @@ jobs:
     - run: npm install eas-cli -g
     - run: npm install expo -g
     - run: EXPO_TOKEN=${{ secrets.EXPO_TOKEN }} eas build --platform android --profile development --local
+    - run: mv ./build*.apk ./appmeau.apk
+    - name: Release
+      uses: softprops/action-gh-release@v2
+      if: startsWith(github.ref, 'refs/tags/')
+      with:
+        files: appmeau.apk
+
