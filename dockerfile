@@ -26,6 +26,9 @@ RUN git clone https://github.com/AppMeau/App-Meau.git
 
 WORKDIR /App-Meau
 
+RUN cd /App-Meau
+RUN chmod +x ./build.sh
+
 RUN mkdir build
 # RUN update-alternatives --config java
 RUN java -version
