@@ -34,6 +34,11 @@ jobs:
     - run: yarn
     - run: npm install eas-cli -g
     - run: npm install expo -g
+    - run: echo "EXPO_PUBLIC_API_KEY=${{ secrets.EXPO_PUBLIC_API_KEY }}" > .env
+    - run: echo "EXPO_PUBLIC_AUTH_DOMAIN=${{ secrets.EXPO_PUBLIC_AUTH_DOMAIN }}" > .env
+    - run: echo "EXPO_PUBLIC_PROJECT_ID=${{ secrets.EXPO_PUBLIC_PROJECT_ID }}" > .env
+    - run: echo "EXPO_PUBLIC_STORAGE_BUCKET=${{ secrets.EXPO_PUBLIC_STORAGE_BUCKET }}" > .env
+    - run: echo "EXPO_PUBLIC_APP_ID=${{ secrets.EXPO_PUBLIC_APP_ID }}" > .env
     - run: EXPO_TOKEN=${{ secrets.EXPO_TOKEN }} eas build --platform android --profile development --local
     - run: mv ./build*.apk ./appmeau.apk
     - name: Release
