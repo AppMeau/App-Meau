@@ -1,4 +1,5 @@
-{
+import 'dotenv/config';
+export default {
   "expo": {
     "name": "appmeau",
     "slug": "appmeau",
@@ -37,6 +38,12 @@
       ]
     ],
     "extra": {
+      EXPO_PUBLIC_API_KEY: process.env.EXPO_PUBLIC_API_KEY,
+      EXPO_PUBLIC_AUTH_DOMAIN: process.env.EXPO_PUBLIC_AUTH_DOMAIN,
+      EXPO_PUBLIC_PROJECT_ID: process.env.EXPO_PUBLIC_PROJECT_ID,
+      EXPO_PUBLIC_STORAGE_BUCKET: process.env.EXPO_PUBLIC_STORAGE_BUCKET,
+      EXPO_PUBLIC_APP_ID: process.env.EXPO_PUBLIC_APP_ID,
+      
       "router": {
         "origin": false
       },
