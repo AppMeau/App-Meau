@@ -34,11 +34,6 @@ jobs:
     - run: yarn
     - run: npm install eas-cli -g
     - run: npm install expo -g
-    - run: echo "EXPO_PUBLIC_API_KEY=${{ secrets.EXPO_PUBLIC_API_KEY }}
-    - run: echo "EXPO_PUBLIC_AUTH_DOMAIN=${{ secrets.EXPO_PUBLIC_AUTH_DOMAIN }}
-    - run: echo "EXPO_PUBLIC_PROJECT_ID=${{ secrets.EXPO_PUBLIC_PROJECT_ID }}
-    - run: echo "EXPO_PUBLIC_STORAGE_BUCKET=${{ secrets.EXPO_PUBLIC_STORAGE_BUCKET }}
-    - run: echo "EXPO_PUBLIC_APP_ID=${{ secrets.EXPO_PUBLIC_APP_ID }}
     - name: Set .env to process.env of github actions
       uses: cardinalby/export-env-action@v1
       with:
