@@ -57,7 +57,7 @@ export default function Routes() {
             <Drawer.Screen
               name="login"
               component={Login}
-              options={{ title: "Login" }}
+              options={{ title: "Login", unmountOnBlur: true }}
             />
             {/* <Drawer.Screen name="notAuthorized" component={notAuthorized}/> */}
             <Drawer.Screen
@@ -68,7 +68,7 @@ export default function Routes() {
             <Drawer.Screen
               name="chat"
               component={Chat}
-              options={{ title: "Chat" }}
+              options={{ title: "Chat", unmountOnBlur: true }}
             />
           </>
         )}

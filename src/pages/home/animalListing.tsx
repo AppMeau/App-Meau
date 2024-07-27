@@ -1,6 +1,6 @@
 import { FlatList, View } from "react-native";
 import CardComponent from "../../components/card";
-import { getAllAnimals, getAvailablePets, getUserPets } from "../../redux/Slice";
+import { getAllpets, getAvailablePets, getUserPets } from "../../redux/pets";
 import { useAppDispatch, useAppSelector } from "../../redux/store";
 import { useEffect } from "react";
 import { Text } from "react-native-paper";
@@ -10,13 +10,13 @@ import { useSelector } from "react-redux";
 import { selectUser } from "../../redux/auth";
 
 export default function AnimalListing({ navigation, route }: any) {
-  const dispatch = useAppDispatch()
-  const {animals, status, error} = useAppSelector((state) => state.animals);
-  const {uid} = useSelector(selectUser)
+  const dispatch = useAppDispatch();
+  const { pets, status, error } = useAppSelector((state) => state.pets);
+  const { uid } = useSelector(selectUser);
 
-  let content = <View></View>
+  let content = <View></View>;
 
-  const isToAdopt = route.params.isToAdopt
+  const isToAdopt = route.params.isToAdopt;
 
   useEffect(() => {
     navigation.setOptions({
@@ -28,31 +28,37 @@ export default function AnimalListing({ navigation, route }: any) {
           onDrawerClick={navigation.toggleDrawer}
         />
       ),
-      title: isToAdopt ? "Adotar" : 'Meus Pets',
-    })
-    
-    if(isToAdopt) {
-      dispatch(getAvailablePets())
-    } else {
-      dispatch(getUserPets(uid))
-    }
-  }, [dispatch])
+      title: isToAdopt ? "Adotar" : "Meus Pets",
+    });
 
-  if(status === 'loading') {
-    content =  <Text>Loading...</Text>
-  } else if(status === 'succeeded') {
+    if (isToAdopt) {
+      dispatch(getAvailablePets());
+    } else {
+      dispatch(getUserPets(uid));
+    }
+  }, [dispatch]);
+
+  if (status === "loading") {
+    content = <Text>Loading...</Text>;
+  } else if (status === "succeeded") {
     content = (
-      <FlatList data={animals} keyExtractor={(animal) => animal.id!.toString()} renderItem={(itemData) => {
-        return <CardComponent icon="heart" isToAdopt={isToAdopt} animal={itemData.item} />
-      }}/>
-    )
+      <FlatList
+        data={pets}
+        keyExtractor={(animal) => animal.id!.toString()}
+        renderItem={(itemData) => {
+          return (
+            <CardComponent
+              icon="heart"
+              isToAdopt={isToAdopt}
+              animal={itemData.item}
+            />
+          );
+        }}
+      />
+    );
   } else {
-    content = <Text>Error: {error?.toString()}</Text>
+    content = <Text>Error: {error?.toString()}</Text>;
   }
 
-  return (
-    <View>
-      {content}
-    </View>
-  )
+  return <View>{content}</View>;
 }

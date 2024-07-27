@@ -18,8 +18,8 @@ import CustomButton from "../../components/customButton";
 import InputComponent from "../../components/input";
 import RadioContainer from "../../components/radioContainer";
 import {
-  animalSchema,
-  baseAnimalSchema,
+  PetSchema,
+  basePetSchema,
 } from "../../schemas/PetRegister/petRegisterTypes";
 import Colors from "../../util/Colors";
 import { db } from "../../util/firebase";
@@ -175,7 +175,7 @@ export default function AnimalRegister({
       ownerId: uid,
     };
     try {
-      animalSchema.parse(docData);
+      PetSchema.parse(docData);
       await addDoc(collection(db, "pets"), docData);
       navigation.navigate("login");
     } catch (e) {
@@ -210,7 +210,7 @@ export default function AnimalRegister({
                 lazy
                 rule={(val) => {
                   return (
-                    baseAnimalSchema
+                    basePetSchema
                       .pick({ name: true })
                       .safeParse({ name: val })
                       .success.toString() !== "false"
@@ -367,7 +367,7 @@ export default function AnimalRegister({
                 lazy
                 rule={(val) => {
                   return (
-                    baseAnimalSchema
+                    basePetSchema
                       .pick({ about: true })
                       .safeParse({ about: val })
                       .success.toString() !== "false"

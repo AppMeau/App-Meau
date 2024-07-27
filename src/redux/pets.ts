@@ -12,8 +12,8 @@ import {
 import { db } from "../util/firebase";
 import { FirebaseError } from "firebase/app";
 import {
-  petRegisterType,
-  petSchema,
+  PetRegisterType,
+  PetSchema,
 } from "../schemas/PetRegister/petRegisterTypes";
 
 type SliceState = { state12: String };
@@ -21,7 +21,7 @@ type SliceState = { state12: String };
 // const initialState: SliceState = { state12: 'teste12'}
 
 export type StateType = {
-  pets: petRegisterType[];
+  pets: PetRegisterType[];
   status: string;
   error: FirebaseError | null;
 };
@@ -34,7 +34,7 @@ const initialState: StateType = {
 
 const parsePet = (pet: QueryDocumentSnapshot<DocumentData, DocumentData>) => {
   try {
-    const parse = petSchema.parse({ id: pet.id, ...pet.data() });
+    const parse = PetSchema.parse({ id: pet.id, ...pet.data() });
     return parse;
   } catch (error: any | undefined) {
     throw new Error("Error parsing data", error);
@@ -47,7 +47,7 @@ export const getAllpets = createAsyncThunk(
     try {
       const allpets = await getDocs(collection(db, "pets"));
       const allpetsData = allpets.docs.map(parsePet);
-      return allpetsData as petRegisterType[];
+      return allpetsData as PetRegisterType[];
     } catch (error: any) {
       return thunkAPI.rejectWithValue({ error: error.message });
     }
@@ -62,7 +62,7 @@ export const getUserPets = createAsyncThunk(
         query(collection(db, "pets"), where("userId", "==", userId))
       );
       const allpetsData = pets.docs.map(parsePet);
-      return allpetsData as petRegisterType[];
+      return allpetsData as PetRegisterType[];
     } catch (error: any) {
       return thunkAPI.rejectWithValue({ error: error.message });
     }
@@ -77,7 +77,7 @@ export const getAvailablePets = createAsyncThunk(
         query(collection(db, "pets"), where("availableToAdoption", "==", true))
       );
       const allpetsData = pets.docs.map(parsePet);
-      return allpetsData as petRegisterType[];
+      return allpetsData as PetRegisterType[];
     } catch (error: any) {
       return thunkAPI.rejectWithValue({ error: error.message });
     }
@@ -127,8 +127,8 @@ export const petSlice = createSlice({
   },
 });
 
-const LoginReducer = petSlice.reducer;
+const PetReducer = petSlice.reducer;
 
 export const { reducer } = petSlice.actions;
 
-export default LoginReducer;
+export default PetReducer;

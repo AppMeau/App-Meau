@@ -1,0 +1,94 @@
+{
+    "chats": [
+        {
+            "createdAt": "2024-07-27T21:43:04.490Z",
+            "members": [Array
+            ],
+            "messages": [Array
+            ],
+            "pet": "",
+            "updatedAt": "2024-07-27T21:43:04.490Z"
+        },
+        {
+            "createdAt": "2024-07-27T21:49:18.025Z",
+            "id": 0,
+            "members": [Array
+            ],
+            "messages": [Array
+            ],
+            "pet": "",
+            "updatedAt": "2024-07-27T21:49:18.025Z"
+        },
+        {
+            "createdAt": "2024-07-27T21:50:20.318Z",
+            "id": 0,
+            "members": [Array
+            ],
+            "messages": [Array
+            ],
+            "pet": "",
+            "updatedAt": "2024-07-27T21:50:20.318Z"
+        },
+        {
+            "createdAt": "2024-07-27T21:53:11.305Z",
+            "id": 0,
+            "members": [Array
+            ],
+            "messages": [Array
+            ],
+            "pet": "",
+            "updatedAt": "2024-07-27T21:53:11.305Z"
+        },
+        {
+            "createdAt": "2024-07-27T21:58:22.611Z",
+            "id": 0,
+            "members": [Array
+            ],
+            "messages": [Array
+            ],
+            "pet": "",
+            "updatedAt": "2024-07-27T21:58:22.611Z"
+        },
+        {
+            "createdAt": "2024-07-27T21:59:40.761Z",
+            "id": 0,
+            "members": [Array
+            ],
+            "messages": [Array
+            ],
+            "pet": "",
+            "updatedAt": "2024-07-27T21:59:40.761Z"
+        },
+        {
+            "createdAt": "2024-07-27T22:00:44.452Z",
+            "id": 0,
+            "members": [Array
+            ],
+            "messages": [Array
+            ],
+            "pet": "",
+            "updatedAt": "2024-07-27T22:00:44.452Z"
+        },
+        {
+            "createdAt": "2024-07-27T22:02:12.790Z",
+            "id": 0,
+            "members": [Array
+            ],
+            "messages": [Array
+            ],
+            "pet": "",
+            "updatedAt": "2024-07-27T22:02:12.790Z"
+        },
+        {
+            "createdAt": 2024-07-27T22: 06: 21.350Z,
+            "id": 0,
+            "members": [Array
+            ],
+            "messages": [Array
+            ],
+            "pet": "",
+            "updatedAt": 2024-07-27T22: 06: 21.350Z
+        }
+    ],
+    "status": null
+}

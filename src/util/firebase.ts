@@ -3,7 +3,6 @@ import { initializeApp } from "firebase/app";
 import { getReactNativePersistence, initializeAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
-import Constants from "expo-constants";
 const firebaseConfig = {
   apiKey: process.env.EXPO_PUBLIC_API_KEY,
   authDomain: process.env.EXPO_PUBLIC_AUTH_DOMAIN,
@@ -11,6 +10,7 @@ const firebaseConfig = {
   storageBucket: process.env.EXPO_PUBLIC_STORAGE_BUCKET,
   appId: process.env.EXPO_PUBLIC_APP_ID,
 };
+console.log(firebaseConfig);
 export const firebase = initializeApp(firebaseConfig);
 
 // Initialize Cloud Firestore and get a reference to the service

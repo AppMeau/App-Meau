@@ -12,10 +12,12 @@ import {
 } from "redux-persist";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { petSlice } from "./pets";
+import { chatSlice } from "./chat";
 
 const reducers = combineReducers({
   auth: authReducer,
   pets: petSlice.reducer,
+  chat: chatSlice.reducer,
 });
 
 const persistConfig = {
