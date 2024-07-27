@@ -20,7 +20,7 @@ import RadioContainer from "../../components/radioContainer";
 import {
   animalSchema,
   baseAnimalSchema,
-} from "../../schemas/AnimalRegister/animalRegisterTypes";
+} from "../../schemas/PetRegister/petRegisterTypes";
 import Colors from "../../util/Colors";
 import { db } from "../../util/firebase";
 import imageHandler from "../../util/functions/ImageHandler";
@@ -28,8 +28,11 @@ import { NavigationProp } from "@react-navigation/native";
 import { useSelector } from "react-redux";
 import { selectUser } from "../../redux/auth";
 
-export default function AnimalRegister({navigation}: {navigation: NavigationProp<any>}) {
-
+export default function AnimalRegister({
+  navigation,
+}: {
+  navigation: NavigationProp<any>;
+}) {
   const [inputs, setInputs] = useState({
     name: "",
     photoUrl: null,
@@ -71,7 +74,7 @@ export default function AnimalRegister({navigation}: {navigation: NavigationProp
   const [disableSickness, setDisableSickness] = useState(false);
   const [isValidAbout, setIsValidAbout] = useState(true);
 
-  const {uid} = useSelector(selectUser)
+  const { uid } = useSelector(selectUser);
 
   useEffect(() => {
     if (inputs.acompanyBeforeAdoption === true) {
@@ -141,7 +144,7 @@ export default function AnimalRegister({navigation}: {navigation: NavigationProp
     const url = await imageHandler(
       "images/pets/",
       inputs.photoUrl,
-      inputs.name,
+      inputs.name
     );
     const docData = {
       name: inputs.name,

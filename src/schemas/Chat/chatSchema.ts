@@ -4,8 +4,8 @@ export const messageSchema = z.object({
   content: z.string(),
   //id do usuario
   sender: z.string(),
-  createdAt: z.string().datetime(),
-  updatedAt: z.string().datetime(),
+  createdAt: z.date(),
+  updatedAt: z.date(),
   // id da mensagem a qual esta é uma resposta
   response: z.string(),
   deleted: z.boolean(),
@@ -16,6 +16,8 @@ export const roomSchema = z.object({
   pet: z.string(),
   messages: z.array(messageSchema),
 
-  createdAt: z.string().datetime(),
-  updatedAt: z.string().datetime(),
+  createdAt: z.date(),
+  updatedAt: z.date(),
 });
+export type Message = z.infer<typeof messageSchema>;
+export type Room = z.infer<typeof roomSchema>;
