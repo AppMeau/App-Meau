@@ -38,8 +38,8 @@ export const roomSchema = z.object({
   pet: z.string(),
   messages: z.array(messageSchema),
 
-  createdAt: z.coerce.date(),
-  updatedAt: z.coerce.date(),
+  createdAt: z.coerce.string().datetime(),
+  updatedAt: z.coerce.string().datetime(),
 });
 export type Message = z.infer<typeof messageSchema>;
 export type Room = z.infer<typeof roomSchema>;
