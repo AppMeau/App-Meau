@@ -4,10 +4,14 @@ import authReducer from './auth';
 import { FLUSH, PAUSE, PERSIST, persistReducer, PURGE, REGISTER, REHYDRATE } from 'redux-persist';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { animalSlice } from './Slice';
+import { animalRegisterSlice } from './animalRegisterSlice';
+import { userRegisterSlice } from './userRegisterSlice';
 
 const reducers = combineReducers({
 	auth: authReducer,
-	animals: animalSlice.reducer
+	animals: animalSlice.reducer,
+	animalRegister: animalRegisterSlice.reducer,
+	userRegister: userRegisterSlice.reducer
 })
 
 const persistConfig = {

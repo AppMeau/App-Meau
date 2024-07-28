@@ -3,7 +3,9 @@ import { useFonts } from "expo-font";
 import * as ImagePicker from "expo-image-picker";
 import { collection, addDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
+import { useSelector, useDispatch } from 'react-redux';
 import {
+  Alert,
   Image,
   Pressable,
   ScrollView,
@@ -25,16 +27,19 @@ import Colors from "../../util/Colors";
 import { db } from "../../util/firebase";
 import imageHandler from "../../util/functions/ImageHandler";
 import { NavigationProp } from "@react-navigation/native";
-import { useSelector } from "react-redux";
 import { selectUser } from "../../redux/auth";
+import { registerAnimal } from "../../redux/animalRegisterSlice";
+import { AppDispatch } from "../../redux/store";
 
 export default function AnimalRegister({navigation}: {navigation: NavigationProp<any>}) {
+
+  const dispatch = useDispatch<AppDispatch>();
+  const { status, isLoading, error } = useSelector((state: any) => state.animalRegister);
 
   const [inputs, setInputs] = useState({
     name: "",
     photoUrl: null,
     photoDownloadUrl: "",
-
     species: "Cachorro",
     gender: "Macho",
     size: "Pequeno",
@@ -138,14 +143,9 @@ export default function AnimalRegister({navigation}: {navigation: NavigationProp
   const hideDialog = () => setShowPhotoDialog(false);
 
   const handleSubmit = async () => {
-    const url = await imageHandler(
-      "images/pets/",
-      inputs.photoUrl,
-      inputs.name,
-    );
-    const docData = {
+    dispatch(registerAnimal({
+      photoUrl: inputs.photoUrl,
       name: inputs.name,
-      photo: url,
       species: inputs.species,
       gender: inputs.gender,
       size: inputs.size,
@@ -168,16 +168,15 @@ export default function AnimalRegister({navigation}: {navigation: NavigationProp
       periodToAcompany: inputs.periodToAcompany,
       about: inputs.about,
       disable: inputs.disable,
-      availableToAdoption: true,
       ownerId: uid,
-    };
-    try {
-      animalSchema.parse(docData);
-      await addDoc(collection(db, "pets"), docData);
-      navigation.navigate("login");
-    } catch (e) {
-      console.log(e);
-    }
+    })).then(() => {
+      if (status === "failed") {
+        Alert.alert("Erro", error);
+      } else if (status === "succeeded") {
+        navigation.navigate("login");
+      }
+      
+    });
   };
 
   return (
@@ -382,6 +381,7 @@ export default function AnimalRegister({navigation}: {navigation: NavigationProp
                 <CustomButton
                   backgroundColor={Colors.yellowPrimary}
                   onPress={handleSubmit}
+                  loading={isLoading}
                 >
                   COLOCAR PARA ADOÇÃO
                 </CustomButton>

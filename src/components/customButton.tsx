@@ -2,16 +2,19 @@ import { useFonts } from "expo-font";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
 import Colors from "../util/Colors";
+import { ActivityIndicator, Button } from "react-native-paper";
 
 function CustomButton({
   children,
   backgroundColor,
   onPress,
+  loading,
   width
 }: {
   children: string;
   backgroundColor: string;
   onPress: any;
+  loading?: boolean;
   width ?: number;
 }) {
 
@@ -25,7 +28,7 @@ function CustomButton({
         }
         onPress={onPress}
       >
-        <Text style={styles.text}>{children}</Text>
+      {loading ? <ActivityIndicator color= {Colors.textAuxPrimary}/> : <Text style={styles.text}>{children}</Text>} 
       </Pressable>
     </View>
   );
