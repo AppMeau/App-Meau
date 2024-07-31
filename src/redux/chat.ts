@@ -15,9 +15,6 @@ const initialState: initialStateType = { status: null, chats: [] };
 // createAsyncThunk(()=>)
 export const findRoom = (id: number | string) => (state: any) => {
   const room = state.chat.chats.find((room: Room) => room.id == id);
-  console.log("STATE", state.chat);
-  console.log("STATE", state.chat.chats.length);
-  console.log("ROOM", room);
   return room;
 };
 
@@ -49,18 +46,16 @@ export const getRoomById = createAsyncThunk(
       );
       const rooms = room.docs.map((el) => {
         const room = el.data();
-        room.createdAt = new Date(room.createdAt.seconds * 1000);
-        room.updatedAt = new Date(room.updatedAt.seconds * 1000);
-        // console.log("debug", room);
+        room.createdAt = new Date(room.createdAt.seconds * 1000).toJSON();
+        room.updatedAt = new Date(room.updatedAt.seconds * 1000).toJSON();
+
         return roomSchema.parse(room);
       });
-      console.log("rooms", rooms);
       return rooms;
     } catch (e) {
       console.error(e);
       return [];
     }
-    // console.log("Query executando", roomId);
   }
 );
 
@@ -104,12 +99,9 @@ export const chatSlice = createSlice({
       state.chats[payload.roomId]?.messages.push(
         messageSchema.parse(payload.message)
       );
-      console.log(payload);
     });
     builder.addCase(getRoomById.fulfilled, (state, { payload }) => {
-      console.log("ROOMS", payload);
       state.chats = payload;
-      console.log(payload);
     });
   },
 });

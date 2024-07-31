@@ -19,13 +19,11 @@ export const login = createAsyncThunk(
   "users/login",
   async (credentials: Credential) => {
     try {
-      console.log("antes");
       const res = await signInWithEmailAndPassword(
         getAuth(firebase),
         credentials.email,
         credentials.password
       );
-      console.log(res);
       const users = await getDocs(
         query(collection(db, "users"), where("uid", "==", res.user.uid))
       );

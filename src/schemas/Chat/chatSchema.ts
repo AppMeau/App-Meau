@@ -39,8 +39,8 @@ export const roomSchema = z.object({
   messages: z.array(messageSchema),
   active: z.boolean(),
 
-  createdAt: z.coerce.date(),
-  updatedAt: z.coerce.date(),
+  createdAt: z.coerce.string().datetime(),
+  updatedAt: z.coerce.string().datetime(),
 });
 export type Message = z.infer<typeof messageSchema>;
 export type Room = z.infer<typeof roomSchema>;
