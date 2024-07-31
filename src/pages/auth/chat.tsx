@@ -18,7 +18,7 @@ export default function ChatComponent() {
   // }, []);
   const onSend = (messages: Message[] = []) => {
     try {
-      dispatch(sendMessage({ message: messages[0], roomId: 0 }));
+      dispatch(sendMessage({ message: messages[0], roomId: "qXdpCfmOpdudHb2RzbDY" }));
     } catch (e) {
       console.error(e);
     }

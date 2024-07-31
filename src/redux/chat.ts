@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { Room, roomSchema, messageSchema } from "../schemas/Chat/chatSchema";
-import { IMessage } from "react-native-gifted-chat";
+import type { Message } from "../schemas/Chat/chatSchema";
+import { GiftedChat } from "react-native-gifted-chat";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { auth, db } from "../util/firebase";
 import { get, getDatabase, ref, child } from "firebase/database";
@@ -20,19 +21,20 @@ export const findRoom = (id: number | string) => (state: any) => {
 
 export const sendMessage = createAsyncThunk(
   "messages/send",
-  async (messagePayload: { message: IMessage; roomId: number }, thunkAPI) => {
+  async (messagePayload: { message: Message; roomId: number|string }, thunkAPI) => {
     const database = ref(getDatabase());
     // const chatRef = ref(database, `${messagePayload.roomId}`);
     const res = await get(child(database, `${messagePayload.roomId}`));
     if (res.exists()) {
-      console.log(res.val());
-    }
-    if (auth.currentUser)
-      messagePayload.message.user._id = auth.currentUser.uid;
-    try {
-      return messagePayload;
-    } catch (e) {
-      return messagePayload;
+      if (auth.currentUser)
+        messagePayload.message.user._id = auth.currentUser.uid;
+      const message = messagePayload.message;
+      messagePayload.message.createdAt = new Date(message.createdAt).toJSON();
+      try {
+        return messagePayload;
+      } catch (e) {
+        return messagePayload;
+      }
     }
   }
 );
@@ -96,9 +98,10 @@ export const chatSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(sendMessage.fulfilled, (state, { payload }) => {
-      state.chats[payload.roomId]?.messages.push(
-        messageSchema.parse(payload.message)
-      );
+      const room = state.chats.find(el=>el.id == payload.roomId) 
+      if(room){
+        room.messages = GiftedChat.append(room.messages, [messageSchema.parse(payload.message)]);
+      }
     });
     // Se encontrar a sala, atualiza, se não, adiciona
     builder.addCase(getRoomById.fulfilled, (state, { payload }) => {

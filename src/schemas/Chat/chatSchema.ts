@@ -20,7 +20,7 @@ export const quickReplySchema = z.object({
 export const messageSchema = z.object({
   _id: z.string().or(z.number()),
   text: z.string(),
-  createdAt: z.date().or(z.number()),
+  createdAt: z.coerce.string().datetime(),
   user: userSchema,
   image: z.string().optional(),
   video: z.string().optional(),
