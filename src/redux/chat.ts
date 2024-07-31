@@ -39,7 +39,7 @@ export const sendMessage = createAsyncThunk(
 
 export const getRoomById = createAsyncThunk(
   "rooms/getById",
-  async (roomId: string, thunkAPI): Promise<Room[]> => {
+  async (roomId: string, thunkAPI): Promise<Room | null> => {
     try {
       const room = await getDocs(
         query(collection(db, "rooms"), where("id", "==", roomId))
@@ -51,10 +51,10 @@ export const getRoomById = createAsyncThunk(
 
         return roomSchema.parse(room);
       });
-      return rooms;
+      return rooms[0];
     } catch (e) {
       console.error(e);
-      return [];
+      return null;
     }
   }
 );
@@ -100,8 +100,20 @@ export const chatSlice = createSlice({
         messageSchema.parse(payload.message)
       );
     });
+    // Se encontrar a sala, atualiza, se não, adiciona
     builder.addCase(getRoomById.fulfilled, (state, { payload }) => {
-      state.chats = payload;
+      if(payload){
+        if(state.chats.find((room) => room.id === payload.id)){
+          state.chats = state.chats.map((room) => {
+            if(room.id === payload.id){
+              return payload;
+            }
+            return room;
+          });
+        }else{
+          state.chats.push(payload);
+        }
+      }
     });
   },
 });
