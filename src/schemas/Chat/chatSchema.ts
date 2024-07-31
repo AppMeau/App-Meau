@@ -20,7 +20,9 @@ export const quickReplySchema = z.object({
 export const messageSchema = z.object({
   _id: z.string().or(z.number()),
   text: z.string(),
-  createdAt: z.coerce.string().datetime(),
+  createdAt: z.coerce.string().datetime().catch(e=>{
+    return `${new Date(e.input)}`;
+  }),
   user: userSchema,
   image: z.string().optional(),
   video: z.string().optional(),
@@ -34,13 +36,13 @@ export const messageSchema = z.object({
 // const MySchema = z.whatever() satisfies z.ZodType<IMessage>;
 export const roomSchema = z.object({
   id: z.string().or(z.number()),
-  members: z.array(z.string()),
+  members: z.array(z.string()).catch([]),
   pet: z.string(),
-  messages: z.array(messageSchema),
-  active: z.boolean(),
+  messages: z.array(messageSchema).catch([]),
+  active: z.boolean().catch(true),
 
-  createdAt: z.coerce.string().datetime(),
-  updatedAt: z.coerce.string().datetime(),
+  createdAt: z.coerce.string().datetime().catch((`${new Date()}`)),
+  updatedAt: z.coerce.string().datetime().catch((`${new Date()}`)),
 });
 export type Message = z.infer<typeof messageSchema>;
 export type Room = z.infer<typeof roomSchema>;

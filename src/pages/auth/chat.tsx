@@ -7,20 +7,20 @@ import {
   instantiateRoom,
   sendMessage,
 } from "../../redux/chat";
-import { Message } from "../../schemas/Chat/chatSchema";
+import { Message, messageSchema } from "../../schemas/Chat/chatSchema";
 import { View, Text } from "react-native";
 
 export default function ChatComponent() {
   const dispatch = useAppDispatch();
   const room = useAppSelector(findRoom("qXdpCfmOpdudHb2RzbDY"));
-  // useEffect(() => {
-  //   dispatch(getRoomById("qXdpCfmOpdudHb2RzbDY"));
-  // }, []);
-  const onSend = (messages: Message[] = []) => {
+  useEffect(() => {
+    dispatch(getRoomById("qXdpCfmOpdudHb2RzbDY"));
+  }, []);
+  const onSend = (messages: IMessage[] = []) => {
     try {
-      dispatch(sendMessage({ message: messages[0], roomId: "qXdpCfmOpdudHb2RzbDY" }));
+      dispatch(sendMessage({ message: messageSchema.parse(messages[0]), roomId: "qXdpCfmOpdudHb2RzbDY" }));
     } catch (e) {
-      console.error(e);
+      console.error("aqui", messages[0]);
     }
   };
   return (
@@ -28,7 +28,7 @@ export default function ChatComponent() {
       {room ? (
         <GiftedChat
           messages={room.messages}
-          onSend={(messages: Message[]) => onSend(messages)}
+          onSend={(messages: IMessage[]) => onSend(messages)}
           user={{
             _id: 1,
           }}

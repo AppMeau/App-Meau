@@ -1,10 +1,8 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { Room, roomSchema, messageSchema } from "../schemas/Chat/chatSchema";
 import type { Message } from "../schemas/Chat/chatSchema";
-import { GiftedChat } from "react-native-gifted-chat";
-import { collection, getDocs, query, where } from "firebase/firestore";
 import { auth, db } from "../util/firebase";
-import { get, getDatabase, ref, child } from "firebase/database";
+import { get, getDatabase, ref, child, set, update, push } from "firebase/database";
 
 type initialStateType = {
   status: boolean | null;
@@ -22,18 +20,25 @@ export const findRoom = (id: number | string) => (state: any) => {
 export const sendMessage = createAsyncThunk(
   "messages/send",
   async (messagePayload: { message: Message; roomId: number|string }, thunkAPI) => {
-    const database = ref(getDatabase());
+    const database = getDatabase();
     // const chatRef = ref(database, `${messagePayload.roomId}`);
-    const res = await get(child(database, `${messagePayload.roomId}`));
-    if (res.exists()) {
-      if (auth.currentUser)
+    if (database) {
+      if (auth.currentUser){
         messagePayload.message.user._id = auth.currentUser.uid;
-      const message = messagePayload.message;
-      messagePayload.message.createdAt = new Date(message.createdAt).toJSON();
-      try {
-        return messagePayload;
-      } catch (e) {
-        return messagePayload;
+        const message = messagePayload.message;
+        message.createdAt = new Date(message.createdAt).toJSON();
+        try {
+          const newMessageKey = push(child(ref(database), `${messagePayload.roomId}/messages`)).key;
+          const updates = {} as Record<string, Message>;
+          updates[`${messagePayload.roomId}/messages/${newMessageKey}`] = message
+          await update(ref(database), updates);
+          return thunkAPI.fulfillWithValue({ message, roomId: messagePayload.roomId });
+        } catch (e) {
+          return thunkAPI.rejectWithValue({ error: e });
+        }
+
+      }else{
+        return thunkAPI.rejectWithValue({ error: "User not authenticated" });
       }
     }
   }
@@ -41,22 +46,17 @@ export const sendMessage = createAsyncThunk(
 
 export const getRoomById = createAsyncThunk(
   "rooms/getById",
-  async (roomId: string, thunkAPI): Promise<Room | null> => {
+  async (roomId: string, thunkAPI) => {
     try {
-      const room = await getDocs(
-        query(collection(db, "rooms"), where("id", "==", roomId))
-      );
-      const rooms = room.docs.map((el) => {
-        const room = el.data();
-        room.createdAt = new Date(room.createdAt.seconds * 1000).toJSON();
-        room.updatedAt = new Date(room.updatedAt.seconds * 1000).toJSON();
-
-        return roomSchema.parse(room);
-      });
-      return rooms[0];
+      const database = ref(getDatabase());
+      const res = await get(child(database, `${roomId}`));
+      if(res.exists()){
+        return thunkAPI.fulfillWithValue(roomSchema.parse(res.val()));
+      } else {
+        return thunkAPI.rejectWithValue("Room not found");
+      }
     } catch (e) {
-      console.error(e);
-      return null;
+      return thunkAPI.rejectWithValue(e);
     }
   }
 );
@@ -98,9 +98,15 @@ export const chatSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(sendMessage.fulfilled, (state, { payload }) => {
-      const room = state.chats.find(el=>el.id == payload.roomId) 
-      if(room){
-        room.messages = GiftedChat.append(room.messages, [messageSchema.parse(payload.message)]);
+      if(payload){
+        const room: Room | undefined = state.chats.find(el=>el.id == payload.roomId) 
+        if(room){
+          try{
+            room.messages.unshift(messageSchema.parse(payload.message));
+          }catch(e){
+          }
+
+        }
       }
     });
     // Se encontrar a sala, atualiza, se não, adiciona
