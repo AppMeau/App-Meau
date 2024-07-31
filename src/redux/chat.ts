@@ -2,7 +2,8 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { Room, roomSchema, messageSchema } from "../schemas/Chat/chatSchema";
 import { IMessage } from "react-native-gifted-chat";
 import { collection, getDocs, query, where } from "firebase/firestore";
-import { db } from "../util/firebase";
+import { auth, db } from "../util/firebase";
+import { get, getDatabase, ref, child } from "firebase/database";
 
 type initialStateType = {
   status: boolean | null;
@@ -22,7 +23,15 @@ export const findRoom = (id: number | string) => (state: any) => {
 
 export const sendMessage = createAsyncThunk(
   "messages/send",
-  (messagePayload: { message: IMessage; roomId: number }, thunkAPI) => {
+  async (messagePayload: { message: IMessage; roomId: number }, thunkAPI) => {
+    const database = ref(getDatabase());
+    // const chatRef = ref(database, `${messagePayload.roomId}`);
+    const res = await get(child(database, `${messagePayload.roomId}`));
+    if (res.exists()) {
+      console.log(res.val());
+    }
+    if (auth.currentUser)
+      messagePayload.message.user._id = auth.currentUser.uid;
     try {
       return messagePayload;
     } catch (e) {
@@ -69,6 +78,7 @@ export const chatSlice = createSlice({
         ...state.chats,
         roomSchema.parse({
           id: action.payload,
+          active: true,
           members: [],
           messages: [
             messageSchema.parse({

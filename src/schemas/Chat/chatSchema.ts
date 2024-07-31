@@ -37,6 +37,7 @@ export const roomSchema = z.object({
   members: z.array(z.string()),
   pet: z.string(),
   messages: z.array(messageSchema),
+  active: z.boolean(),
 
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),
