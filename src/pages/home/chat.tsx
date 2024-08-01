@@ -21,7 +21,7 @@ export default function ChatComponent() {
   const roomId = "qXdpCfmOpdudHb2RzbDY";
   const room = useAppSelector(findRoom(roomId));
   const user = useAppSelector(selectUser)
-
+  
   useEffect(() => {
     dispatch(getRoomById(roomId));
     const rtdb = getDatabase()
@@ -29,7 +29,6 @@ export default function ChatComponent() {
     onValue(chatRef, async (snapshot) => {
       const data = snapshot.val();
       if (data) {
-        console.log(data);
         const messages = Object.keys(data).map((key) => data[key]);
         const newMessages = []
         for(const message of messages){
@@ -38,6 +37,7 @@ export default function ChatComponent() {
           );
           const usersData: User[] = users.docs.map((doc) => doc.data()).map(el=>userSchema.parse(el));
           if(usersData[0].photo) message.user.avatar = usersData[0].photo;
+          message.sent = true
           newMessages.push(message);
         }
         if(newMessages.length) dispatch(updateMessages({ messages: newMessages, roomId }));

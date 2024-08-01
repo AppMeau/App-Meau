@@ -5,13 +5,16 @@ import { auth, db } from "../util/firebase";
 import { get, getDatabase, ref, child, set, update, push } from "firebase/database";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { User, userSchema } from "../schemas/UserRegister/userRegister";
+import { useDispatch } from "react-redux";
+import { useAppDispatch } from "./store";
 
 type initialStateType = {
   status: boolean | null;
   isLoading?: boolean;
-  chats: Array<Room>;
+  chats: Array<Room>
+  pendingMessages: Array<{_id:String | number, roomId: String | number}>;
 };
-const initialState: initialStateType = { status: null, chats: [] };
+const initialState: initialStateType = { status: null, chats: []};
 
 // createAsyncThunk(()=>)
 export const findRoom = (id: number | string) => (state: any) => {
@@ -72,6 +75,9 @@ export const chatSlice = createSlice({
   name: "chat",
   initialState,
   reducers: {
+    setMessageAsSent: (state, action: {payload: {roomId: string, messageId: string}}) => {
+
+    },
     updateMessages: (state, action: {payload: {roomId: string, messages: Message[]}}) => {
       const { roomId, messages } = action.payload;
       const room = state.chats.find((room) => room.id === roomId);
@@ -113,26 +119,29 @@ export const chatSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(sendMessage.fulfilled, (state, { payload }) => {
-      // if(payload){
-      //   const room: Room | undefined = state.chats.find(el=>el.id == payload.roomId) 
-      //   if(room){
-      //     try{
-      //       room.messages.unshift(messageSchema.parse(payload.message));
-      //     }catch(e){
-      //     }
-
-      //   }
-      // }
+      if(payload){
+        const { roomId } = payload;
+        const room = state.chats.find((room) => room.id === roomId);
+        if (room) {
+          const message = room.messages.find((message) => message._id === payload.message._id);
+          if (message) {
+            message.pending = false;
+            message.sent = true
+          }
+        }
+      }
     });
-    // builder.addCase(sendMessage.pending,  (state, { payload }) => {
-    //   if(payload){
-    //     const room: Room | undefined = state.chats.find(el=>el.id == payload.roomId) 
-    //     if(room){
-    //       room.messages.unshift(messageSchema.parse(payload.message));
-    //     }
-    //     room.messages.unshift(messageSchema.parse(payload.message));
-    //   }
-    // });
+    builder.addCase(sendMessage.pending,  (state, {meta}) => {
+      if(meta.arg){
+        const room: Room | undefined = state.chats.find(el=>el.id == meta.arg.roomId) 
+        const message = {...meta.arg.message}
+        message.pending = true
+        if(room){
+          // state.pendingMessages.push({_id: message._id, roomId: room.id});
+          room.messages.unshift(message);
+        }
+      }
+    });
     // Se encontrar a sala, atualiza, se não, adiciona
     builder.addCase(getRoomById.fulfilled, (state, { payload }) => {
       if(payload){
