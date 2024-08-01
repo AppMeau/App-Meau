@@ -25,7 +25,7 @@ export const findRoom = (id: number | string) => (state: any) => {
 const sortByDate = (messages: Array<Message>) => messages.sort((a,b)=>{
   return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
 });
-export const markAsRead = async (messages: Message[], roomId: string|number) => {
+export const markAsReceived = async (messages: Message[], roomId: string|number) => {
   for(const message of messages){
     if(auth.currentUser){
       if(message.readers?.indexOf(auth.currentUser.uid) == -1){
@@ -54,7 +54,7 @@ export const processMessages = async (messages: Message[], room: Room): Promise<
         if(message.readers && message.readers.indexOf(el) !== -1 && acc) return true;
         return false;
       }, true)
-      
+      if(received) console.log("Received", received, message.text)
       message.received = received
       message.sent = true
       newMessages.push(message);
@@ -104,7 +104,7 @@ export const getRoomById = createAsyncThunk(
           room.messages = Object.keys(room.messages).map((key) => {
             return {...room.messages[key], dbId: key}
           });
-          await markAsRead(room.messages, roomId);
+          await markAsReceived(room.messages, roomId);
           room.messages = await processMessages(room.messages, room);
           room.messages = sortByDate(room.messages);
         }
@@ -132,8 +132,12 @@ export const chatSlice = createSlice({
           if(!messageInRoom){
             room.messages.unshift(message);
           } else {
-            messageInRoom = message
-            console.log("Message updated", message)
+            room.messages = room.messages.map(el => {
+              if(el._id === message._id){
+                return message;
+              }
+              return el
+            })
           }
         })
         room.messages = sortByDate(room.messages)
