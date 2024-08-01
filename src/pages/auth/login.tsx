@@ -19,11 +19,6 @@ export default function Login({
   const [user, setUser] = React.useState("");
   const [password, setPassword] = React.useState("");
   const isLoading = useAppSelector((state) => state.auth.isLoading);
-  useEffect(() => {
-    dispatch(clearRooms());
-    dispatch(getRoomById("qXdpCfmOpdudHb2RzbDY"));
-    // dispatch(instantiateRoom(2));
-  }, []);
   const dispatch = useAppDispatch();
   const auth = async () => {
     try {

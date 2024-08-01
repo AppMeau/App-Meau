@@ -20,6 +20,8 @@ export const quickReplySchema = z.object({
 export const messageSchema = z.object({
   _id: z.string().or(z.number()),
   text: z.string(),
+  readers: z.array(z.string().or(z.number())).optional(),
+  read: z.boolean().optional(),
   createdAt: z.coerce.string().datetime().catch(e=>{
     return `${new Date(e.input)}`;
   }),

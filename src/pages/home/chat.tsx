@@ -1,27 +1,24 @@
-import { useCallback, useEffect, useState } from "react";
+import { useEffect } from "react";
 import { GiftedChat, IMessage } from "react-native-gifted-chat";
 import { useAppDispatch, useAppSelector } from "../../redux/store";
 import {
   findRoom,
   getRoomById,
-  instantiateRoom,
   sendMessage,
   updateMessages,
 } from "../../redux/chat";
-import { Message, messageSchema } from "../../schemas/Chat/chatSchema";
-import { View, Text } from "react-native";
+import { messageSchema } from "../../schemas/Chat/chatSchema";
+import { Text } from "react-native";
 import { getDatabase, onValue, ref } from "firebase/database";
 import { selectUser } from "../../redux/auth";
-import { collection, getDocs, query, where } from "firebase/firestore";
-import { User, userSchema } from "../../schemas/UserRegister/userRegister";
-import { db } from "../../util/firebase";
+import { processMessages } from "../../redux/chat";
 
 export default function ChatComponent() {
   const dispatch = useAppDispatch();
   const roomId = "qXdpCfmOpdudHb2RzbDY";
   const room = useAppSelector(findRoom(roomId));
   const user = useAppSelector(selectUser)
-  
+  const isLoading = useAppSelector((state) => state.chat.isLoading);
   useEffect(() => {
     dispatch(getRoomById(roomId));
     const rtdb = getDatabase()
@@ -29,18 +26,13 @@ export default function ChatComponent() {
     onValue(chatRef, async (snapshot) => {
       const data = snapshot.val();
       if (data) {
-        const messages = Object.keys(data).map((key) => data[key]);
-        const newMessages = []
-        for(const message of messages){
-          const users = await getDocs(
-            query(collection(db, "users"), where("uid", "==", message.user._id))
-          );
-          const usersData: User[] = users.docs.map((doc) => doc.data()).map(el=>userSchema.parse(el));
-          if(usersData[0].photo) message.user.avatar = usersData[0].photo;
-          message.sent = true
-          newMessages.push(message);
-        }
-        if(newMessages.length) dispatch(updateMessages({ messages: newMessages, roomId }));
+        try{
+          const messages = Object.keys(data).map((key) => data[key]);
+          const newMessages = await processMessages(messages, room);
+          if(newMessages.length) dispatch(updateMessages({ messages: newMessages, roomId }));
+        } catch (e) {
+          console.error(e);
+        } 
       }
     })
   }, []);
@@ -53,7 +45,7 @@ export default function ChatComponent() {
   };
   return (
     <>
-      {room && user ? (
+      {room && user && !isLoading? (
         <GiftedChat
           messages={room.messages}
           onSend={(messages: IMessage[]) => onSend(messages)}
