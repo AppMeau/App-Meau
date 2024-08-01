@@ -4,6 +4,7 @@ import { useAppDispatch, useAppSelector } from "../../redux/store";
 import {
   findRoom,
   getRoomById,
+  markAsRead,
   sendMessage,
   updateMessages,
 } from "../../redux/chat";
@@ -28,6 +29,7 @@ export default function ChatComponent() {
       if (data) {
         try{
           const messages = Object.keys(data).map((key) => data[key]);
+          await markAsRead(messages, roomId);
           const newMessages = await processMessages(messages, room);
           if(newMessages.length) dispatch(updateMessages({ messages: newMessages, roomId }));
         } catch (e) {
