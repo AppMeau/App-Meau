@@ -10,7 +10,7 @@ import {
 } from "../../redux/chat";
 import { messageSchema } from "../../schemas/Chat/chatSchema";
 import { Text } from "react-native";
-import { getDatabase, onValue, ref } from "firebase/database";
+import { getDatabase, off, onValue, ref } from "firebase/database";
 import { selectUser } from "../../redux/auth";
 import { processMessages } from "../../redux/chat";
 
@@ -21,9 +21,9 @@ export default function ChatComponent() {
   const user = useAppSelector(selectUser)
   const isLoading = useAppSelector((state) => state.chat.isLoading);
   useEffect(() => {
-    dispatch(getRoomById(roomId));
     const rtdb = getDatabase()
     const chatRef = ref(rtdb,roomId+'/messages');
+    dispatch(getRoomById(roomId));
     onValue(chatRef, async (snapshot) => {
       const data = snapshot.val();
       if (data) {
@@ -32,12 +32,14 @@ export default function ChatComponent() {
           await markAsReceived(messages, roomId);
           const newMessages = await processMessages(messages, room);
           if(newMessages.length) dispatch(updateMessages({ messages: newMessages, roomId }));
-          console.log(room.messages)
         } catch (e) {
           console.error(e);
         } 
       }
-    })
+    });
+    return ()=>{
+      off(chatRef, 'value');
+    }
   }, []);
   const onSend = (messages: IMessage[] = []) => {
     try {
@@ -55,7 +57,7 @@ export default function ChatComponent() {
           user={{
             _id: user?.uid,
             name: user?.name,
-            // avatar: user?.photo,
+            avatar: user?.photo,
           }}
         />
       ) : (

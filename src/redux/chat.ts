@@ -5,9 +5,6 @@ import { auth, db } from "../util/firebase";
 import { get, getDatabase, ref, child, set, update, push } from "firebase/database";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { User, userSchema } from "../schemas/UserRegister/userRegister";
-import { useDispatch } from "react-redux";
-import { useAppDispatch } from "./store";
-import { isLoading } from "expo-font";
 
 type initialStateType = {
   status: boolean | null;
@@ -43,11 +40,11 @@ export const processMessages = async (messages: Message[], room: Room): Promise<
   const newMessages = []
   for(const message of messages){
     try{
-      const users = await getDocs(
-        query(collection(db, "users"), where("uid", "==", message.user._id))
-      );
-      const usersData: User[] = users.docs.map((doc) => doc.data()).map(el=>userSchema.parse(el));
-      if(usersData[0].photo) message.user.avatar = usersData[0].photo;
+      // const users = await getDocs(
+        // query(collection(db, "users"), where("uid", "==", message.user._id))
+      // );
+      // const usersData: User[] = users.docs.map((doc) => doc.data()).map(el=>userSchema.parse(el));
+      // if(usersData[0].photo) message.user.avatar = usersData[0].photo;
 
       //checa se todas as pessoas receberam a mensagem
       const received = room.members.reduce((acc: boolean,el:string|number)=>{
