@@ -51,7 +51,6 @@ export const processMessages = async (messages: Message[], room: Room): Promise<
         if(message.readers && message.readers.indexOf(el) !== -1 && acc) return true;
         return false;
       }, true)
-      if(received) console.log("Received", received, message.text)
       message.received = received
       message.sent = true
       newMessages.push(message);
