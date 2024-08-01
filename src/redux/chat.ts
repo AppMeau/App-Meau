@@ -12,7 +12,6 @@ type initialStateType = {
   status: boolean | null;
   isLoading?: boolean;
   chats: Array<Room>
-  pendingMessages: Array<{_id:String | number, roomId: String | number}>;
 };
 const initialState: initialStateType = { status: null, chats: []};
 
@@ -21,6 +20,10 @@ export const findRoom = (id: number | string) => (state: any) => {
   const room = state.chat.chats.find((room: Room) => room.id == id);
   return room;
 };
+
+const sortByDate = (messages: Array<Message>) => messages.sort((a,b)=>{
+  return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+});
 
 export const sendMessage = createAsyncThunk(
   "messages/send",
@@ -58,8 +61,10 @@ export const getRoomById = createAsyncThunk(
       const res = await get(child(database, `${roomId}`));
       if(res.exists()){
         const room = res.val();
-        if(room.messages) room.messages = Object.keys(room.messages).map((key) => room.messages[key]);
-
+        if(room.messages){
+          room.messages = Object.keys(room.messages).map((key) => room.messages[key]);
+          room.messages = sortByDate(room.messages);
+        }
         return thunkAPI.fulfillWithValue(roomSchema.parse(room));
       } else {
         return thunkAPI.rejectWithValue("Room not found");
@@ -75,16 +80,11 @@ export const chatSlice = createSlice({
   name: "chat",
   initialState,
   reducers: {
-    setMessageAsSent: (state, action: {payload: {roomId: string, messageId: string}}) => {
-
-    },
     updateMessages: (state, action: {payload: {roomId: string, messages: Message[]}}) => {
       const { roomId, messages } = action.payload;
       const room = state.chats.find((room) => room.id === roomId);
       if (room) {
-        room.messages = messages.sort((a,b)=>{
-          return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-        });
+        room.messages = sortByDate(room.messages)
       }
     },
     // recebe id e inicia uma nova sala
