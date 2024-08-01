@@ -84,7 +84,7 @@ export const chatSlice = createSlice({
       const { roomId, messages } = action.payload;
       const room = state.chats.find((room) => room.id === roomId);
       if (room) {
-        room.messages = sortByDate(room.messages)
+        room.messages = sortByDate(messages)
       }
     },
     // recebe id e inicia uma nova sala
