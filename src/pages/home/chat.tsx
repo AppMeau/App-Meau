@@ -6,31 +6,48 @@ import {
   getRoomById,
   instantiateRoom,
   sendMessage,
+  updateMessages,
 } from "../../redux/chat";
 import { Message, messageSchema } from "../../schemas/Chat/chatSchema";
 import { View, Text } from "react-native";
+import { getDatabase, onValue, ref } from "firebase/database";
+import { selectUser } from "../../redux/auth";
 
 export default function ChatComponent() {
   const dispatch = useAppDispatch();
-  const room = useAppSelector(findRoom("qXdpCfmOpdudHb2RzbDY"));
+  const roomId = "qXdpCfmOpdudHb2RzbDY";
+  const room = useAppSelector(findRoom(roomId));
+  const user = useAppSelector(selectUser)
+
   useEffect(() => {
-    dispatch(getRoomById("qXdpCfmOpdudHb2RzbDY"));
+    dispatch(getRoomById(roomId));
+    const db = getDatabase()
+    const chatRef = ref(db,roomId+'/messages');
+    onValue(chatRef, (snapshot) => {
+      const data = snapshot.val();
+      if (data) {
+        const messages = Object.keys(data).map((key) => data[key]);
+        dispatch(updateMessages({ messages, roomId }));
+      }   
+    })
   }, []);
   const onSend = (messages: IMessage[] = []) => {
     try {
-      dispatch(sendMessage({ message: messageSchema.parse(messages[0]), roomId: "qXdpCfmOpdudHb2RzbDY" }));
+      dispatch(sendMessage({ message: messageSchema.parse(messages[0]), roomId }));
     } catch (e) {
-      console.error("aqui", messages[0]);
+      console.error(e);
     }
   };
   return (
     <>
-      {room ? (
+      {room && user ? (
         <GiftedChat
           messages={room.messages}
           onSend={(messages: IMessage[]) => onSend(messages)}
           user={{
-            _id: 1,
+            _id: user?.uid,
+            name: user?.name,
+            avatar: user?.photo,
           }}
         />
       ) : (

@@ -23,8 +23,9 @@ export const sendMessage = createAsyncThunk(
     const database = getDatabase();
     // const chatRef = ref(database, `${messagePayload.roomId}`);
     if (database) {
-      if (auth.currentUser){
-        messagePayload.message.user._id = auth.currentUser.uid;
+      // if (auth.currentUser){
+      if (true){
+          // messagePayload.message.user._id = auth.currentUser.uid;
         const message = messagePayload.message;
         message.createdAt = new Date(message.createdAt).toJSON();
         try {
@@ -51,7 +52,10 @@ export const getRoomById = createAsyncThunk(
       const database = ref(getDatabase());
       const res = await get(child(database, `${roomId}`));
       if(res.exists()){
-        return thunkAPI.fulfillWithValue(roomSchema.parse(res.val()));
+        const room = res.val();
+        room.messages = Object.keys(room.messages).map((key) => room.messages[key]);
+
+        return thunkAPI.fulfillWithValue(roomSchema.parse(room));
       } else {
         return thunkAPI.rejectWithValue("Room not found");
       }
@@ -66,6 +70,15 @@ export const chatSlice = createSlice({
   name: "chat",
   initialState,
   reducers: {
+    updateMessages: (state, action: {payload: {roomId: string, messages: Message[]}}) => {
+      const { roomId, messages } = action.payload;
+      const room = state.chats.find((room) => room.id === roomId);
+      if (room) {
+        room.messages = messages.sort((a,b)=>{
+          return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        });
+      }
+    },
     // recebe id e inicia uma nova sala
     clearRooms: (state) => {
       state.chats = [];
@@ -98,17 +111,26 @@ export const chatSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(sendMessage.fulfilled, (state, { payload }) => {
-      if(payload){
-        const room: Room | undefined = state.chats.find(el=>el.id == payload.roomId) 
-        if(room){
-          try{
-            room.messages.unshift(messageSchema.parse(payload.message));
-          }catch(e){
-          }
+      // if(payload){
+      //   const room: Room | undefined = state.chats.find(el=>el.id == payload.roomId) 
+      //   if(room){
+      //     try{
+      //       room.messages.unshift(messageSchema.parse(payload.message));
+      //     }catch(e){
+      //     }
 
-        }
-      }
+      //   }
+      // }
     });
+    // builder.addCase(sendMessage.pending,  (state, { payload }) => {
+    //   if(payload){
+    //     const room: Room | undefined = state.chats.find(el=>el.id == payload.roomId) 
+    //     if(room){
+    //       room.messages.unshift(messageSchema.parse(payload.message));
+    //     }
+    //     room.messages.unshift(messageSchema.parse(payload.message));
+    //   }
+    // });
     // Se encontrar a sala, atualiza, se não, adiciona
     builder.addCase(getRoomById.fulfilled, (state, { payload }) => {
       if(payload){
@@ -129,6 +151,6 @@ export const chatSlice = createSlice({
 
 const chatReducer = chatSlice.reducer;
 
-export const { instantiateRoom, clearRooms } = chatSlice.actions;
+export const { instantiateRoom, clearRooms, updateMessages } = chatSlice.actions;
 
 export default chatReducer;

@@ -10,7 +10,7 @@ import AnimalListing from "./src/pages/home/animalListing";
 import { useEffect } from "react";
 import { checkAuthStatus } from "./src/redux/auth";
 import AnimalDetails from "./src/pages/home/animalDetails";
-import Chat from "./src/pages/auth/chat";
+import Chat from "./src/pages/home/chat";
 
 export default function Routes() {
   const Drawer = createDrawerNavigator();
@@ -51,6 +51,11 @@ export default function Routes() {
               component={AnimalDetails}
               options={{ title: "Detalhes", unmountOnBlur: true }}
             />
+            <Drawer.Screen
+              name="chat"
+              component={Chat}
+              options={{ title: "Chat", unmountOnBlur: true }}
+            />
           </>
         ) : (
           <>
@@ -64,11 +69,6 @@ export default function Routes() {
               name="register"
               component={Register}
               options={{ title: "Cadastrar" }}
-            />
-            <Drawer.Screen
-              name="chat"
-              component={Chat}
-              options={{ title: "Chat", unmountOnBlur: true }}
             />
           </>
         )}
