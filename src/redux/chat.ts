@@ -3,6 +3,8 @@ import { Room, roomSchema, messageSchema } from "../schemas/Chat/chatSchema";
 import type { Message } from "../schemas/Chat/chatSchema";
 import { auth, db } from "../util/firebase";
 import { get, getDatabase, ref, child, set, update, push } from "firebase/database";
+import { collection, getDocs, query, where } from "firebase/firestore";
+import { User, userSchema } from "../schemas/UserRegister/userRegister";
 
 type initialStateType = {
   status: boolean | null;
@@ -53,7 +55,7 @@ export const getRoomById = createAsyncThunk(
       const res = await get(child(database, `${roomId}`));
       if(res.exists()){
         const room = res.val();
-        room.messages = Object.keys(room.messages).map((key) => room.messages[key]);
+        if(room.messages) room.messages = Object.keys(room.messages).map((key) => room.messages[key]);
 
         return thunkAPI.fulfillWithValue(roomSchema.parse(room));
       } else {

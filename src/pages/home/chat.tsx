@@ -12,6 +12,9 @@ import { Message, messageSchema } from "../../schemas/Chat/chatSchema";
 import { View, Text } from "react-native";
 import { getDatabase, onValue, ref } from "firebase/database";
 import { selectUser } from "../../redux/auth";
+import { collection, getDocs, query, where } from "firebase/firestore";
+import { User, userSchema } from "../../schemas/UserRegister/userRegister";
+import { db } from "../../util/firebase";
 
 export default function ChatComponent() {
   const dispatch = useAppDispatch();
@@ -21,14 +24,24 @@ export default function ChatComponent() {
 
   useEffect(() => {
     dispatch(getRoomById(roomId));
-    const db = getDatabase()
-    const chatRef = ref(db,roomId+'/messages');
-    onValue(chatRef, (snapshot) => {
+    const rtdb = getDatabase()
+    const chatRef = ref(rtdb,roomId+'/messages');
+    onValue(chatRef, async (snapshot) => {
       const data = snapshot.val();
       if (data) {
+        console.log(data);
         const messages = Object.keys(data).map((key) => data[key]);
-        dispatch(updateMessages({ messages, roomId }));
-      }   
+        const newMessages = []
+        for(const message of messages){
+          const users = await getDocs(
+            query(collection(db, "users"), where("uid", "==", message.user._id))
+          );
+          const usersData: User[] = users.docs.map((doc) => doc.data()).map(el=>userSchema.parse(el));
+          if(usersData[0].photo) message.user.avatar = usersData[0].photo;
+          newMessages.push(message);
+        }
+        if(newMessages.length) dispatch(updateMessages({ messages: newMessages, roomId }));
+      }
     })
   }, []);
   const onSend = (messages: IMessage[] = []) => {
@@ -47,7 +60,7 @@ export default function ChatComponent() {
           user={{
             _id: user?.uid,
             name: user?.name,
-            avatar: user?.photo,
+            // avatar: user?.photo,
           }}
         />
       ) : (
