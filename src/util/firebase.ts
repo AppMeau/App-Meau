@@ -5,11 +5,11 @@ import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 import Constants from 'expo-constants';
 const firebaseConfig = {
-  apiKey: Constants.manifest?.extra?.EXPO_PUBLIC_API_KEY,
-  authDomain: Constants.manifest?.extra?.EXPO_PUBLIC_AUTH_DOMAIN,
-  projectId: Constants.manifest?.extra?.EXPO_PUBLIC_PROJECT_ID,
-  storageBucket: Constants.manifest?.extra?.EXPO_PUBLIC_STORAGE_BUCKET,
-  appId: Constants.manifest?.extra?.EXPO_PUBLIC_APP_ID,
+  apiKey: process.env.EXPO_PUBLIC_API_KEY,
+  authDomain: process.env.EXPO_PUBLIC_AUTH_DOMAIN,
+  projectId: process.env.EXPO_PUBLIC_PROJECT_ID,
+  storageBucket: process.env.EXPO_PUBLIC_STORAGE_BUCKET,
+  appId: process.env.EXPO_PUBLIC_APP_ID,
 };
 export const firebase = initializeApp(firebaseConfig);
 

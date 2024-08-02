@@ -8,7 +8,7 @@ import {
 import Colors from "../../util/Colors";
 import Button from "../../components/customButton";
 
-export default function AnimalDetails({route}: any) {
+export default function AnimalDetails({route, navigation}: any) {
   const pet = route.params.animal;
 
   function displayinfosBehavior(){
@@ -53,6 +53,12 @@ export default function AnimalDetails({route}: any) {
 
     return requirements.join(", ")
     
+  }
+
+  const navigateToInteresteds = () => {
+    navigation.navigate('interesteds', {
+      animal: pet
+    })
   }
 
   function render() {
@@ -139,14 +145,14 @@ export default function AnimalDetails({route}: any) {
             <View style={styles.containerButton}>
               <Button
                 backgroundColor={Colors.yellowPrimary}
-                onPress={null}
                 width={175}
+                onPress={navigateToInteresteds}
               >
                 VER INTERESSADOS
               </Button>
               <Button
                 backgroundColor={Colors.yellowPrimary}
-                onPress={null}
+                onPress={()=>{}}
                 width={175}
               >
                 REMOVER PET
