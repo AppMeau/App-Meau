@@ -27,6 +27,7 @@ import imageHandler from "../../util/functions/ImageHandler";
 import { NavigationProp } from "@react-navigation/native";
 import { useSelector } from "react-redux";
 import { selectUser } from "../../redux/auth";
+import Interesteds from "./interesteds";
 
 export default function AnimalRegister({navigation}: {navigation: NavigationProp<any>}) {
 
@@ -170,6 +171,7 @@ export default function AnimalRegister({navigation}: {navigation: NavigationProp
       disable: inputs.disable,
       availableToAdoption: true,
       ownerId: uid,
+      Interesteds: [],
     };
     try {
       animalSchema.parse(docData);

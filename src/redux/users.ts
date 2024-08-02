@@ -23,11 +23,11 @@ const initialState: StateType = {
 export const getAllInteresteds = createAsyncThunk('users/getAllInteresteds', async (usersId: Array<string>, thunkAPI) => {
 	try {
 		let interesteds: User[] = []
-		usersId.map(async (userId) => {
+		for (const userId of usersId) {
 			const user = await getDocs(query(collection(db, "users"), where("uid", "==", userId)))
 			const userData = user.docs.map(doc => doc.data()) as User[]
-			interesteds.push(...userData)
-		})
+			interesteds.push(userData[0])
+		}
 		return interesteds
 	} catch (error: any) {
 		return thunkAPI.rejectWithValue({ error: error.message })

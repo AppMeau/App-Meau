@@ -28,7 +28,7 @@ export default function CardComponent({
     </View>
   ):(
     <View style={styles.interestedView}>
-      <Text style={styles.centerText}>__ NOVOS INTERESSADOS</Text>
+      <Text style={styles.centerText}>{animal.interesteds?.length} NOVO(S) INTERESSADO(S)</Text>
     </View>
   )
 

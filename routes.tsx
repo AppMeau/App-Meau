@@ -12,6 +12,8 @@ import { checkAuthStatus } from "./src/redux/auth";
 import AnimalDetails from "./src/pages/home/animalDetails";
 import Interesteds from "./src/pages/home/interesteds";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import Header from "./src/components/header";
+import Colors from "./src/util/Colors";
 
 const Drawer = createDrawerNavigator();
 const DetailStack = createNativeStackNavigator();
@@ -39,7 +41,14 @@ function DetailsRoute({isToAdopt}:{isToAdopt: boolean}) {
       <DetailStack.Screen 
         name="interesteds" 
         component={Interesteds} 
-        options={{ title: 'Interessados'}} 
+        options={{ header: ({ navigation, options }: any) => (
+          <Header
+            color={Colors.bluePrimary}
+            title={'Interessados'}
+            search
+            onDrawerClick={navigation.toggleDrawer}
+          />
+        ),}} 
       />
     </DetailStack.Navigator>
   )
@@ -56,16 +65,16 @@ export default function Routes() {
           <Drawer.Navigator>
             {status ? (
                 <>
-                    <Drawer.Screen name="inicio" component={Index} options={{ title: '', drawerLabel: 'Início' }}/>
-                    <Drawer.Screen name="animalRegister" component={AnimalRegister} options={{ title: 'Cadastrar um Pet' }}/>
-                    <Drawer.Screen 
-                      name="animalListingAdoption"
-                      options={{ title: 'Adotar', headerShown: false }}
-                    >{props => <DetailsRoute {...props} isToAdopt={true} />}</Drawer.Screen>
-                    <Drawer.Screen 
-                      name="animalListingMyPets" 
-                      options={{ title: 'Meus Pets', headerShown: false }}
-                    >{props => <DetailsRoute {...props} isToAdopt={false} />}</Drawer.Screen>
+                  <Drawer.Screen name="inicio" component={Index} options={{ title: '', drawerLabel: 'Início' }}/>
+                  <Drawer.Screen name="animalRegister" component={AnimalRegister} options={{ title: 'Cadastrar um Pet' }}/>
+                  <Drawer.Screen 
+                    name="animalListingAdoption"
+                    options={{ title: 'Adotar', headerShown: false, unmountOnBlur: true }}
+                  >{props => <DetailsRoute {...props} isToAdopt={true} />}</Drawer.Screen>
+                  <Drawer.Screen 
+                    name="animalListingMyPets" 
+                    options={{ title: 'Meus Pets', headerShown: false, unmountOnBlur: true }}
+                  >{props => <DetailsRoute {...props} isToAdopt={false} />}</Drawer.Screen>
                 </>
             ):(
                 <>
