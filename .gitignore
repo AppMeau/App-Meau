@@ -6,3 +6,4 @@ build/*.aab
 .env
 android
 ios
+package-lock

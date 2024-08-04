@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const baseAnimalSchema = z.object({
+export const basePetSchema = z.object({
   id: z.string().optional(),
   name: z.string().min(1),
   photo: z.string().optional(),
@@ -39,7 +39,7 @@ export const baseAnimalSchema = z.object({
   userId: z.string().optional(),
 });
 
-export const animalSchema = baseAnimalSchema
+export const PetSchema = basePetSchema
   .refine(
     (data) => {
       return (
@@ -47,7 +47,7 @@ export const animalSchema = baseAnimalSchema
         (!data.sick && data.sickness === "")
       );
     },
-    { message: "Sickness inválido", path: ["sickness"] },
+    { message: "Sickness inválido", path: ["sickness"] }
   )
   .refine(
     (data) => {
@@ -59,7 +59,7 @@ export const animalSchema = baseAnimalSchema
     {
       message: "Month Information inválido",
       path: ["oneMonth", "threeMonths", "sixMonths"],
-    },
+    }
   )
   .refine((data) => {
     return (
@@ -81,7 +81,7 @@ export const animalSchema = baseAnimalSchema
     );
   });
 
-export type animalRegisterType = z.infer<typeof animalSchema>;
+export type PetRegisterType = z.infer<typeof PetSchema>;
 function refine(arg0: (data: any) => boolean) {
   throw new Error("Function not implemented.");
 }
