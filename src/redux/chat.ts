@@ -10,13 +10,13 @@ type initialStateType = {
   status: boolean | null;
   isLoading?: boolean;
   chats: Array<Room>;
-  lastCreatedRoomId: Room | null;
+  lastCreatedRoom: Room | null;
 };
 const initialState: initialStateType = {
   status: null, 
   isLoading: false, 
   chats: [], 
-  lastCreatedRoomId: null 
+  lastCreatedRoom: null 
 };
 
 // createAsyncThunk(()=>)
@@ -102,11 +102,13 @@ export const createRoom = createAsyncThunk("rooms/createRoom",
         active: true,
         members: roomData.members,
         pet: roomData.pet,
+        // messages: [],
         createdAt: new Date(),
         updatedAt: new Date(),
       };
       const newRoom = await push(database, room);
-      return thunkAPI.fulfillWithValue(newRoom.key);
+      console.log('NEW ROOM', newRoom)
+      return thunkAPI.fulfillWithValue({id: newRoom.key, ...room});
     } catch (e) {
       return thunkAPI.rejectWithValue(e);
     }
@@ -238,8 +240,9 @@ export const chatSlice = createSlice({
     });
     builder.addCase(createRoom.fulfilled, (state, { payload }) => {
       if(payload){
+        console.log('PAYLOAD', payload)
         state.chats.push(roomSchema.parse(payload));
-        state.lastCreatedRoomId = roomSchema.parse(payload);
+        state.lastCreatedRoom = roomSchema.parse(payload);
         state.isLoading = false;
       }
     });

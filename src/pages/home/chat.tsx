@@ -18,6 +18,7 @@ export default function ChatComponent({route}: any) {
   const dispatch = useAppDispatch();
 
   const roomId = route.params.roomId;
+  console.log('ROOMID', roomId)
   
   const room = useAppSelector(findRoom(roomId));
   const user = useAppSelector(selectUser)
@@ -47,7 +48,7 @@ export default function ChatComponent({route}: any) {
 
   const onSend = (messages: IMessage[] = []) => {
     try {
-      dispatch(sendMessage({ message: messageSchema.parse(messages[0]), roomId }));
+      dispatch(sendMessage({ message: messageSchema.parse(messages[0]), roomId: roomId }));
     } catch (e) {
       console.error(e);
     }

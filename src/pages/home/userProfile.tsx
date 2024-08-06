@@ -1,20 +1,23 @@
 import { StyleSheet, View } from "react-native";
 import { Button } from "react-native-paper";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Header from "../../components/header";
 import Colors from "../../util/Colors";
 import { useAppDispatch, useAppSelector } from "../../redux/store";
 import { createRoom } from "../../redux/chat";
 import { selectUser } from "../../redux/auth";
+import { unwrapResult } from "@reduxjs/toolkit";
 
 export default function UserProfile({navigation, route}: any) {
   const dispatch = useAppDispatch();
-  let {lastCreatedRoomId} = useAppSelector((state) => state.chat);
+  let {lastCreatedRoom} = useAppSelector((state) => state.chat);
 
   const {uid} = useAppSelector(selectUser)
 
   const user = route.params.user 
   const petId = route.params.petId
+
+  const [originalResult, setOriginalResult] = useState<any>()
 
   useEffect(() => {
     navigation.setOptions({
@@ -30,15 +33,24 @@ export default function UserProfile({navigation, route}: any) {
   }, []);
 
   useEffect(() => {
-    console.log(lastCreatedRoomId)
+    console.log(lastCreatedRoom)
 
-    dispatch(createRoom({members: [user.uid, uid], pet: petId}))
-
+    const createChat = async () => {
+      try{
+        const result = await dispatch(createRoom({members: [user.uid, uid], pet: petId}))
+        setOriginalResult(unwrapResult(result))
+        // console.log('ORIGINAL', originalResult)
+      } catch(e) {
+        console.error(e)
+      }
+    }
+    createChat()
   }, [])
   
   const navigateToNewChat = () => {
+    console.log('ORIGINAL', originalResult)
     navigation.navigate('chat', {
-      roomId: lastCreatedRoomId,
+      roomId: originalResult.id,
     })
   }
 
