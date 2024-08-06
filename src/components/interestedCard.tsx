@@ -4,15 +4,18 @@ import { User } from "../schemas/UserRegister/userRegister";
 import { useNavigation } from "@react-navigation/native";
 import Colors from "../util/Colors";
 
-export default function InterestedsCard({user}: {user: User}) {
-  const navigation = useNavigation();
+export default function InterestedsCard({user, petId}: {user: User, petId: string}) {
+  const navigation: any = useNavigation();
 
-  const navigateToNewChat = () => {
-    // navigation.navigate('chat')
+  const navigateToUserProfile = () => {
+    navigation.navigate('userProfile', {
+      user: user,
+      petId: petId,
+    })
   }
 
   return (
-    <Pressable style={styles.container} onPress={navigateToNewChat} >
+    <Pressable style={styles.container} onPress={navigateToUserProfile} >
       <Card mode="contained" style={styles.cardContainer}>
         <Card.Cover source={{ uri: user.photo }} style={styles.cover}/>
         <Card.Title 

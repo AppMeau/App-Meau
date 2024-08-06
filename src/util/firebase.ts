@@ -1,9 +1,9 @@
 import ReactNativeAsyncStorage from "@react-native-async-storage/async-storage";
 import { initializeApp } from "firebase/app";
+import { getDatabase } from "firebase/database";
 import { getReactNativePersistence, initializeAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
-import Constants from 'expo-constants';
 const firebaseConfig = {
   apiKey: process.env.EXPO_PUBLIC_API_KEY,
   authDomain: process.env.EXPO_PUBLIC_AUTH_DOMAIN,
@@ -15,6 +15,7 @@ export const firebase = initializeApp(firebaseConfig);
 
 // Initialize Cloud Firestore and get a reference to the service
 export const db = getFirestore(firebase);
+export const realtimeDb = getDatabase(firebase);
 export const storage = getStorage(firebase);
 
 export const auth = initializeAuth(firebase, {

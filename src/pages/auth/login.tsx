@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Alert, StyleSheet, View, Text } from "react-native";
 
 import Buttom from "../../components/button";
@@ -9,22 +9,28 @@ import { credentialSchema } from "../../schemas/UserRegister/userRegister";
 import { NavigationProp } from "@react-navigation/native";
 import Colors from "../../util/Colors";
 import Button from "../../components/button";
+import { clearRooms, getRoomById, instantiateRoom } from "../../redux/chat";
 
-export default function Login({navigation}: {navigation: NavigationProp<any>}) {
+export default function Login({
+  navigation,
+}: {
+  navigation: NavigationProp<any>;
+}) {
   const [user, setUser] = React.useState("");
   const [password, setPassword] = React.useState("");
   const isLoading = useAppSelector((state) => state.auth.isLoading);
-
-  const dispatch = useAppDispatch()
+  const dispatch = useAppDispatch();
   const auth = async () => {
-    try{
-      dispatch(login(credentialSchema.parse({ email: user, password }))).then((res) => {
-        if (res.payload) {
-          navigation.navigate("inicio");
-        } else {
-          Alert.alert("Erro", "Usuário ou senha inválidos");
+    try {
+      dispatch(login(credentialSchema.parse({ email: user, password }))).then(
+        (res) => {
+          if (res.payload) {
+            navigation.navigate("inicio");
+          } else {
+            Alert.alert("Erro", "Usuário ou senha inválidos");
+          }
         }
-      });
+      );
     } catch (e) {
       Alert.alert("Erro", "Usuário ou senha inválidos");
     }
@@ -38,7 +44,15 @@ export default function Login({navigation}: {navigation: NavigationProp<any>}) {
         onDrawerClick={() => {}}
       /> */}
       <View style={styles.container}>
-        <View style={{ flexDirection: "column", gap: 20, marginBottom: 52, justifyContent: "center", alignItems: "center"}}>
+        <View
+          style={{
+            flexDirection: "column",
+            gap: 20,
+            marginBottom: 52,
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
           <InputComponent
             lazy
             rule={(val) => val !== ""}
@@ -52,7 +66,13 @@ export default function Login({navigation}: {navigation: NavigationProp<any>}) {
             value={password}
             onChangeText={setPassword}
           />
-          <Button type="transparent" mode="text" onPress={()=>navigation.navigate('register')}>Cadastre-se aqui</Button>
+          <Button
+            type="transparent"
+            mode="text"
+            onPress={() => navigation.navigate("register")}
+          >
+            Cadastre-se aqui
+          </Button>
         </View>
         <View style={{ marginBottom: 72 }}>
           <Buttom

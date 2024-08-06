@@ -1,15 +1,17 @@
 import { FlatList, ScrollView, StyleSheet, Text, View } from "react-native";
-import { animalRegisterType } from "../../schemas/AnimalRegister/animalRegisterTypes";
 import InterestedsCard from "../../components/interestedCard";
 import { useAppDispatch, useAppSelector } from "../../redux/store";
 import { getAllInteresteds } from "../../redux/users";
 import { useEffect } from "react";
 import { User } from "../../schemas/UserRegister/userRegister";
+import { PetRegisterType } from "../../schemas/PetRegister/petRegisterTypes";
+import { Button } from "react-native-paper";
+import Colors from "../../util/Colors";
 
 export default function Interesteds({route}: any) {
   const dispatch = useAppDispatch()
 
-  const animal: animalRegisterType = route.params.animal
+  const animal: PetRegisterType = route.params.animal
   
   useEffect(() => {
     if(animal.interesteds) {
@@ -26,11 +28,12 @@ export default function Interesteds({route}: any) {
         <FlatList
           data={users}
           keyExtractor={(user) => user.uid}
-          renderItem={({ item }) => <InterestedsCard user={item} />}
+          renderItem={({ item }) => <InterestedsCard user={item} petId={animal.id!} />}
           numColumns={2}
           contentContainerStyle={styles.flatListContainer}
         />
       )} 
+      <Button labelStyle={styles.btnLabel} style={styles.btn}>TODAS AS CONVERSAS</Button>
     </View>
   )
 }
@@ -49,4 +52,17 @@ const styles = StyleSheet.create({
   flatListContainer: {
     justifyContent: 'space-between',
   },
+  btn: {
+    width: '80%',
+    borderRadius: 3,
+    backgroundColor: Colors.bluePrimary,
+    textAlign: 'center',
+    alignSelf: 'center',
+    marginBottom: 24,
+  },
+  btnLabel: {
+    color: Colors.textAuxPrimary,
+    fontFamily: 'Roboto_400Regular',
+    fontSize: 12,
+  }
 })

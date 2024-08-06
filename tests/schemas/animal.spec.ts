@@ -1,8 +1,8 @@
-import { animalSchema } from "../../src/schemas/AnimalRegister/animalRegisterTypes";
+import { PetSchema } from "../../src/schemas/PetRegister/petRegisterTypes";
 
 describe("Animal Schema", () => {
   it("all should be valid", () => {
-    const res = animalSchema.safeParse({
+    const res = PetSchema.safeParse({
       name: "Test",
       photo: "Test",
       species: "Gato",
@@ -34,7 +34,7 @@ describe("Animal Schema", () => {
   });
 
   it("name should not be blank", () => {
-    const res = animalSchema.safeParse({
+    const res = PetSchema.safeParse({
       name: "",
       photo: "Test",
       species: "Gato",
@@ -66,7 +66,7 @@ describe("Animal Schema", () => {
   });
 
   it("species' value should not be outside the options", () => {
-    const res = animalSchema.safeParse({
+    const res = PetSchema.safeParse({
       name: "Test",
       photo: "Test",
       species: "Pássaro",
@@ -98,7 +98,7 @@ describe("Animal Schema", () => {
   });
 
   it("gender's value should not be outside the options", () => {
-    const res = animalSchema.safeParse({
+    const res = PetSchema.safeParse({
       name: "Test",
       photo: "Test",
       species: "Gato",
@@ -130,7 +130,7 @@ describe("Animal Schema", () => {
   });
 
   it("size's value should not be outside the options", () => {
-    const res = animalSchema.safeParse({
+    const res = PetSchema.safeParse({
       name: "Test",
       photo: "Test",
       species: "Gato",
@@ -162,7 +162,7 @@ describe("Animal Schema", () => {
   });
 
   it("age's value should not be outside the options", () => {
-    const res = animalSchema.safeParse({
+    const res = PetSchema.safeParse({
       name: "Test",
       photo: "Test",
       species: "Gato",
@@ -194,7 +194,7 @@ describe("Animal Schema", () => {
   });
 
   it("playfull's value should not have type different than boolean", () => {
-    const res = animalSchema.safeParse({
+    const res = PetSchema.safeParse({
       name: "Test",
       photo: "Test",
       species: "Gato",
@@ -226,7 +226,7 @@ describe("Animal Schema", () => {
   });
 
   it("shy's value should not have type different than boolean", () => {
-    const res = animalSchema.safeParse({
+    const res = PetSchema.safeParse({
       name: "Test",
       photo: "Test",
       species: "Gato",
@@ -258,7 +258,7 @@ describe("Animal Schema", () => {
   });
 
   it("calm's value should not have type different than boolean", () => {
-    const res = animalSchema.safeParse({
+    const res = PetSchema.safeParse({
       name: "Test",
       photo: "Test",
       species: "Gato",
@@ -290,7 +290,7 @@ describe("Animal Schema", () => {
   });
 
   it("guard's value should not have type different than boolean", () => {
-    const res = animalSchema.safeParse({
+    const res = PetSchema.safeParse({
       name: "Test",
       photo: "Test",
       species: "Gato",
@@ -322,7 +322,7 @@ describe("Animal Schema", () => {
   });
 
   it("lovely's value should not have type different than boolean", () => {
-    const res = animalSchema.safeParse({
+    const res = PetSchema.safeParse({
       name: "Test",
       photo: "Test",
       species: "Gato",
@@ -354,7 +354,7 @@ describe("Animal Schema", () => {
   });
 
   it("lazy's value should not have type different than boolean", () => {
-    const res = animalSchema.safeParse({
+    const res = PetSchema.safeParse({
       name: "Test",
       photo: "Test",
       species: "Gato",
@@ -386,7 +386,7 @@ describe("Animal Schema", () => {
   });
 
   it("vaccinated's value should not have type different than boolean", () => {
-    const res = animalSchema.safeParse({
+    const res = PetSchema.safeParse({
       name: "Test",
       photo: "Test",
       species: "Gato",
@@ -418,7 +418,7 @@ describe("Animal Schema", () => {
   });
 
   it("dewormed's value should not have type different than boolean", () => {
-    const res = animalSchema.safeParse({
+    const res = PetSchema.safeParse({
       name: "Test",
       photo: "Test",
       species: "Gato",
@@ -450,7 +450,7 @@ describe("Animal Schema", () => {
   });
 
   it("castrated's value should not have type different than boolean", () => {
-    const res = animalSchema.safeParse({
+    const res = PetSchema.safeParse({
       name: "Test",
       photo: "Test",
       species: "Gato",
@@ -482,7 +482,7 @@ describe("Animal Schema", () => {
   });
 
   it("sick's value should not have type different than boolean", () => {
-    const res = animalSchema.safeParse({
+    const res = PetSchema.safeParse({
       name: "Test",
       photo: "Test",
       species: "Gato",
@@ -514,7 +514,7 @@ describe("Animal Schema", () => {
   });
 
   it("sickness should not be filled when sick is false", () => {
-    const res = animalSchema.safeParse({
+    const res = PetSchema.safeParse({
       name: "Test",
       photo: "Test",
       species: "Gato",
@@ -546,7 +546,7 @@ describe("Animal Schema", () => {
   });
 
   it("sickenss should be filled when sick is true", () => {
-    const res = animalSchema.safeParse({
+    const res = PetSchema.safeParse({
       name: "Test",
       photo: "Test",
       species: "Gato",
@@ -578,7 +578,7 @@ describe("Animal Schema", () => {
   });
 
   it("adoptionTerm's value should not have type different than boolean", () => {
-    const res = animalSchema.safeParse({
+    const res = PetSchema.safeParse({
       name: "Test",
       photo: "Test",
       species: "Gato",
@@ -610,7 +610,7 @@ describe("Animal Schema", () => {
   });
 
   it("homePhotos' value should not have type different than boolean", () => {
-    const res = animalSchema.safeParse({
+    const res = PetSchema.safeParse({
       name: "Test",
       photo: "Test",
       species: "Gato",
@@ -642,7 +642,7 @@ describe("Animal Schema", () => {
   });
 
   it("previousVisit's value should not have type different than boolean", () => {
-    const res = animalSchema.safeParse({
+    const res = PetSchema.safeParse({
       name: "Test",
       photo: "Test",
       species: "Gato",
@@ -674,7 +674,7 @@ describe("Animal Schema", () => {
   });
 
   it("acompanyBeforeAdoption's value should not have type different than boolean", () => {
-    const res = animalSchema.safeParse({
+    const res = PetSchema.safeParse({
       name: "Test",
       photo: "Test",
       species: "Gato",
@@ -706,7 +706,7 @@ describe("Animal Schema", () => {
   });
 
   it("periodToAcompany should not be filled if acompanyBeforeAdoption is false", () => {
-    const res = animalSchema.safeParse({
+    const res = PetSchema.safeParse({
       name: "Test",
       photo: "Test",
       species: "Gato",
@@ -738,7 +738,7 @@ describe("Animal Schema", () => {
   });
 
   it("periodToAcompany should not be empty if acompanyBeforeAdoption is true", () => {
-    const res = animalSchema.safeParse({
+    const res = PetSchema.safeParse({
       name: "Test",
       photo: "Test",
       species: "Gato",
@@ -770,7 +770,7 @@ describe("Animal Schema", () => {
   });
 
   it("playfull's value should not have type different than boolean", () => {
-    const res = animalSchema.safeParse({
+    const res = PetSchema.safeParse({
       name: "Test",
       photo: "Test",
       species: "Gato",

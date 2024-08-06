@@ -18,9 +18,9 @@ import CustomButton from "../../components/customButton";
 import InputComponent from "../../components/input";
 import RadioContainer from "../../components/radioContainer";
 import {
-  animalSchema,
-  baseAnimalSchema,
-} from "../../schemas/AnimalRegister/animalRegisterTypes";
+  PetSchema,
+  basePetSchema,
+} from "../../schemas/PetRegister/petRegisterTypes";
 import Colors from "../../util/Colors";
 import { db } from "../../util/firebase";
 import imageHandler from "../../util/functions/ImageHandler";
@@ -29,8 +29,11 @@ import { useSelector } from "react-redux";
 import { selectUser } from "../../redux/auth";
 import Interesteds from "./interesteds";
 
-export default function AnimalRegister({navigation}: {navigation: NavigationProp<any>}) {
-
+export default function AnimalRegister({
+  navigation,
+}: {
+  navigation: NavigationProp<any>;
+}) {
   const [inputs, setInputs] = useState({
     name: "",
     photoUrl: null,
@@ -72,7 +75,7 @@ export default function AnimalRegister({navigation}: {navigation: NavigationProp
   const [disableSickness, setDisableSickness] = useState(false);
   const [isValidAbout, setIsValidAbout] = useState(true);
 
-  const {uid} = useSelector(selectUser)
+  const { uid } = useSelector(selectUser);
 
   useEffect(() => {
     if (inputs.acompanyBeforeAdoption === true) {
@@ -142,7 +145,7 @@ export default function AnimalRegister({navigation}: {navigation: NavigationProp
     const url = await imageHandler(
       "images/pets/",
       inputs.photoUrl,
-      inputs.name,
+      inputs.name
     );
     const docData = {
       name: inputs.name,
@@ -171,10 +174,10 @@ export default function AnimalRegister({navigation}: {navigation: NavigationProp
       disable: inputs.disable,
       availableToAdoption: true,
       ownerId: uid,
-      Interesteds: [],
+      interesteds: [],
     };
     try {
-      animalSchema.parse(docData);
+      PetSchema.parse(docData);
       await addDoc(collection(db, "pets"), docData);
       navigation.navigate("login");
     } catch (e) {
@@ -209,7 +212,7 @@ export default function AnimalRegister({navigation}: {navigation: NavigationProp
                 lazy
                 rule={(val) => {
                   return (
-                    baseAnimalSchema
+                    basePetSchema
                       .pick({ name: true })
                       .safeParse({ name: val })
                       .success.toString() !== "false"
@@ -366,7 +369,7 @@ export default function AnimalRegister({navigation}: {navigation: NavigationProp
                 lazy
                 rule={(val) => {
                   return (
-                    baseAnimalSchema
+                    basePetSchema
                       .pick({ about: true })
                       .safeParse({ about: val })
                       .success.toString() !== "false"

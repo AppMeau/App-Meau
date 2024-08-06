@@ -7,9 +7,20 @@ import {
 } from "react-native";
 import Colors from "../../util/Colors";
 import Button from "../../components/customButton";
+import { useAppSelector } from "../../redux/store";
+import { selectUser } from "../../redux/auth";
+import { PetRegisterType } from "../../schemas/PetRegister/petRegisterTypes";
+import { useState } from "react";
+import { collection, doc, updateDoc, where } from "firebase/firestore";
+import { query } from "firebase/database";
+import { db } from "../../util/firebase";
 
 export default function AnimalDetails({route, navigation}: any) {
-  const pet = route.params.animal;
+  const {uid} = useAppSelector(selectUser)
+
+  const pet: PetRegisterType = route.params.animal;
+  const [isAlreadyInterested, setIsAlreadyInterested] = useState(pet.interesteds?.includes(uid));
+
 
   function displayinfosBehavior(){
     const behaviors = []
@@ -59,6 +70,14 @@ export default function AnimalDetails({route, navigation}: any) {
     navigation.navigate('interesteds', {
       animal: pet
     })
+  }
+
+  const wantToAdoptHandler = async () => {
+    console.log(uid)
+    if(!isAlreadyInterested && pet.interesteds){
+      await updateDoc(doc(collection(db, "pets"), pet.id), {interesteds: [...pet.interesteds, uid]})
+      setIsAlreadyInterested(true);
+    }
   }
 
   function render() {
@@ -158,6 +177,15 @@ export default function AnimalDetails({route, navigation}: any) {
                 REMOVER PET
               </Button>
             </View>
+            {!isAlreadyInterested && pet.userId !== uid && (
+              <Button
+                backgroundColor={Colors.yellowPrimary}
+                onPress={wantToAdoptHandler}
+                width={175}
+              >
+                PRETENDO ADOTAR
+              </Button>
+            )}
             </View>
         </ScrollView>
         </View>

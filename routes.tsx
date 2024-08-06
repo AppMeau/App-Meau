@@ -1,5 +1,5 @@
 import { NavigationContainer } from "@react-navigation/native";
-import { createDrawerNavigator } from '@react-navigation/drawer';
+import { createDrawerNavigator } from "@react-navigation/drawer";
 import Index from "./src/pages/index";
 import { useAppDispatch, useAppSelector } from "./src/redux/store";
 import Login from "./src/pages/auth/login";
@@ -10,10 +10,12 @@ import AnimalListing from "./src/pages/home/animalListing";
 import { useEffect } from "react";
 import { checkAuthStatus } from "./src/redux/auth";
 import AnimalDetails from "./src/pages/home/animalDetails";
+import Chat from "./src/pages/home/chat";
 import Interesteds from "./src/pages/home/interesteds";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Header from "./src/components/header";
 import Colors from "./src/util/Colors";
+import UserProfile from "./src/pages/home/userProfile";
 
 const Drawer = createDrawerNavigator();
 const DetailStack = createNativeStackNavigator();
@@ -50,13 +52,25 @@ function DetailsRoute({isToAdopt}:{isToAdopt: boolean}) {
           />
         ),}} 
       />
+      <DetailStack.Screen 
+        name="userProfile" 
+        component={UserProfile} 
+        options={{ header: ({ navigation, options }: any) => (
+          <Header
+            color={Colors.bluePrimary}
+            title={'Interessados'}
+            search
+            onDrawerClick={navigation.toggleDrawer}
+          />
+        ),}} 
+      />
     </DetailStack.Navigator>
   )
 }
 
 export default function Routes() {
   const status = useAppSelector((state) => state.auth.status);
-  const dispatch = useAppDispatch()
+  const dispatch = useAppDispatch();
   useEffect(() => {
     dispatch(checkAuthStatus());
   }, []);
@@ -75,6 +89,11 @@ export default function Routes() {
                     name="animalListingMyPets" 
                     options={{ title: 'Meus Pets', headerShown: false, unmountOnBlur: true }}
                   >{props => <DetailsRoute {...props} isToAdopt={false} />}</Drawer.Screen>
+                  <Drawer.Screen
+                    name="chat"
+                    component={Chat}
+                    options={{ title: "Chat", unmountOnBlur: true }}
+                  />
                 </>
             ):(
                 <>
