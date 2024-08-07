@@ -11,48 +11,39 @@ import Button from "../../components/customButton";
 export default function AnimalDetails({route}: any) {
   const pet = route.params.animal;
 
-  function displayinfosBehavior(){
-    const behaviors = []
-    if(pet.playfull){
-        behaviors.push("Brincalhão")
+  function displayObject(pet: any){
+    const removeProps = ["id", "name", "photo", "disable", "availableToAdoption"]
+    const translateObject = {
+        species: "espécie",
+        gender: "gênero",
+        size: "porte",
+        age: "idade",
+        vaccinated: "vacinado",
+        dewormed: "vermifugado",
+        castrated: "castrado",
+        sick: "doente",
+        periodToAcompany: "período de acompanhamento",
+        acompanyBeforeAdoption: "acompanhamento",
+        about: "sobre",
+        sickness: "doença",
     }
-    if(pet.shy){
-        behaviors.push("Tímido")
-    }
-    if(pet.calm){
-        behaviors.push("Calmo")
-    }
-    if(pet.guard){
-        behaviors.push("Guarda")
-    }
-    if(pet.lovely){
-        behaviors.push("Amoroso")
-    }
-    if(pet.lazy){
-        behaviors.push("Preguiçoso")
-    }
+    return Object.entries(pet).map(([key, value]) => {
+      if(removeProps.includes(key) || value === ""){
+        return <></>
+      }
 
-    return behaviors.join(", ")
+      const mappedKey = translateObject[key as keyof typeof translateObject] ?? key;
 
-  }
-
-  function displayinfosAdoptionRequirements(){
-    const requirements = []
-    if(pet.adoptionTerm){
-        requirements.push("Termo de adoção")
-    }
-    if(pet.homePhotos){
-        requirements.push("Fotos da casa")
-    }
-    if(pet.previousVisit){
-        requirements.push("Visita prévia ao animal")
-    }
-    if(pet.acompanyBeforeAdoption){
-        requirements.push("Acompanhamento pós adoção")
-    }
-
-    return requirements.join(", ")
-    
+      return (
+        <View style={styles.infosContainer}>
+          <Text style={styles.subtitle}>{mappedKey.toUpperCase()}</Text>
+          <View style={styles.textContainer}>
+            <Text style={styles.infos}>{`${value}`}</Text>
+          </View>
+        </View>
+      )
+    });
+   
   }
 
   function render() {
@@ -71,70 +62,7 @@ export default function AnimalDetails({route}: any) {
                 <Text style={[{fontWeight: "bold"}]}>{pet.name}</Text>
             </View>
             <View style={styles.infosTitleContainer}>
-               <View style={styles.infosContainer}>
-                  <Text style={styles.subtitle}>SEXO</Text>
-                  <Text style={styles.infos}>{pet.gender}</Text>
-               </View>
-               <View style={styles.infosContainer}>
-                   <Text style={styles.subtitle}>PORTE</Text>
-                  <Text style={styles.infos}>{pet.size}</Text>
-               </View>        
-               <View style={styles.infosContainer}>
-                  <Text style={styles.subtitle}>IDADE</Text>
-                  <Text style={styles.infos}>{pet.age}</Text>
-               </View>          
-            </View>
-            <View style={styles.infosTitleContainer}>
-              <View style={styles.infosContainer}>
-                <Text style={styles.subtitle}>LOCALIZAÇÃO</Text>
-                <Text style={styles.infos}></Text>
-               </View>
-            </View>
-            <View style={styles.infosTitleContainer}>
-               <View style={styles.infosContainer}>
-                <Text style={styles.subtitle}>CASTRADO</Text>
-                <Text style={styles.infos}>{pet.castrated ? "Sim" : "Não"}</Text>
-               </View>
-               <View style={styles.infosContainer}>
-                <Text style={styles.subtitle}>VERMIFUGADO</Text>
-                <Text style={styles.infos}>{pet.dewormed ? "Sim" : "Não"}</Text>
-               </View>
-            </View>
-    
-            <View style={styles.infosTitleContainer}>
-              <View style={styles.infosContainer}>
-                <Text style={styles.subtitle}>VACINADO</Text>
-                <Text style={styles.infos}>{pet.vaccinated ? "Sim" : "Não"}</Text>
-              </View>
-              <View style={styles.infosContainer}>
-                <Text style={styles.subtitle}>DOENÇAS</Text>
-                <Text style={styles.infos}>{pet.sick ? pet.sickness : "Não"}</Text>
-              </View>                
-            </View>
-            
-             <View style={styles.infosTitleContainer}>
-              <View style={styles.infosContainer}>
-                <Text style={styles.subtitle}>TEMPERAMENTO</Text>
-                <Text style={styles.infos}>{displayinfosBehavior()}</Text>
-              </View> 
-            </View>
-            {/* <View style={styles.infosTitleContainer}>
-              <View style={styles.infosContainer}>
-                <Text style={styles.subtitle}>O {pet.name.toUpperCase()} PRECISA DE</Text>
-                <Text style={styles.infos}>{}</Text>
-              </View>
-            </View> */}
-            <View style={styles.infosTitleContainer}>
-              <View style={styles.infosContainer}>
-                <Text style={styles.subtitle}>EXIGÊNCIAS DO DOADOR</Text>
-                <Text style={styles.infos}>{displayinfosAdoptionRequirements()}</Text>
-              </View>
-            </View>
-            <View style={styles.infosTitleContainer}>
-              <View style={styles.infosContainer}>
-                <Text style={styles.subtitle}>MAIS SOBRE</Text>
-                <Text style={styles.infos}>{pet.about}</Text>
-              </View> 
+              {displayObject(pet)}
             </View>
             <View style={styles.containerButton}>
               <Button
@@ -181,24 +109,26 @@ const styles = StyleSheet.create({
   infosTitleContainer:{
     paddingLeft: 16,
     display: "flex",
-    // width: "100%",
     paddingHorizontal: 8,
     flexWrap: "wrap",
     flexDirection: "row",
-    gap:40,
+    gap:70,
   },
   infosContainer:{
     display: "flex",
     flexWrap: "wrap",
     flexDirection: "column",
-    gap:30,
+    gap:20,
   },
   subtitle: {
     color: Colors.bluePrimary,
     flex: 1,
   },
+  textContainer: {
+    flexDirection: "row"
+  },
   infos:{
-    flex: 1,
+    flexWrap: "wrap"
   },
   containerButton:{
     display: "flex",

@@ -76,6 +76,7 @@ export const getAvailablePets = createAsyncThunk(
       const pets = await getDocs(
         query(collection(db, "pets"), where("availableToAdoption", "==", true))
       );
+      console.log(pets)
       const allpetsData = pets.docs.map(parsePet);
       return allpetsData as PetRegisterType[];
     } catch (error: any) {
