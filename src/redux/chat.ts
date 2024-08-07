@@ -3,7 +3,7 @@ import { Room, roomSchema, messageSchema } from "../schemas/Chat/chatSchema";
 import type { Message } from "../schemas/Chat/chatSchema";
 import { auth, db } from "../util/firebase";
 import { get, getDatabase, ref, child, set, update, push } from "firebase/database";
-import { collection, getDocs, query, where } from "firebase/firestore";
+import { addDoc, collection, getDocs, query, where } from "firebase/firestore";
 import { User, userSchema } from "../schemas/UserRegister/userRegister";
 
 type initialStateType = {
@@ -28,6 +28,20 @@ export const findRoom = (id: number | string) => (state: any) => {
 const sortByDate = (messages: Array<Message>) => messages.sort((a,b)=>{
   return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
 });
+
+export const getMyRooms = createAsyncThunk(
+  'rooms/getMyRooms',
+  async () => {
+  const roomsRef = collection(db, "rooms");
+  const user = auth.currentUser?.uid;
+  const roomSnapshot = await getDocs( query(roomsRef, where("members", "array-contains", user)))
+  const rooms = roomSnapshot.docs.map(room => {
+    const parsedRoom = roomSchema.parse(room.data());
+    console.log(parsedRoom)
+    return parsedRoom
+  })
+  return rooms;
+})
 
 export const markAsReceived = async (messages: Message[], roomId: string|number) => {
   for(const message of messages){
@@ -106,6 +120,7 @@ export const createRoom = createAsyncThunk("rooms/createRoom",
         members: roomData.members,
         pet: roomData.pet,
       };
+      await addDoc(collection(db, "rooms"), room);
       updates[`${newRoomId}`] = room;
       await update(database, updates)
       return thunkAPI.fulfillWithValue(room);
@@ -197,6 +212,7 @@ export const chatSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
+    //TODO: addcase para getMyRooms
     builder.addCase(sendMessage.fulfilled, (state, { payload }) => {
       if(payload){
         const { roomId } = payload;
