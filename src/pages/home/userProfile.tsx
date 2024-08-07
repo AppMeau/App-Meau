@@ -16,7 +16,15 @@ export default function UserProfile({navigation, route}: any) {
 
   const user = route.params.user 
   const petId = route.params.petId
-
+  const createChat = async () => {
+    try{
+      const result = await dispatch(createRoom({members: [user.uid, uid], pet: petId}))
+      setOriginalResult(unwrapResult(result))
+      // console.log('ORIGINAL', originalResult)
+    } catch(e) {
+      console.error(e)
+    }
+  }
   const [originalResult, setOriginalResult] = useState<any>()
 
   useEffect(() => {
@@ -32,26 +40,15 @@ export default function UserProfile({navigation, route}: any) {
     });
   }, []);
 
-  useEffect(() => {
-    console.log(lastCreatedRoom)
-
-    const createChat = async () => {
-      try{
-        const result = await dispatch(createRoom({members: [user.uid, uid], pet: petId}))
-        setOriginalResult(unwrapResult(result))
-        // console.log('ORIGINAL', originalResult)
-      } catch(e) {
-        console.error(e)
-      }
+  const navigateToNewChat = async () => {
+    try{
+      await createChat()
+      navigation.navigate('chat', {
+        roomId: originalResult.id,
+      })
+    } catch(e) {
+      console.error(e)
     }
-    createChat()
-  }, [])
-  
-  const navigateToNewChat = () => {
-    console.log('ORIGINAL', originalResult)
-    navigation.navigate('chat', {
-      roomId: originalResult.id,
-    })
   }
 
   return (

@@ -98,17 +98,17 @@ export const createRoom = createAsyncThunk("rooms/createRoom",
   async (roomData: {members: string[], pet: string}, thunkAPI) => {
     try {
       const database = ref(getDatabase());
+      const newRoomId = await push(database).key;
+      const updates: any = {};
       const room = {
+        id: newRoomId,
         active: true,
         members: roomData.members,
         pet: roomData.pet,
-        // messages: [],
-        createdAt: new Date(),
-        updatedAt: new Date(),
       };
-      const newRoom = await push(database, room);
-      console.log('NEW ROOM', newRoom)
-      return thunkAPI.fulfillWithValue({id: newRoom.key, ...room});
+      updates[`${newRoomId}`] = room;
+      await update(database, updates)
+      return thunkAPI.fulfillWithValue(room);
     } catch (e) {
       return thunkAPI.rejectWithValue(e);
     }
@@ -240,7 +240,6 @@ export const chatSlice = createSlice({
     });
     builder.addCase(createRoom.fulfilled, (state, { payload }) => {
       if(payload){
-        console.log('PAYLOAD', payload)
         state.chats.push(roomSchema.parse(payload));
         state.lastCreatedRoom = roomSchema.parse(payload);
         state.isLoading = false;

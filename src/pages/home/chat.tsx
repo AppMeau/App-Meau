@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { GiftedChat, IMessage } from "react-native-gifted-chat";
 import { useAppDispatch, useAppSelector } from "../../redux/store";
 import {
@@ -18,19 +18,17 @@ export default function ChatComponent({route}: any) {
   const dispatch = useAppDispatch();
 
   const roomId = route.params.roomId;
-  console.log('ROOMID', roomId)
-  
   const room = useAppSelector(findRoom(roomId));
+
   const user = useAppSelector(selectUser)
   const isLoading = useAppSelector((state) => state.chat.isLoading);
 
   useEffect(() => {
     const rtdb = getDatabase()
     const chatRef = ref(rtdb,roomId+'/messages');
-    dispatch(getRoomById(roomId));
     onValue(chatRef, async (snapshot) => {
       const data = snapshot.val();
-      if (data) {
+      if (data && room) {
         try{
           const messages = Object.keys(data).map((key) => data[key]);
           await markAsReceived(messages, roomId);
@@ -67,7 +65,9 @@ export default function ChatComponent({route}: any) {
           }}
         />
       ) : (
-        <Text>Não tem sala</Text>
+        <>
+          <Text>Não tem sala</Text>
+        </>
       )}
     </>
   );
