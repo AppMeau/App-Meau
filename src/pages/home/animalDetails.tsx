@@ -7,15 +7,18 @@ import {
 } from "react-native";
 import Colors from "../../util/Colors";
 import Button from "../../components/customButton";
-import { useAppSelector } from "../../redux/store";
+import { useAppDispatch, useAppSelector } from "../../redux/store";
 import { selectUser } from "../../redux/auth";
 import { PetRegisterType } from "../../schemas/PetRegister/petRegisterTypes";
 import { useState } from "react";
 import { collection, doc, updateDoc, where } from "firebase/firestore";
 import { query } from "firebase/database";
 import { db } from "../../util/firebase";
+import { addInterested } from "../../redux/pets";
 
 export default function AnimalDetails({route, navigation}: any) {
+  const dispatch = useAppDispatch();
+
   const {uid} = useAppSelector(selectUser)
 
   const pet: PetRegisterType = route.params.animal;
@@ -73,9 +76,9 @@ export default function AnimalDetails({route, navigation}: any) {
   }
 
   const wantToAdoptHandler = async () => {
-    console.log(pet)
+    // console.log(isAlreadyInterested)
     if(!isAlreadyInterested && pet.interesteds){
-      await updateDoc(doc(collection(db, "pets"), pet.id), {interesteds: [...pet.interesteds, uid]})
+      await dispatch(addInterested({pet, userId: uid}))
       setIsAlreadyInterested(true);
     }
   }

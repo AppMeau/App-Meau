@@ -3,14 +3,15 @@ import { Card, Text } from "react-native-paper";
 import { User } from "../schemas/UserRegister/userRegister";
 import { useNavigation } from "@react-navigation/native";
 import Colors from "../util/Colors";
+import { PetRegisterType } from "../schemas/PetRegister/petRegisterTypes";
 
-export default function InterestedsCard({user, petId}: {user: User, petId: string}) {
+export default function InterestedsCard({user, pet}: {user: User, pet: PetRegisterType}) {
   const navigation: any = useNavigation();
 
   const navigateToUserProfile = () => {
     navigation.navigate('userProfile', {
       user: user,
-      petId: petId,
+      pet: pet,
     })
   }
 

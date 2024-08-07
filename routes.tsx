@@ -16,6 +16,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Header from "./src/components/header";
 import Colors from "./src/util/Colors";
 import UserProfile from "./src/pages/home/userProfile";
+import MyChatRooms from "./src/pages/home/myChatRooms";
 
 const Drawer = createDrawerNavigator();
 const DetailStack = createNativeStackNavigator();
@@ -93,6 +94,11 @@ export default function Routes() {
                     name="chat"
                     component={Chat}
                     options={{ title: "Chat", unmountOnBlur: true }}
+                  />
+                  <Drawer.Screen
+                    name="myChatRooms"
+                    component={MyChatRooms}
+                    options={{ title: "Minhas Conversas", unmountOnBlur: true }}
                   />
                 </>
             ):(

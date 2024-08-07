@@ -1,12 +1,14 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import {
   collection,
+  doc,
   DocumentData,
   DocumentReference,
   getDoc,
   getDocs,
   query,
   QueryDocumentSnapshot,
+  updateDoc,
   where,
 } from "firebase/firestore";
 import { db } from "../util/firebase";
@@ -15,10 +17,6 @@ import {
   PetRegisterType,
   PetSchema,
 } from "../schemas/PetRegister/petRegisterTypes";
-
-type SliceState = { state12: String };
-
-// const initialState: SliceState = { state12: 'teste12'}
 
 export type StateType = {
   pets: PetRegisterType[];
@@ -68,6 +66,25 @@ export const getUserPets = createAsyncThunk(
     }
   }
 );
+
+export const addInterested = createAsyncThunk("pets/addInterested", 
+  async (params: {pet: PetRegisterType, userId: string}, thunkAPI) => {
+    try {
+      await updateDoc(doc(collection(db, "pets"), params.pet.id), {interesteds: [...params.pet.interesteds || [], params.userId]})
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue({ error: error.message });
+    }
+});
+
+export const removeInterested = createAsyncThunk("pets/removeInterested", 
+  async (params: {pet: PetRegisterType, userId: string}, thunkAPI) => {
+    try {
+      const interestedsUpdated = params.pet.interesteds!.filter((interested) => interested !== params.userId)
+      await updateDoc(doc(collection(db, "pets"), params.pet.id), {interesteds: interestedsUpdated})
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue({ error: error.message });
+    }
+  });
 
 export const getAvailablePets = createAsyncThunk(
   "pets/getAvailablePets",

@@ -7,18 +7,20 @@ import { useAppDispatch, useAppSelector } from "../../redux/store";
 import { createRoom } from "../../redux/chat";
 import { selectUser } from "../../redux/auth";
 import { unwrapResult } from "@reduxjs/toolkit";
+import { PetRegisterType } from "../../schemas/PetRegister/petRegisterTypes";
+import { removeInterested } from "../../redux/pets";
 
 export default function UserProfile({navigation, route}: any) {
   const dispatch = useAppDispatch();
-  let {lastCreatedRoom} = useAppSelector((state) => state.chat);
 
   const {uid} = useAppSelector(selectUser)
 
   const user = route.params.user 
-  const petId = route.params.petId
+  const pet: PetRegisterType = route.params.pet
+
   const createChat = async () => {
     try{
-      const result = await dispatch(createRoom({members: [user.uid, uid], pet: petId}))
+      const result = await dispatch(createRoom({members: [user.uid, uid], pet: pet.id as string}))
       setOriginalResult(unwrapResult(result))
     } catch(e) {
       console.error(e)
@@ -38,9 +40,14 @@ export default function UserProfile({navigation, route}: any) {
       ),
     });
   }, []);
-
+  
   useEffect(()=>{
+    const removeInterestedUser = async () => {
+      await dispatch(removeInterested({pet, userId: user.uid}))
+    }
+    
     if(originalResult){
+      removeInterestedUser();
       navigation.navigate('chat', {
         roomId: originalResult.id,
       })

@@ -28,7 +28,7 @@ export default function Interesteds({route}: any) {
         <FlatList
           data={users}
           keyExtractor={(user) => user.uid}
-          renderItem={({ item }) => <InterestedsCard user={item} petId={animal.id!} />}
+          renderItem={({ item }) => <InterestedsCard user={item} pet={animal} />}
           numColumns={2}
           contentContainerStyle={styles.flatListContainer}
         />

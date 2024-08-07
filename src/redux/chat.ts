@@ -16,7 +16,7 @@ const initialState: initialStateType = {
   status: null, 
   isLoading: false, 
   chats: [], 
-  lastCreatedRoom: null 
+  lastCreatedRoom: null,
 };
 
 // createAsyncThunk(()=>)
@@ -212,7 +212,6 @@ export const chatSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    //TODO: addcase para getMyRooms
     builder.addCase(sendMessage.fulfilled, (state, { payload }) => {
       if(payload){
         const { roomId } = payload;
@@ -263,6 +262,13 @@ export const chatSlice = createSlice({
     });
     builder.addCase(createRoom.pending, (state) => {state.isLoading=true})
 
+    builder.addCase(getMyRooms.fulfilled, (state, { payload }) => {
+      if(payload){
+        state.chats = payload;
+      }
+      state.isLoading = false;
+    });
+    builder.addCase(getMyRooms.pending, (state) => {state.isLoading=true})
   },
 });
 

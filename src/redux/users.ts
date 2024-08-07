@@ -4,10 +4,6 @@ import { db } from '../util/firebase';
 import { FirebaseError } from 'firebase/app';
 import { User } from '../schemas/UserRegister/userRegister';
 
-type SliceState = {state12: String}
-
-// const initialState: SliceState = { state12: 'teste12'}
-
 export type StateType = {
 	users: User[],
 	status: string,
