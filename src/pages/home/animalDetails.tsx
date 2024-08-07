@@ -73,7 +73,7 @@ export default function AnimalDetails({route, navigation}: any) {
   }
 
   const wantToAdoptHandler = async () => {
-    console.log(uid)
+    console.log(pet)
     if(!isAlreadyInterested && pet.interesteds){
       await updateDoc(doc(collection(db, "pets"), pet.id), {interesteds: [...pet.interesteds, uid]})
       setIsAlreadyInterested(true);
