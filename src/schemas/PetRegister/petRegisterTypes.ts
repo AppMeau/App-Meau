@@ -123,10 +123,6 @@ export const PetSchema = basePetSchema
       }
     })
 
-    if(data.sick) {
-      mappedOptions["Doença"] = data.sickness;
-    }
-
     return {
       ...data,
       ...mappedOptions,
