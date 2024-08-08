@@ -35,6 +35,7 @@ export default function CardComponent({
   const navigateToDetails = () => {
     (navigation as any).navigate("animalDetails", {
       animal: animal,
+      isToAdopt: isToAdopt,
     });
   };
 
