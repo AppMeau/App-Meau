@@ -37,6 +37,7 @@ export const basePetSchema = z.object({
 
   availableToAdoption: z.boolean(),
   userId: z.string().optional(),
+  interesteds: z.array(z.string()).optional(),
 });
 
 export const PetSchema = basePetSchema

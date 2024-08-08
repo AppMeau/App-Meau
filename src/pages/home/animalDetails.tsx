@@ -7,9 +7,23 @@ import {
 } from "react-native";
 import Colors from "../../util/Colors";
 import Button from "../../components/customButton";
+import { useAppDispatch, useAppSelector } from "../../redux/store";
+import { selectUser } from "../../redux/auth";
+import { PetRegisterType } from "../../schemas/PetRegister/petRegisterTypes";
+import { useState } from "react";
+import { collection, doc, updateDoc, where } from "firebase/firestore";
+import { query } from "firebase/database";
+import { db } from "../../util/firebase";
+import { addInterested } from "../../redux/pets";
 
-export default function AnimalDetails({route}: any) {
-  const pet = route.params.animal;
+export default function AnimalDetails({route, navigation}: any) {
+  const dispatch = useAppDispatch();
+
+  const {uid} = useAppSelector(selectUser)
+
+  const pet: PetRegisterType = route.params.animal;
+  const [isAlreadyInterested, setIsAlreadyInterested] = useState(pet.interesteds?.includes(uid));
+
 
   function displayinfosBehavior(){
     const behaviors = []
@@ -53,6 +67,20 @@ export default function AnimalDetails({route}: any) {
 
     return requirements.join(", ")
     
+  }
+
+  const navigateToInteresteds = () => {
+    navigation.navigate('interesteds', {
+      animal: pet
+    })
+  }
+
+  const wantToAdoptHandler = async () => {
+    // console.log(isAlreadyInterested)
+    if(!isAlreadyInterested && pet.interesteds){
+      await dispatch(addInterested({pet, userId: uid}))
+      setIsAlreadyInterested(true);
+    }
   }
 
   function render() {
@@ -139,19 +167,28 @@ export default function AnimalDetails({route}: any) {
             <View style={styles.containerButton}>
               <Button
                 backgroundColor={Colors.yellowPrimary}
-                onPress={null}
                 width={175}
+                onPress={navigateToInteresteds}
               >
                 VER INTERESSADOS
               </Button>
               <Button
                 backgroundColor={Colors.yellowPrimary}
-                onPress={null}
+                onPress={()=>{}}
                 width={175}
               >
                 REMOVER PET
               </Button>
             </View>
+            {!isAlreadyInterested && pet.userId !== uid && (
+              <Button
+                backgroundColor={Colors.yellowPrimary}
+                onPress={wantToAdoptHandler}
+                width={175}
+              >
+                PRETENDO ADOTAR
+              </Button>
+            )}
             </View>
         </ScrollView>
         </View>

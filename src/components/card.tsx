@@ -1,10 +1,10 @@
 import * as React from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 import { Card, Text } from "react-native-paper";
-import { animalRegisterType } from "../schemas/PetRegister/petRegisterTypes";
 import Colors from "../util/Colors";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
+import { PetRegisterType } from "../schemas/PetRegister/petRegisterTypes";
 
 export default function CardComponent({
   icon,
@@ -13,7 +13,7 @@ export default function CardComponent({
 }: {
   icon: string;
   isToAdopt: boolean;
-  animal: animalRegisterType;
+  animal: PetRegisterType;
 }) {
   const navigation = useNavigation();
 
@@ -28,7 +28,7 @@ export default function CardComponent({
     </View>
   ) : (
     <View style={styles.interestedView}>
-      <Text style={styles.centerText}>__ NOVOS INTERESSADOS</Text>
+      <Text style={styles.centerText}>{animal.interesteds?.length} NOVO(S) INTERESSADO(S)</Text>
     </View>
   );
 

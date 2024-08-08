@@ -1,6 +1,10 @@
-import { combineReducers, configureStore } from "@reduxjs/toolkit";
-import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
-import authReducer from "./auth";
+import { combineReducers, configureStore } from '@reduxjs/toolkit';
+import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
+import authReducer from './auth';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { userSlice } from './users';
+import { petSlice } from "./pets";
+import { chatSlice } from "./chat";
 import {
   FLUSH,
   PAUSE,
@@ -10,15 +14,14 @@ import {
   REGISTER,
   REHYDRATE,
 } from "redux-persist";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { petSlice } from "./pets";
-import { chatSlice } from "./chat";
 
 const reducers = combineReducers({
-  auth: authReducer,
-  pets: petSlice.reducer,
+	auth: authReducer,
+	pets: petSlice.reducer,
+	users: userSlice.reducer,
   chat: chatSlice.reducer,
-});
+})
+
 
 const persistConfig = {
   key: "root",

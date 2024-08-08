@@ -11,68 +11,104 @@ import { useEffect } from "react";
 import { checkAuthStatus } from "./src/redux/auth";
 import AnimalDetails from "./src/pages/home/animalDetails";
 import Chat from "./src/pages/home/chat";
+import Interesteds from "./src/pages/home/interesteds";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import Header from "./src/components/header";
+import Colors from "./src/util/Colors";
+import UserProfile from "./src/pages/home/userProfile";
+import MyChatRooms from "./src/pages/home/myChatRooms";
+
+const Drawer = createDrawerNavigator();
+const DetailStack = createNativeStackNavigator();
+
+function DetailsRoute({isToAdopt}:{isToAdopt: boolean}) {
+  return (
+    <DetailStack.Navigator>
+      <DetailStack.Screen 
+        name="animalListingAdoptionStack" 
+        component={AnimalListing} 
+        options={{ title: 'Adotar' }} 
+        initialParams={{isToAdopt: isToAdopt}}
+      />
+      <DetailStack.Screen 
+        name="animalListingMyPetsStack" 
+        component={AnimalListing} 
+        options={{ title: 'Meus Pets' }} 
+        initialParams={{isToAdopt: isToAdopt}}
+      />
+      <DetailStack.Screen 
+        name="animalDetails" 
+        component={AnimalDetails} 
+        options={{ title: 'Detalhes'}} 
+      />
+      <DetailStack.Screen 
+        name="interesteds" 
+        component={Interesteds} 
+        options={{ header: ({ navigation, options }: any) => (
+          <Header
+            color={Colors.bluePrimary}
+            title={'Interessados'}
+            search
+            onDrawerClick={navigation.toggleDrawer}
+          />
+        ),}} 
+      />
+      <DetailStack.Screen 
+        name="userProfile" 
+        component={UserProfile} 
+        options={{ header: ({ navigation, options }: any) => (
+          <Header
+            color={Colors.bluePrimary}
+            title={'Interessados'}
+            search
+            onDrawerClick={navigation.toggleDrawer}
+          />
+        ),}} 
+      />
+    </DetailStack.Navigator>
+  )
+}
 
 export default function Routes() {
-  const Drawer = createDrawerNavigator();
   const status = useAppSelector((state) => state.auth.status);
   const dispatch = useAppDispatch();
   useEffect(() => {
     dispatch(checkAuthStatus());
   }, []);
-  return (
-    <NavigationContainer>
-      <Drawer.Navigator>
-        {status ? (
-          <>
-            <Drawer.Screen
-              name="inicio"
-              component={Index}
-              options={{ title: "", drawerLabel: "Início" }}
-            />
-            <Drawer.Screen
-              name="animalRegister"
-              component={AnimalRegister}
-              options={{ title: "Cadastrar um Pet" }}
-            />
-            <Drawer.Screen
-              name="animalListingAdoption"
-              component={AnimalListing}
-              options={{ title: "Adotar", unmountOnBlur: true }}
-              initialParams={{ isToAdopt: true }}
-            />
-            <Drawer.Screen
-              name="animalListingMyPets"
-              component={AnimalListing}
-              options={{ title: "Meus Pets", unmountOnBlur: true }}
-              initialParams={{ isToAdopt: false }}
-            />
-            <Drawer.Screen
-              name="animalDetails"
-              component={AnimalDetails}
-              options={{ title: "Detalhes", unmountOnBlur: true }}
-            />
-            <Drawer.Screen
-              name="chat"
-              component={Chat}
-              options={{ title: "Chat", unmountOnBlur: true }}
-            />
-          </>
-        ) : (
-          <>
-            <Drawer.Screen
-              name="login"
-              component={Login}
-              options={{ title: "Login", unmountOnBlur: true }}
-            />
-            {/* <Drawer.Screen name="notAuthorized" component={notAuthorized}/> */}
-            <Drawer.Screen
-              name="register"
-              component={Register}
-              options={{ title: "Cadastrar" }}
-            />
-          </>
-        )}
-      </Drawer.Navigator>
-    </NavigationContainer>
-  );
+    return (
+        <NavigationContainer>
+          <Drawer.Navigator>
+            {status ? (
+                <>
+                  <Drawer.Screen name="inicio" component={Index} options={{ title: '', drawerLabel: 'Início' }}/>
+                  <Drawer.Screen name="animalRegister" component={AnimalRegister} options={{ title: 'Cadastrar um Pet' }}/>
+                  <Drawer.Screen 
+                    name="animalListingAdoption"
+                    options={{ title: 'Adotar', headerShown: false, unmountOnBlur: true }}
+                  >{props => <DetailsRoute {...props} isToAdopt={true} />}</Drawer.Screen>
+                  <Drawer.Screen 
+                    name="animalListingMyPets" 
+                    options={{ title: 'Meus Pets', headerShown: false, unmountOnBlur: true }}
+                  >{props => <DetailsRoute {...props} isToAdopt={false} />}</Drawer.Screen>
+                  <Drawer.Screen
+                    name="chat"
+                    component={Chat}
+                    options={{ title: "Chat", unmountOnBlur: true }}
+                  />
+                  <Drawer.Screen
+                    name="myChatRooms"
+                    component={MyChatRooms}
+                    options={{ title: "Minhas Conversas", unmountOnBlur: true }}
+                  />
+                </>
+            ):(
+                <>
+                    <Drawer.Screen name="login" component={Login} options={{ title: 'Login' }}/>
+                    {/* <Drawer.Screen name="notAuthorized" component={notAuthorized}/> */}
+                    <Drawer.Screen name="register" component={Register} options={{ title: 'Cadastrar' }}/>
+                </>
+            )}
+          </Drawer.Navigator>
+        </NavigationContainer>
+      );
 }
