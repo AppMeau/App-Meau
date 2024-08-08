@@ -7,9 +7,27 @@ import {
 } from "react-native";
 import Colors from "../../util/Colors";
 import Button from "../../components/customButton";
+import { useEffect } from "react";
+import Header from "../../components/header";
 
-export default function AnimalDetails({route}: any) {
+export default function AnimalDetails({route, navigation}: any) {
   const pet = route.params.animal;
+  const isToAdopt = route.params.isToAdopt;
+
+  useEffect(() => {
+    navigation.setOptions({
+      header: ({ navigation, options }: any) => (
+        <Header
+          color={isToAdopt ? Colors.yellowPrimary : Colors.bluePrimary}
+          title={options.title}
+          search
+          onDrawerClick={navigation.toggleDrawer}
+        />
+      ),
+      title: isToAdopt ? "Adotar" : "Meus Pets",
+    });
+
+  }, []);
 
   function displayObject(pet: any){
     const removeProps = ["id", "name", "photo", "disable", "availableToAdoption"]
@@ -36,7 +54,7 @@ export default function AnimalDetails({route}: any) {
 
       return (
         <View style={styles.infosContainer}>
-          <Text style={styles.subtitle}>{mappedKey.toUpperCase()}</Text>
+          <Text style={isToAdopt ? styles.subtitleYellow : styles.subtitleBlue}>{mappedKey.toUpperCase()}</Text>
           <View style={styles.textContainer}>
             <Text style={styles.infos}>{`${value}`}</Text>
           </View>
@@ -64,22 +82,31 @@ export default function AnimalDetails({route}: any) {
             <View style={styles.infosTitleContainer}>
               {displayObject(pet)}
             </View>
-            <View style={styles.containerButton}>
+            {isToAdopt ? <View style={styles.containerButton}>
               <Button
                 backgroundColor={Colors.yellowPrimary}
+                onPress={null}
+                width={350}
+              >
+                PRETENDO ADOTAR
+              </Button>
+            </View> : <View style={styles.containerButton}>
+              <Button
+                backgroundColor={Colors.bluePrimary}
                 onPress={null}
                 width={175}
               >
                 VER INTERESSADOS
               </Button>
               <Button
-                backgroundColor={Colors.yellowPrimary}
+                backgroundColor={Colors.bluePrimary}
                 onPress={null}
                 width={175}
               >
                 REMOVER PET
               </Button>
-            </View>
+            </View>}
+            
             </View>
         </ScrollView>
         </View>
@@ -120,8 +147,12 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     gap:20,
   },
-  subtitle: {
+  subtitleBlue: {
     color: Colors.bluePrimary,
+    flex: 1,
+  },
+  subtitleYellow: {
+    color: Colors.yellowSecondary,
     flex: 1,
   },
   textContainer: {
