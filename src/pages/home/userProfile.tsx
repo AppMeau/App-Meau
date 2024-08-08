@@ -13,14 +13,14 @@ import { removeInterested } from "../../redux/pets";
 export default function UserProfile({navigation, route}: any) {
   const dispatch = useAppDispatch();
 
-  const {uid} = useAppSelector(selectUser)
+  const {uid, photo, name} = useAppSelector(selectUser)
 
-  const user = route.params.user 
+  const targetUser = route.params.user 
   const pet: PetRegisterType = route.params.pet
 
   const createChat = async () => {
     try{
-      const result = await dispatch(createRoom({members: [user.uid, uid], pet: pet.id as string}))
+      const result = await dispatch(createRoom({members: [targetUser, {id: uid, avatar: photo, name}], pet: {id:pet.id, name: pet.name} as {id: string, name: string}}))
       setOriginalResult(unwrapResult(result))
     } catch(e) {
       console.error(e)
@@ -33,7 +33,7 @@ export default function UserProfile({navigation, route}: any) {
       header: ({ navigation, options }: any) => (
         <Header
           color={Colors.bluePrimary}
-          title={user.name}
+          title={targetUser.name}
           search
           onDrawerClick={navigation.toggleDrawer}
         />
@@ -43,7 +43,7 @@ export default function UserProfile({navigation, route}: any) {
   
   useEffect(()=>{
     const removeInterestedUser = async () => {
-      await dispatch(removeInterested({pet, userId: user.uid}))
+      await dispatch(removeInterested({pet, userId: targetUser.id}))
     }
     
     if(originalResult){

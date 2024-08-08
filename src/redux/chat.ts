@@ -31,15 +31,28 @@ const sortByDate = (messages: Array<Message>) => messages.sort((a,b)=>{
 
 export const getMyRooms = createAsyncThunk(
   'rooms/getMyRooms',
-  async () => {
+  async (user: User) => {
   const roomsRef = collection(db, "rooms");
-  const user = auth.currentUser?.uid;
-  const roomSnapshot = await getDocs( query(roomsRef, where("members", "array-contains", user)))
+  const roomSnapshot = await getDocs( query(roomsRef, where("members", "array-contains", {id: user.uid, name: user.name, avatar: user.photo})));
   const rooms = roomSnapshot.docs.map(room => {
     const parsedRoom = roomSchema.parse(room.data());
-    console.log(parsedRoom)
     return parsedRoom
   })
+  const roomsWithMessages = await Promise.all(rooms.map(async (room) => {
+    const dbRef = ref(getDatabase());
+    await get(child(dbRef, `${room.id}/messages`)).then((snapshot) => {
+      if (snapshot.exists()) {
+        room.messages = Object.keys(snapshot.val()).map((key) => {
+          return {...snapshot.val()[key]}
+        })
+      } else {
+        console.log("No data available");
+      }
+    }).catch((error) => {
+      console.error(error);
+    });
+    return room
+  }))
   return rooms;
 })
 
@@ -68,8 +81,8 @@ export const processMessages = async (messages: Message[], room: Room): Promise<
       // if(usersData[0].photo) message.user.avatar = usersData[0].photo;
 
       //checa se todas as pessoas receberam a mensagem
-      const received = room.members.reduce((acc: boolean,el:string|number)=>{
-        if(message.readers && message.readers.indexOf(el) !== -1 && acc) return true;
+      const received = room.members.reduce((acc: boolean,el: {id: string, avatar: string, name: string})=>{
+        if(message.readers && message.readers.indexOf(el.id) !== -1 && acc) return true;
         return false;
       }, true)
       message.received = received
@@ -109,7 +122,7 @@ export const sendMessage = createAsyncThunk(
 );
 
 export const createRoom = createAsyncThunk("rooms/createRoom", 
-  async (roomData: {members: string[], pet: string}, thunkAPI) => {
+  async (roomData: {members: Array<{id: string, name: string, avatar: string}>, pet: {id: string, name: string}}, thunkAPI) => {
     try {
       const database = ref(getDatabase());
       const newRoomId = await push(database).key;

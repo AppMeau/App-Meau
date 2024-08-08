@@ -10,7 +10,7 @@ export default function InterestedsCard({user, pet}: {user: User, pet: PetRegist
 
   const navigateToUserProfile = () => {
     navigation.navigate('userProfile', {
-      user: user,
+      user: {id: user.uid, name: user.name, avatar: user.photo},
       pet: pet,
     })
   }
