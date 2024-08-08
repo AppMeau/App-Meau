@@ -45,6 +45,7 @@ export const getMyRooms = createAsyncThunk(
         room.messages = Object.keys(snapshot.val()).map((key) => {
           return {...snapshot.val()[key]}
         })
+        room.messages = sortByDate(room.messages)
       } else {
         console.log("No data available");
       }
@@ -53,7 +54,7 @@ export const getMyRooms = createAsyncThunk(
     });
     return room
   }))
-  return rooms;
+  return roomsWithMessages;
 })
 
 export const markAsReceived = async (messages: Message[], roomId: string|number) => {
