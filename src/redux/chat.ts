@@ -34,7 +34,7 @@ export const getMyRooms = createAsyncThunk(
   'rooms/getMyRooms',
   async (user: User) => {
   const roomsRef = collection(db, "rooms");
-  const roomSnapshot = await getDocs( query(roomsRef, where("members", "array-contains", {id: user.uid, name: user.name, avatar: user.photo})));
+  const roomSnapshot = await getDocs( query(roomsRef, where("members", "array-contains", {id: user.uid, name: user.name, avatar: user.photo, token: user.notification_token})));
   const rooms = roomSnapshot.docs.map(room => {
     const parsedRoom = roomSchema.parse(room.data());
     return parsedRoom
