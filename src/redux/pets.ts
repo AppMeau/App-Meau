@@ -17,7 +17,7 @@ import {
   PetRegisterType,
   PetSchema,
 } from "../schemas/PetRegister/petRegisterTypes";
-import { sendMessageNotification } from "./notification";
+import { sendInterestedNotification, sendMessageNotification } from "./notification";
 import { getUserById } from "./users";
 
 export type StateType = {
@@ -74,10 +74,9 @@ export const addInterested = createAsyncThunk("pets/addInterested",
     try {
       if(params.pet.userId){
         const owner = await getUserById(params.pet.userId)
-        console.log()
         if(owner?.notification_token){
           await updateDoc(doc(collection(db, "pets"), params.pet.id), {interesteds: [...params.pet.interesteds || [], params.userId]})
-          await sendMessageNotification(owner.notification_token, `Um usuário se interessou pelo seu pet ${params.pet.name}`)
+          await sendInterestedNotification(owner.notification_token, params.pet.name)
         }
       }
     } catch (error: any) {

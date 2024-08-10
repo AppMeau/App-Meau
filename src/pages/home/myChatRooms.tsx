@@ -6,8 +6,6 @@ import { unwrapResult } from "@reduxjs/toolkit"
 import { Room } from "../../schemas/Chat/chatSchema"
 import { selectUser } from "../../redux/auth"
 import ChatCard from "../../components/chatCard"
-import { DrawerItemList } from "@react-navigation/drawer"
-import { pushNotifications } from "../../redux/notification"
 
 export default function MyChatRooms({navigation, route}: any) {
   const dispatch = useAppDispatch()
@@ -17,7 +15,6 @@ export default function MyChatRooms({navigation, route}: any) {
   const isLoading = useAppSelector(state => !!state.chat.isLoading)
   const getAllMyRooms = async () => {
     const result = await dispatch(getMyRooms(user));
-    console.log(result)
     setChats(unwrapResult(result))
   }
   useEffect(() => {

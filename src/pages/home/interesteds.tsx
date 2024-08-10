@@ -7,7 +7,6 @@ import { User } from "../../schemas/UserRegister/userRegister";
 import { PetRegisterType } from "../../schemas/PetRegister/petRegisterTypes";
 import { Button } from "react-native-paper";
 import Colors from "../../util/Colors";
-import { pushNotifications } from "../../redux/notification";
 
 export default function Interesteds({route}: any) {
   const dispatch = useAppDispatch()

@@ -14,18 +14,6 @@ const initialState: initialStateType = {
   isLoading: false,
 };
 
-export async function getTokenByUserId(userId: string){
-  try{
-    const user = await getDoc(doc(db, 'users' , userId))
-    if(user.exists()){
-      return user.data().expoPushToken
-    } else {
-      throw new Error('user not found')
-    }
-  } catch(e){
-    console.error(e)
-  }
-}
 export async function sendMessageNotification(token:string, msg: string) {
   const message = {
     title: "Você tem uma nova mensagem!",
@@ -44,14 +32,21 @@ export async function sendMessageNotification(token:string, msg: string) {
   });
 }
 
-export async function schedulePushNotification() {
-  await Notifications.scheduleNotificationAsync({
-    content: {
-      title: "You've got mail! 📬",
-      body: "Here is the notification body",
-      data: { data: "goes here", test: { test1: "more data" } },
+export async function sendInterestedNotification(token: string, petName: string) {
+  const message = {
+    title: "Seu pet tem um novo interessado!",
+    body: `Um usuário se interessou no seu pet ${petName}!`,
+    to: token,
+    sound: 'default',
+  };
+  const res = await fetch('https://exp.host/--/api/v2/push/send', {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Accept-encoding': 'gzip, deflate',
+      'Content-Type': 'application/json',
     },
-    trigger: null,
+    body: JSON.stringify(message),
   });
 }
 
@@ -98,17 +93,6 @@ export async function registerForPushNotifications() {
 
   return token;
 }
-
-export const pushNotifications = createAsyncThunk(
-  "notifications/pushNotification",
-  async () => {
-    try {
-      await schedulePushNotification();
-    } catch (e) {
-      console.error(e);
-    }
-  }
-);
 
 export const registerForPushNotificationsThunk = createAsyncThunk(
   "notifications/registerForPushNotification",
