@@ -8,6 +8,7 @@ import { login } from "../../redux/auth";
 import { credentialSchema } from "../../schemas/UserRegister/userRegister";
 import { NavigationProp } from "@react-navigation/native";
 import Button from "../../components/button";
+import { registerForPushNotificationsThunk } from "../../redux/notification";
 
 export default function Login({
   navigation,
@@ -33,9 +34,9 @@ export default function Login({
       Alert.alert("Erro", "Usuário ou senha inválidos");
     }
   };
-  // useEffect(() => {
-  //   dispatch(registerForPushNotificationsThunk());
-  // }, []);
+  useEffect(() => {
+    dispatch(registerForPushNotificationsThunk());
+  }, []);
 
   return (
     <>

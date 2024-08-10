@@ -2,6 +2,8 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { Platform } from "react-native";
 import * as Notifications from "expo-notifications";
 import Constants from "expo-constants";
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "../util/firebase";
 
 type initialStateType = {
   expoPushToken: string | null;
@@ -12,6 +14,18 @@ const initialState: initialStateType = {
   isLoading: false,
 };
 
+export async function getTokenByUserId(userId: string){
+  try{
+    const user = await getDoc(doc(db, 'users' , userId))
+    if(user.exists()){
+      return user.data().expoPushToken
+    } else {
+      throw new Error('user not found')
+    }
+  } catch(e){
+    console.error(e)
+  }
+}
 export async function sendMessageNotification(token:string, msg: string) {
   const message = {
     title: "Você tem uma nova mensagem!",

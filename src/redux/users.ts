@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { collection, DocumentData, DocumentReference, getDoc, getDocs, query, QueryDocumentSnapshot, where } from 'firebase/firestore';
+import { collection, doc, DocumentData, DocumentReference, getDoc, getDocs, query, QueryDocumentSnapshot, where } from 'firebase/firestore';
 import { db } from '../util/firebase';
 import { FirebaseError } from 'firebase/app';
 import { User } from '../schemas/UserRegister/userRegister';
@@ -15,6 +15,23 @@ const initialState: StateType = {
   status: 'idle',
   error: null
 }
+
+
+export async function getUserById(userId: string|number){
+	try{
+		const snapshot = await getDocs(
+			query(collection(db, "users"), where("uid", "==", userId))
+		);
+		const user = snapshot.docs.map(el => el.data())[0];
+	  if(user){
+		return user
+	  } else {
+		throw new Error('user not found')
+	  }
+	} catch(e){
+	  console.error(e)
+	}
+  }
 
 export const getAllInteresteds = createAsyncThunk('users/getAllInteresteds', async (usersId: Array<string>, thunkAPI) => {
 	try {
