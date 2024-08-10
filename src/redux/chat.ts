@@ -34,7 +34,7 @@ export const getMyRooms = createAsyncThunk(
   'rooms/getMyRooms',
   async (user: User) => {
   const roomsRef = collection(db, "rooms");
-  const roomSnapshot = await getDocs( query(roomsRef, where("members", "array-contains", {id: user.uid, name: user.name, avatar: user.photo, token: user.notification_token})));
+  const roomSnapshot = await getDocs( query(roomsRef, where("membersId", "array-contains", user.uid)));
   const rooms = await Promise.all(roomSnapshot.docs.map(async room => {
     const messagesCollection = collection(db, room.ref.path, "messages");
     let messages: any = await (getDocs(messagesCollection));
@@ -88,7 +88,7 @@ export const sendMessage = createAsyncThunk(
   "messages/send",
   async (messagePayload: { message: Message; roomId: number|string, token: string }, thunkAPI) => {
     try{
-      const messagesCollection = await collection(db, "rooms", messagePayload.roomId as string, "messages");
+      const messagesCollection = collection(db, "rooms", messagePayload.roomId as string, "messages");
       const messageRef = await addDoc(messagesCollection, messagePayload.message);
       await updateDoc(messageRef, { _id: messageRef.id });
       const oldId = messagePayload.message._id;
@@ -112,9 +112,14 @@ export const createRoom = createAsyncThunk("rooms/createRoom",
       const room = {
         active: true,
         members: roomData.members,
+        membersId: roomData.members.map(el=>el.id),
         pet: roomData.pet,
       };
       const res = await addDoc(collection(db, "rooms"), room);
+      // const membersCollection = collection(db, "rooms", res.id as string, "members");
+      // await Promise.all(roomData.members.map(async (member) => {
+      //   await addDoc(membersCollection, member);
+      // }))
       
       // updates[`${newRoomId}`] = room;
       // await update(database, updates)
