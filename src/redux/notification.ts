@@ -13,7 +13,6 @@ const initialState: initialStateType = {
 };
 
 export async function sendMessageNotification(token:string, msg: string) {
-  console.log(token, msg);
   const message = {
     title: "Você tem uma nova mensagem!",
     body: msg,
