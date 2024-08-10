@@ -11,9 +11,6 @@ import { useAppDispatch, useAppSelector } from "../../redux/store";
 import { selectUser } from "../../redux/auth";
 import { PetRegisterType } from "../../schemas/PetRegister/petRegisterTypes";
 import { useState } from "react";
-import { collection, doc, updateDoc, where } from "firebase/firestore";
-import { query } from "firebase/database";
-import { db } from "../../util/firebase";
 import { addInterested } from "../../redux/pets";
 import { useEffect } from "react";
 import Header from "../../components/header";
@@ -26,53 +23,50 @@ export default function AnimalDetails({route, navigation}: any) {
   const pet: PetRegisterType = route.params.animal;
   const [isAlreadyInterested, setIsAlreadyInterested] = useState(pet.interesteds?.includes(uid));
 
-
   useEffect(() => {
     navigation.setOptions({
       header: ({ navigation, options }: any) => (
         <Header
           color={isToAdopt ? Colors.yellowPrimary : Colors.bluePrimary}
-          title={options.title}
+          title={pet.name}
           search
-          onDrawerClick={navigation.toggleDrawer}
+          icon="arrow-back"
+          onDrawerClick={navigation.goBack}
         />
       ),
-      title: isToAdopt ? "Adotar" : "Meus Pets",
     });
 
   }, []);
 
   function displayObject(pet: any){
-    const removeProps = ["id", "name", "photo", "disable", "availableToAdoption", "interesteds"]
+    const removeProps = ["id", "name", "photo", "disable", "availableToAdoption", "interesteds", "userId"]
     const translateObject = {
-        species: "espécie",
-        gender: "gênero",
-        size: "porte",
-        age: "idade",
-        vaccinated: "vacinado",
-        dewormed: "vermifugado",
-        castrated: "castrado",
-        sick: "doente",
-        periodToAcompany: "período de acompanhamento",
-        acompanyBeforeAdoption: "acompanhamento",
-        about: "sobre",
-        sickness: "doença",
+      species: "espécie",
+      gender: "gênero",
+      size: "porte",
+      age: "idade",
+      vaccinated: "vacinado",
+      dewormed: "vermifugado",
+      castrated: "castrado",
+      sick: "doente",
+      periodToAcompany: "período de acompanhamento",
+      acompanyBeforeAdoption: "acompanhamento",
+      about: "sobre",
+      sickness: "doença",
     }
-    return Object.entries(pet).map(([key, value]) => {
-      if(removeProps.includes(key) || value === ""){
-        return <></>
-      }
-
-      const mappedKey = translateObject[key as keyof typeof translateObject] ?? key;
-
-      return (
-        <View style={styles.infosContainer}>
-          <Text style={isToAdopt ? styles.subtitleYellow : styles.subtitleBlue}>{mappedKey.toUpperCase()}</Text>
-          <View style={styles.textContainer}>
-            <Text style={styles.infos}>{`${value}`}</Text>
+    return Object.entries(pet).map(([key, value], index) => {
+      if(!removeProps.includes(key)){
+        const mappedKey = translateObject[key as keyof typeof translateObject] ?? key;
+  
+        return (
+          <View key={index} style={styles.infosContainer}>
+            <Text style={isToAdopt ? styles.subtitleYellow : styles.subtitleBlue}>{mappedKey.toUpperCase()}</Text>
+            <View style={styles.textContainer}>
+              <Text style={styles.infos}>{`${value}`}</Text>
+            </View>
           </View>
-        </View>
-      )
+        )
+      }
     });
    
   }
@@ -91,58 +85,54 @@ export default function AnimalDetails({route, navigation}: any) {
     }
   }
 
-  function render() {
-    if(!pet) {
-        return <></>;
-    }
-
-     return (
-        <View style={{ flex: 1 }}>
-        <ScrollView>
-            <View style={styles.container}>
-            <View style={styles.pictureContainer}>
-                <Image style={styles.picture} source={{ uri: pet.photo}} />
-            </View>
-            <View style={styles.infosTitleContainer}>
-                <Text style={[{fontWeight: "bold"}]}>{pet.name}</Text>
-            </View>
-            <View style={styles.infosTitleContainer}>
-              {displayObject(pet)}
-            </View>
-            {isToAdopt ? <View style={styles.containerButton}>
-              {!isAlreadyInterested && pet.userId !== uid && (
-              <Button
-                backgroundColor={Colors.yellowPrimary}
-                onPress={wantToAdoptHandler}
-                width={175}
-              >
-                PRETENDO ADOTAR
-              </Button>
-            )}
-            </View> : <View style={styles.containerButton}>
-              <Button
-                backgroundColor={Colors.bluePrimary}
-                width={175}
-                onPress={navigateToInteresteds}
-              >
-                VER INTERESSADOS
-              </Button>
-              <Button
-                backgroundColor={Colors.bluePrimary}
-                onPress={()=>{}}
-                width={175}
-              >
-                REMOVER PET
-              </Button>
-            </View>}
-            
-            </View>
-        </ScrollView>
+    return (
+      <>
+        {pet && (
+          <View style={{ flex: 1 }}>
+            <ScrollView>
+              <View style={styles.container}>
+              <View style={styles.pictureContainer}>
+                  <Image style={styles.picture} source={{ uri: pet.photo}} />
+              </View>
+              <View style={styles.infosTitleContainer}>
+                  <Text style={[{fontWeight: "bold"}]}>{pet.name}</Text>
+              </View>
+              <View style={styles.infosTitleContainer}>
+                {displayObject(pet)}
+              </View>
+              {isToAdopt ? <View style={styles.containerButton}>
+                {!isAlreadyInterested && pet.userId !== uid && (
+                <Button
+                  backgroundColor={Colors.yellowPrimary}
+                  onPress={wantToAdoptHandler}
+                  width={175}
+                >
+                  PRETENDO ADOTAR
+                </Button>
+              )}
+              </View> : <View style={styles.containerButton}>
+                <Button
+                  backgroundColor={Colors.bluePrimary}
+                  width={180}
+                  onPress={navigateToInteresteds}
+                >
+                  VER INTERESSADOS
+                </Button>
+                <Button
+                  backgroundColor={Colors.bluePrimary}
+                  onPress={()=>{}}
+                  width={175}
+                >
+                  REMOVER PET
+                </Button>
+              </View>}
+              
+              </View>
+          </ScrollView>
         </View>
-    );
-  }
-  
-  return render();
+      )}
+    </>
+  );
 }
 
 const styles = StyleSheet.create({

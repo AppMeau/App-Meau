@@ -8,13 +8,15 @@ import {
   sendMessage,
   updateMessages,
 } from "../../redux/chat";
-import { messageSchema } from "../../schemas/Chat/chatSchema";
+import { messageSchema, Room } from "../../schemas/Chat/chatSchema";
 import { Text } from "react-native";
 import { getDatabase, off, onValue, ref } from "firebase/database";
 import { selectUser } from "../../redux/auth";
 import { processMessages } from "../../redux/chat";
+import Header from "../../components/header";
+import Colors from "../../util/Colors";
 
-export default function ChatComponent({route}: any) {
+export default function ChatComponent({route, navigation}: any) {
   const dispatch = useAppDispatch();
 
   const roomId = route.params.roomId;
@@ -22,6 +24,21 @@ export default function ChatComponent({route}: any) {
 
   const user = useAppSelector(selectUser)
   const isLoading = useAppSelector((state) => state.chat.isLoading);
+
+  useEffect(() => {
+    navigation.setOptions({
+      header: ({ navigation, options }: any) => (
+        <Header
+          color={Colors.bluePrimary}
+          title={room.members.find((el: any) => el.id !== user.uid).name}
+          dotsMenu
+          icon="arrow-back"
+          onDrawerClick={navigation.goBack}
+        />
+      ),
+    });
+
+  }, []);
 
   useEffect(() => {
     const rtdb = getDatabase()
