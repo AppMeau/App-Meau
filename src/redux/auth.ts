@@ -6,7 +6,9 @@ import {
   User,
   userSchema,
 } from "../schemas/UserRegister/userRegister";
-import { collection, doc, getDocs, query, where } from "firebase/firestore";
+import { collection, doc, getDocs, query, updateDoc, where } from "firebase/firestore";
+import { useAppDispatch } from "./store";
+import { registerForPushNotifications } from "./notification";
 
 type initialStateType = {
   status: boolean | null;
@@ -29,6 +31,8 @@ export const login = createAsyncThunk(
       );
       const usersData = users.docs.map((doc) => doc.data());
       if (usersData.length) {
+        const token = await registerForPushNotifications()
+        users.docs.map(async doc => await updateDoc(doc.ref, { notification_token: token }))
         return usersData[0];
       }
       return null;

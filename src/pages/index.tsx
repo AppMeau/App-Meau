@@ -27,9 +27,6 @@ export default function App({
       navigation.navigate("login");
     });
   };
-  useEffect(() => {
-    dispatch(pushNotifications());
-  }, []);
 
   return (
     <SafeAreaProvider>

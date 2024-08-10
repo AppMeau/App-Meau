@@ -21,6 +21,7 @@ export const userSchema = z.object({
   password: z.string().min(6),
   photo: z.string().optional(),
   uid: z.string(),
+  notification_token: z.string().optional(),
 });
 
 export type User = z.infer<typeof userSchema>;

@@ -7,6 +7,7 @@ import { Room } from "../../schemas/Chat/chatSchema"
 import { selectUser } from "../../redux/auth"
 import ChatCard from "../../components/chatCard"
 import { DrawerItemList } from "@react-navigation/drawer"
+import { pushNotifications } from "../../redux/notification"
 
 export default function MyChatRooms({navigation, route}: any) {
   const dispatch = useAppDispatch()
@@ -19,7 +20,6 @@ export default function MyChatRooms({navigation, route}: any) {
     setChats(unwrapResult(result))
   }
   useEffect(() => {
-
     getAllMyRooms();
   }, [])
   return (

@@ -5,6 +5,7 @@ import { auth, db } from "../util/firebase";
 import { get, getDatabase, ref, child, set, update, push } from "firebase/database";
 import { addDoc, collection, getDocs, query, where } from "firebase/firestore";
 import { User, userSchema } from "../schemas/UserRegister/userRegister";
+import { sendMessageNotification } from "./notification";
 
 type initialStateType = {
   status: boolean | null;
@@ -98,7 +99,7 @@ export const processMessages = async (messages: Message[], room: Room): Promise<
 
 export const sendMessage = createAsyncThunk(
   "messages/send",
-  async (messagePayload: { message: Message; roomId: number|string }, thunkAPI) => {
+  async (messagePayload: { message: Message; roomId: number|string, token: string }, thunkAPI) => {
     const database = getDatabase();
     if (database) {
       if (auth.currentUser){
@@ -110,6 +111,9 @@ export const sendMessage = createAsyncThunk(
           const updates = {} as Record<string, Message>;
           updates[`${messagePayload.roomId}/messages/${message._id}`] = message
           await update(ref(database), updates);
+          if(messagePayload.token){
+            await sendMessageNotification(messagePayload.token, message.text);
+          }
           return thunkAPI.fulfillWithValue({ message, roomId: messagePayload.roomId });
         } catch (e) {
           return thunkAPI.rejectWithValue({ error: e });

@@ -45,8 +45,9 @@ export default function ChatComponent({route}: any) {
   }, []);
 
   const onSend = (messages: IMessage[] = []) => {
+    const targetUser = room?.members.find((member: any) => member.id !== user?.uid);
     try {
-      dispatch(sendMessage({ message: messageSchema.parse(messages[0]), roomId: roomId }));
+      dispatch(sendMessage({ message: messageSchema.parse(messages[0]), roomId: roomId, token: targetUser?.notification_token }));
     } catch (e) {
       console.error(e);
     }

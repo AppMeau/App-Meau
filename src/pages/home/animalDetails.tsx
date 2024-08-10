@@ -76,7 +76,6 @@ export default function AnimalDetails({route, navigation}: any) {
   }
 
   const wantToAdoptHandler = async () => {
-    // console.log(isAlreadyInterested)
     if(!isAlreadyInterested && pet.interesteds){
       await dispatch(addInterested({pet, userId: uid}))
       setIsAlreadyInterested(true);

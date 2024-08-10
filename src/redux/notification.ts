@@ -12,8 +12,26 @@ const initialState: initialStateType = {
   isLoading: false,
 };
 
+export async function sendMessageNotification(token:string, msg: string) {
+  console.log(token, msg);
+  const message = {
+    title: "Você tem uma nova mensagem!",
+    body: msg,
+    to: token,
+    sound: 'default',
+  };
+  const res = await fetch('https://exp.host/--/api/v2/push/send', {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Accept-encoding': 'gzip, deflate',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(message),
+  });
+}
+
 export async function schedulePushNotification() {
-  console.log("chamou notify");
   await Notifications.scheduleNotificationAsync({
     content: {
       title: "You've got mail! 📬",
@@ -61,7 +79,6 @@ export async function registerForPushNotifications() {
         projectId,
       })
     ).data;
-    console.log(token);
   } catch (e) {
     token = `${e}`;
   }
@@ -73,9 +90,7 @@ export const pushNotifications = createAsyncThunk(
   "notifications/pushNotification",
   async () => {
     try {
-      console.log("antes");
       await schedulePushNotification();
-      console.log("depois");
     } catch (e) {
       console.error(e);
     }
@@ -86,7 +101,6 @@ export const registerForPushNotificationsThunk = createAsyncThunk(
   "notifications/registerForPushNotification",
   async (_, { dispatch, rejectWithValue, fulfillWithValue }) => {
     try {
-      console.log("register");
       const token = await registerForPushNotifications();
       return fulfillWithValue(token);
     } catch (e) {
