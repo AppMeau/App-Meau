@@ -3,7 +3,6 @@ import { GiftedChat, IMessage } from "react-native-gifted-chat";
 import { useAppDispatch, useAppSelector } from "../../redux/store";
 import {
   findRoom,
-  getRoomById,
   markAsReceived,
   sendMessage,
   updateMessages,
@@ -46,6 +45,7 @@ export default function ChatComponent({route}: any) {
 
   const onSend = (messages: IMessage[] = []) => {
     const targetUser = room?.members.find((member: any) => member.id !== user?.uid);
+    console.log(room)
     try {
       dispatch(sendMessage({ message: messageSchema.parse(messages[0]), roomId: roomId, token: targetUser?.notification_token }));
     } catch (e) {
