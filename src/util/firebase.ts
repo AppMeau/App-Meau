@@ -10,7 +10,6 @@ const firebaseConfig = {
   projectId: process.env.EXPO_PUBLIC_PROJECT_ID,
   storageBucket: process.env.EXPO_PUBLIC_STORAGE_BUCKET,
   appId: process.env.EXPO_PUBLIC_APP_ID,
-  databaseURL: process.env.EXPO_PUBLIC_DATABASE,
 };
 export const firebase = initializeApp(firebaseConfig);
 

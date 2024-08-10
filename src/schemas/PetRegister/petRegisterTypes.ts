@@ -37,6 +37,7 @@ export const basePetSchema = z.object({
 
   availableToAdoption: z.boolean(),
   userId: z.string().optional(),
+  interesteds: z.array(z.string()).optional(),
 });
 
 export const PetSchema = basePetSchema
@@ -102,7 +103,6 @@ export const PetSchema = basePetSchema
     Object.entries(optionsToStringObject).forEach(([key, propStringMap]) => {
       const values: string[] = [];
       Object.entries(propStringMap).forEach(([input, text]) => {
-        console.log(input, data[input as keyof typeof propStringMap])
         if (data[input as keyof typeof propStringMap]) {
           values.push(text);
           delete data[input as keyof typeof propStringMap]

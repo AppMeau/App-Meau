@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { GiftedChat, IMessage } from "react-native-gifted-chat";
 import { useAppDispatch, useAppSelector } from "../../redux/store";
 import {
@@ -14,19 +14,21 @@ import { getDatabase, off, onValue, ref } from "firebase/database";
 import { selectUser } from "../../redux/auth";
 import { processMessages } from "../../redux/chat";
 
-export default function ChatComponent() {
+export default function ChatComponent({route}: any) {
   const dispatch = useAppDispatch();
-  const roomId = "qXdpCfmOpdudHb2RzbDY";
+
+  const roomId = route.params.roomId;
   const room = useAppSelector(findRoom(roomId));
+
   const user = useAppSelector(selectUser)
   const isLoading = useAppSelector((state) => state.chat.isLoading);
+
   useEffect(() => {
     const rtdb = getDatabase()
     const chatRef = ref(rtdb,roomId+'/messages');
-    dispatch(getRoomById(roomId));
     onValue(chatRef, async (snapshot) => {
       const data = snapshot.val();
-      if (data) {
+      if (data && room) {
         try{
           const messages = Object.keys(data).map((key) => data[key]);
           await markAsReceived(messages, roomId);
@@ -41,13 +43,15 @@ export default function ChatComponent() {
       off(chatRef, 'value');
     }
   }, []);
+
   const onSend = (messages: IMessage[] = []) => {
     try {
-      dispatch(sendMessage({ message: messageSchema.parse(messages[0]), roomId }));
+      dispatch(sendMessage({ message: messageSchema.parse(messages[0]), roomId: roomId }));
     } catch (e) {
       console.error(e);
     }
   };
+  
   return (
     <>
       {room && user && !isLoading? (
@@ -61,7 +65,9 @@ export default function ChatComponent() {
           }}
         />
       ) : (
-        <Text>Não tem sala</Text>
+        <>
+          <Text>Não tem sala</Text>
+        </>
       )}
     </>
   );

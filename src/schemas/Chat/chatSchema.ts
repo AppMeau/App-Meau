@@ -38,8 +38,8 @@ export const messageSchema = z.object({
 // const MySchema = z.whatever() satisfies z.ZodType<IMessage>;
 export const roomSchema = z.object({
   id: z.string().or(z.number()),
-  members: z.array(z.string()).catch([]),
-  pet: z.string(),
+  members: z.array(z.object({id: z.string(), name: z.string(), avatar: z.string()})).catch([]),
+  pet: z.object({id: z.string(), name: z.string()}),
   messages: z.array(messageSchema).catch([]),
   active: z.boolean().catch(true),
 

@@ -3,15 +3,21 @@ import { Room, roomSchema, messageSchema } from "../schemas/Chat/chatSchema";
 import type { Message } from "../schemas/Chat/chatSchema";
 import { auth, db } from "../util/firebase";
 import { get, getDatabase, ref, child, set, update, push } from "firebase/database";
-import { collection, getDocs, query, where } from "firebase/firestore";
+import { addDoc, collection, getDocs, query, where } from "firebase/firestore";
 import { User, userSchema } from "../schemas/UserRegister/userRegister";
 
 type initialStateType = {
   status: boolean | null;
   isLoading?: boolean;
-  chats: Array<Room>
+  chats: Array<Room>;
+  lastCreatedRoom: Room | null;
 };
-const initialState: initialStateType = { status: null, isLoading: false, chats: []};
+const initialState: initialStateType = {
+  status: null, 
+  isLoading: false, 
+  chats: [], 
+  lastCreatedRoom: null,
+};
 
 // createAsyncThunk(()=>)
 export const findRoom = (id: number | string) => (state: any) => {
@@ -22,6 +28,35 @@ export const findRoom = (id: number | string) => (state: any) => {
 const sortByDate = (messages: Array<Message>) => messages.sort((a,b)=>{
   return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
 });
+
+export const getMyRooms = createAsyncThunk(
+  'rooms/getMyRooms',
+  async (user: User) => {
+  const roomsRef = collection(db, "rooms");
+  const roomSnapshot = await getDocs( query(roomsRef, where("members", "array-contains", {id: user.uid, name: user.name, avatar: user.photo})));
+  const rooms = roomSnapshot.docs.map(room => {
+    const parsedRoom = roomSchema.parse(room.data());
+    return parsedRoom
+  })
+  const roomsWithMessages = await Promise.all(rooms.map(async (room) => {
+    const dbRef = ref(getDatabase());
+    await get(child(dbRef, `${room.id}/messages`)).then((snapshot) => {
+      if (snapshot.exists()) {
+        room.messages = Object.keys(snapshot.val()).map((key) => {
+          return {...snapshot.val()[key]}
+        })
+        room.messages = sortByDate(room.messages)
+      } else {
+        console.log("No data available");
+      }
+    }).catch((error) => {
+      console.error(error);
+    });
+    return room
+  }))
+  return roomsWithMessages;
+})
+
 export const markAsReceived = async (messages: Message[], roomId: string|number) => {
   for(const message of messages){
     if(auth.currentUser){
@@ -47,8 +82,8 @@ export const processMessages = async (messages: Message[], room: Room): Promise<
       // if(usersData[0].photo) message.user.avatar = usersData[0].photo;
 
       //checa se todas as pessoas receberam a mensagem
-      const received = room.members.reduce((acc: boolean,el:string|number)=>{
-        if(message.readers && message.readers.indexOf(el) !== -1 && acc) return true;
+      const received = room.members.reduce((acc: boolean,el: {id: string, avatar: string, name: string})=>{
+        if(message.readers && message.readers.indexOf(el.id) !== -1 && acc) return true;
         return false;
       }, true)
       message.received = received
@@ -86,6 +121,27 @@ export const sendMessage = createAsyncThunk(
     }
   }
 );
+
+export const createRoom = createAsyncThunk("rooms/createRoom", 
+  async (roomData: {members: Array<{id: string, name: string, avatar: string}>, pet: {id: string, name: string}}, thunkAPI) => {
+    try {
+      const database = ref(getDatabase());
+      const newRoomId = await push(database).key;
+      const updates: any = {};
+      const room = {
+        id: newRoomId,
+        active: true,
+        members: roomData.members,
+        pet: roomData.pet,
+      };
+      await addDoc(collection(db, "rooms"), room);
+      updates[`${newRoomId}`] = room;
+      await update(database, updates)
+      return thunkAPI.fulfillWithValue(room);
+    } catch (e) {
+      return thunkAPI.rejectWithValue(e);
+    }
+});
 
 
 export const getRoomById = createAsyncThunk(
@@ -211,6 +267,22 @@ export const chatSlice = createSlice({
       }
       state.isLoading = false;
     });
+    builder.addCase(createRoom.fulfilled, (state, { payload }) => {
+      if(payload){
+        state.chats.push(roomSchema.parse(payload));
+        state.lastCreatedRoom = roomSchema.parse(payload);
+        state.isLoading = false;
+      }
+    });
+    builder.addCase(createRoom.pending, (state) => {state.isLoading=true})
+
+    builder.addCase(getMyRooms.fulfilled, (state, { payload }) => {
+      if(payload){
+        state.chats = payload;
+      }
+      state.isLoading = false;
+    });
+    builder.addCase(getMyRooms.pending, (state) => {state.isLoading=true})
   },
 });
 
