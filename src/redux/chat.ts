@@ -3,7 +3,7 @@ import { Room, roomSchema, messageSchema } from "../schemas/Chat/chatSchema";
 import type { Message } from "../schemas/Chat/chatSchema";
 import { auth, db } from "../util/firebase";
 import { get, getDatabase, ref, child, set, update, push } from "firebase/database";
-import { addDoc, arrayUnion, collection, doc, getDoc, getDocs, query, updateDoc, where } from "firebase/firestore";
+import { addDoc, arrayUnion, collection, doc, getDoc, getDocs, query, setDoc, updateDoc, where } from "firebase/firestore";
 import { User, userSchema } from "../schemas/UserRegister/userRegister";
 import { sendMessageNotification } from "./notification";
 
@@ -53,6 +53,7 @@ export const markAsReceived = async (messages: Message[], roomId: string|number)
       if(message.readers?.indexOf(auth.currentUser.uid) == -1 || message.readers == undefined){
         // const dispatch = useAppDispatch()
         // dispatch(readMessages({roomId: roomId, messageId: message._id}))
+        console.log("marking as read", message._id)
         const messageDoc = doc(db, "rooms", roomId as string, "messages", message._id as string);
         await updateDoc(messageDoc, {readers: arrayUnion(auth.currentUser.uid)});
       }
@@ -89,10 +90,10 @@ export const sendMessage = createAsyncThunk(
   async (messagePayload: { message: Message; roomId: number|string, token: string }, thunkAPI) => {
     try{
       const messagesCollection = collection(db, "rooms", messagePayload.roomId as string, "messages");
-      const messageRef = await addDoc(messagesCollection, messagePayload.message);
-      await updateDoc(messageRef, { _id: messageRef.id });
+      const messageDoc = doc(messagesCollection)
       const oldId = messagePayload.message._id;
-      messagePayload.message._id = messageRef.id;
+      messagePayload.message._id = messageDoc.id;
+      const messageRef = await setDoc(messageDoc, messagePayload.message);
       if(messagePayload.token){
         await sendMessageNotification(messagePayload.token, messagePayload.message.text);
       }
