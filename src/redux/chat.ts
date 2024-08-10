@@ -36,6 +36,7 @@ export const getMyRooms = createAsyncThunk(
   const roomsRef = collection(db, "rooms");
   const roomSnapshot = await getDocs( query(roomsRef, where("membersId", "array-contains", user.uid)));
   const rooms = await Promise.all(roomSnapshot.docs.map(async room => {
+    console.log(room.data())
     const messagesCollection = collection(db, room.ref.path, "messages");
     let messages: any = await (getDocs(messagesCollection));
     messages = messages.docs.map((doc: any) => messageSchema.parse(doc.data()));
@@ -95,6 +96,7 @@ export const sendMessage = createAsyncThunk(
       messagePayload.message._id = messageDoc.id;
       const messageRef = await setDoc(messageDoc, messagePayload.message);
       if(messagePayload.token){
+        console.log(messagePayload.token)
         await sendMessageNotification(messagePayload.token, messagePayload.message.text);
       }
       return thunkAPI.fulfillWithValue({ message: messagePayload.message, roomId: messagePayload.roomId, oldId });
@@ -223,6 +225,7 @@ export const chatSlice = createSlice({
     builder.addCase(getMyRooms.fulfilled, (state, { payload }) => {
       if(payload){
         state.chats = payload;
+        console.log(payload)
       }
       state.isLoading = false;
     });

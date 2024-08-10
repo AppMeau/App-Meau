@@ -17,6 +17,7 @@ export default function MyChatRooms({navigation, route}: any) {
   const isLoading = useAppSelector(state => !!state.chat.isLoading)
   const getAllMyRooms = async () => {
     const result = await dispatch(getMyRooms(user));
+    console.log(result)
     setChats(unwrapResult(result))
   }
   useEffect(() => {
