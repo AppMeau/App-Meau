@@ -5,7 +5,6 @@ import { useAppDispatch, useAppSelector } from "./src/redux/store";
 import Login from "./src/pages/auth/login";
 import Register from "./src/pages/auth/register";
 import AnimalRegister from "./src/pages/home/animalRegister";
-import notAuthorized from "./src/pages/exceptions/notAuthorized";
 import AnimalListing from "./src/pages/home/animalListing";
 import { useEffect } from "react";
 import { checkAuthStatus } from "./src/redux/auth";
@@ -20,6 +19,31 @@ import MyChatRooms from "./src/pages/home/myChatRooms";
 
 const Drawer = createDrawerNavigator();
 const DetailStack = createNativeStackNavigator();
+const ChatStack = createNativeStackNavigator();
+
+function ChatRoute() {
+  return (
+    <ChatStack.Navigator>
+      <ChatStack.Screen
+        name="myChatRooms"
+        component={MyChatRooms}
+        options={{ title: "Minhas Conversas", 
+          header: ({ navigation, options }: any) => (
+            <Header
+              color={Colors.bluePrimary}
+              title={"Minhas Conversas"}
+              search
+              onDrawerClick={navigation.toggleDrawer}
+            />
+        ), }}
+      />
+      <ChatStack.Screen 
+        name="chat" 
+        component={Chat} 
+      />
+    </ChatStack.Navigator>
+  )
+}
 
 function DetailsRoute({isToAdopt}:{isToAdopt: boolean}) {
   return (
@@ -49,7 +73,8 @@ function DetailsRoute({isToAdopt}:{isToAdopt: boolean}) {
             color={Colors.bluePrimary}
             title={'Interessados'}
             search
-            onDrawerClick={navigation.toggleDrawer}
+            icon="arrow-back"
+            onDrawerClick={navigation.goBack}
           />
         ),}} 
       />
@@ -91,14 +116,9 @@ export default function Routes() {
                     options={{ title: 'Meus Pets', headerShown: false, unmountOnBlur: true }}
                   >{props => <DetailsRoute {...props} isToAdopt={false} />}</Drawer.Screen>
                   <Drawer.Screen
-                    name="chat"
-                    component={Chat}
-                    options={{ title: "Chat", unmountOnBlur: true }}
-                  />
-                  <Drawer.Screen
-                    name="myChatRooms"
-                    component={MyChatRooms}
-                    options={{ title: "Minhas Conversas", unmountOnBlur: true }}
+                    name="chatRoute"
+                    component={ChatRoute}
+                    options={{ title: "Minhas Conversas", unmountOnBlur: true, headerShown: false }}
                   />
                 </>
             ):(
