@@ -26,6 +26,21 @@ export default function ChatComponent({route, navigation}: any) {
   const isLoading = useAppSelector((state) => state.chat.isLoading);
 
   useEffect(() => {
+    navigation.setOptions({
+      header: ({ navigation, options }: any) => (
+        <Header
+          color={Colors.bluePrimary}
+          title={room.members.find((el: any) => el.id !== user.uid).name}
+          dotsMenu
+          icon="arrow-back"
+          onDrawerClick={navigation.goBack}
+        />
+      ),
+    });
+
+  }, []);
+  
+  useEffect(() => {
     const roomDoc = query(collection(db, "rooms", roomId, "messages"));
     const unsub = onSnapshot(roomDoc, { includeMetadataChanges: true },async (snapshot: any) => {
       try{
