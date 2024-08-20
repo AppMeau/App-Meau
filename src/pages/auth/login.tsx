@@ -7,9 +7,8 @@ import { useAppDispatch, useAppSelector } from "../../redux/store";
 import { login } from "../../redux/auth";
 import { credentialSchema } from "../../schemas/UserRegister/userRegister";
 import { NavigationProp } from "@react-navigation/native";
-import Colors from "../../util/Colors";
 import Button from "../../components/button";
-import { clearRooms, getRoomById, instantiateRoom } from "../../redux/chat";
+import { registerForPushNotificationsThunk } from "../../redux/notification";
 
 export default function Login({
   navigation,
@@ -35,6 +34,9 @@ export default function Login({
       Alert.alert("Erro", "Usuário ou senha inválidos");
     }
   };
+  useEffect(() => {
+    dispatch(registerForPushNotificationsThunk());
+  }, []);
 
   return (
     <>

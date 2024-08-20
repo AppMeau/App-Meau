@@ -14,6 +14,7 @@ describe("User Schema", () => {
       password: "Teste123",
       photo: "phototest",
       uid: "uidtest",
+      notification_token: "token",
     });
     expect(res.success).toBe(true);
   });
@@ -30,7 +31,7 @@ describe("User Schema", () => {
       user: "Test",
       password: "Test",
       uid: "uidtest",
-
+      notification_token: "token",
     });
     expect(res.success).toBe(false);
   });
@@ -47,7 +48,7 @@ describe("User Schema", () => {
       user: "Test",
       password: "Test",
       uid: "uidtest",
-
+      notification_token: "token",
     });
     expect(res.success).toBe(false);
   });
@@ -64,7 +65,7 @@ describe("User Schema", () => {
       user: "Test",
       password: "Test",
       uid: "uidtest",
-
+      notification_token: "token",
     });
     expect(res.success).toBe(false);
   });
@@ -81,7 +82,7 @@ describe("User Schema", () => {
       user: "Test",
       password: "Test",
       uid: "uidtest",
-
+      notification_token: "token",
     });
     expect(res.success).toBe(false);
   });
@@ -98,7 +99,7 @@ describe("User Schema", () => {
       user: "Test",
       password: "Test",
       uid: "uidtest",
-
+      notification_token: "token",
     });
     expect(res.success).toBe(false);
   });
@@ -115,7 +116,7 @@ describe("User Schema", () => {
       user: "Test",
       password: "Test",
       uid: "uidtest",
-
+      notification_token: "token",
     });
     expect(res.success).toBe(false);
   });
@@ -132,7 +133,7 @@ describe("User Schema", () => {
       user: "Test",
       password: "Test",
       uid: "uidtest",
-
+      notification_token: "token",
     });
     expect(res.success).toBe(false);
   });
@@ -149,7 +150,7 @@ describe("User Schema", () => {
       user: "Test",
       password: "Test",
       uid: "uidtest",
-
+      notification_token: "token",
     });
     expect(res.success).toBe(false);
   });
@@ -166,7 +167,7 @@ describe("User Schema", () => {
       user: "Test",
       password: "Test",
       uid: "uidtest",
-
+      notification_token: "token",
     });
     expect(res.success).toBe(false);
   });
@@ -183,7 +184,7 @@ describe("User Schema", () => {
       user: "",
       password: "Test",
       uid: "uidtest",
-
+      notification_token: "token",
     });
     expect(res.success).toBe(false);
   });
@@ -200,7 +201,7 @@ describe("User Schema", () => {
       user: "Test",
       password: "",
       uid: "uidtest",
-
+      notification_token: "token",
     });
     expect(res.success).toBe(false);
   });

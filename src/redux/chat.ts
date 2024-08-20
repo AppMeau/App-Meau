@@ -3,8 +3,9 @@ import { Room, roomSchema, messageSchema } from "../schemas/Chat/chatSchema";
 import type { Message } from "../schemas/Chat/chatSchema";
 import { auth, db } from "../util/firebase";
 import { get, getDatabase, ref, child, set, update, push } from "firebase/database";
-import { addDoc, collection, getDocs, query, where } from "firebase/firestore";
+import { addDoc, arrayUnion, collection, doc, getDoc, getDocs, query, setDoc, updateDoc, where } from "firebase/firestore";
 import { User, userSchema } from "../schemas/UserRegister/userRegister";
+import { sendMessageNotification } from "./notification";
 
 type initialStateType = {
   status: boolean | null;
@@ -33,45 +34,32 @@ export const getMyRooms = createAsyncThunk(
   'rooms/getMyRooms',
   async (user: User) => {
   const roomsRef = collection(db, "rooms");
-  const roomSnapshot = await getDocs( query(roomsRef, where("members", "array-contains", {id: user.uid, name: user.name, avatar: user.photo})));
-  const rooms = roomSnapshot.docs.map(room => {
-    const parsedRoom = roomSchema.parse(room.data());
+  const roomSnapshot = await getDocs( query(roomsRef, where("membersId", "array-contains", user.uid)));
+  const rooms = await Promise.all(roomSnapshot.docs.map(async room => {
+    const messagesCollection = collection(db, room.ref.path, "messages");
+    let messages: any = await (getDocs(messagesCollection));
+    messages = messages.docs.map((doc: any) => messageSchema.parse(doc.data()));
+    const parsedRoom = roomSchema.parse({...room.data(), id: room.id, messages});
+    parsedRoom.messages = sortByDate(processMessages(parsedRoom.messages, parsedRoom));
+    
     return parsedRoom
-  })
-  const roomsWithMessages = await Promise.all(rooms.map(async (room) => {
-    const dbRef = ref(getDatabase());
-    await get(child(dbRef, `${room.id}/messages`)).then((snapshot) => {
-      if (snapshot.exists()) {
-        room.messages = Object.keys(snapshot.val()).map((key) => {
-          return {...snapshot.val()[key]}
-        })
-        room.messages = sortByDate(room.messages)
-      } else {
-        console.log("No data available");
-      }
-    }).catch((error) => {
-      console.error(error);
-    });
-    return room
   }))
-  return roomsWithMessages;
+  return rooms;
 })
 
 export const markAsReceived = async (messages: Message[], roomId: string|number) => {
   for(const message of messages){
     if(auth.currentUser){
-      if(message.readers?.indexOf(auth.currentUser.uid) == -1){
+      if(message.readers?.indexOf(auth.currentUser.uid) == -1 || message.readers == undefined){
         // const dispatch = useAppDispatch()
         // dispatch(readMessages({roomId: roomId, messageId: message._id}))
-        const dbRef = ref(getDatabase())
-        const updates = {} as Record<string, string>;
-        updates[`${roomId}/messages/${message._id}/readers/${message.readers.length}`] = auth.currentUser.uid;
-        await update(dbRef, updates);
+        const messageDoc = doc(db, "rooms", roomId as string, "messages", message._id as string);
+        await updateDoc(messageDoc, {readers: arrayUnion(auth.currentUser.uid)});
       }
     }
   }
 }
-export const processMessages = async (messages: Message[], room: Room): Promise<Message[]> => {
+export const processMessages = (messages: Message[], room: Room): Message[] => {
   const newMessages = []
   for(const message of messages){
     try{
@@ -98,26 +86,19 @@ export const processMessages = async (messages: Message[], room: Room): Promise<
 
 export const sendMessage = createAsyncThunk(
   "messages/send",
-  async (messagePayload: { message: Message; roomId: number|string }, thunkAPI) => {
-    const database = getDatabase();
-    if (database) {
-      if (auth.currentUser){
-        const message = messagePayload.message;
-        message.createdAt = new Date(message.createdAt).toJSON();
-        message.readers = [auth.currentUser.uid];
-        try {
-          // const newMessageKey = push(child(ref(database), `${messagePayload.roomId}/messages/${message._id}`));
-          const updates = {} as Record<string, Message>;
-          updates[`${messagePayload.roomId}/messages/${message._id}`] = message
-          await update(ref(database), updates);
-          return thunkAPI.fulfillWithValue({ message, roomId: messagePayload.roomId });
-        } catch (e) {
-          return thunkAPI.rejectWithValue({ error: e });
-        }
-
-      }else{
-        return thunkAPI.rejectWithValue({ error: "User not authenticated" });
+  async (messagePayload: { message: Message; roomId: number|string, token: string }, thunkAPI) => {
+    try{
+      const messagesCollection = collection(db, "rooms", messagePayload.roomId as string, "messages");
+      const messageDoc = doc(messagesCollection)
+      const oldId = messagePayload.message._id;
+      messagePayload.message._id = messageDoc.id;
+      const messageRef = await setDoc(messageDoc, messagePayload.message);
+      if(messagePayload.token){
+        await sendMessageNotification(messagePayload.token, messagePayload.message.text);
       }
+      return thunkAPI.fulfillWithValue({ message: messagePayload.message, roomId: messagePayload.roomId, oldId });
+    } catch (e) {
+      return thunkAPI.rejectWithValue({ error: e });
     }
   }
 );
@@ -125,50 +106,28 @@ export const sendMessage = createAsyncThunk(
 export const createRoom = createAsyncThunk("rooms/createRoom", 
   async (roomData: {members: Array<{id: string, name: string, avatar: string}>, pet: {id: string, name: string}}, thunkAPI) => {
     try {
-      const database = ref(getDatabase());
-      const newRoomId = await push(database).key;
-      const updates: any = {};
+      // const database = ref(getDatabase());
+      // const newRoomId = await push(database).key;
+      // const updates: any = {};
       const room = {
-        id: newRoomId,
         active: true,
         members: roomData.members,
+        membersId: roomData.members.map(el=>el.id),
         pet: roomData.pet,
       };
-      await addDoc(collection(db, "rooms"), room);
-      updates[`${newRoomId}`] = room;
-      await update(database, updates)
-      return thunkAPI.fulfillWithValue(room);
+      const res = await addDoc(collection(db, "rooms"), room);
+      // const membersCollection = collection(db, "rooms", res.id as string, "members");
+      // await Promise.all(roomData.members.map(async (member) => {
+      //   await addDoc(membersCollection, member);
+      // }))
+      
+      // updates[`${newRoomId}`] = room;
+      // await update(database, updates)
+      return thunkAPI.fulfillWithValue({...room, id: res.id});
     } catch (e) {
       return thunkAPI.rejectWithValue(e);
     }
 });
-
-
-export const getRoomById = createAsyncThunk(
-  "rooms/getById",
-  async (roomId: string, thunkAPI) => {
-    try {
-      const database = ref(getDatabase());
-      const res = await get(child(database, `${roomId}`));
-      if(res.exists()){
-        const room = res.val();
-        if(room.messages){
-          room.messages = Object.keys(room.messages).map((key) => {
-            return {...room.messages[key], dbId: key}
-          });
-          await markAsReceived(room.messages, roomId);
-          room.messages = await processMessages(room.messages, room);
-          room.messages = sortByDate(room.messages);
-        }
-        return thunkAPI.fulfillWithValue(roomSchema.parse(room));
-      } else {
-        return thunkAPI.rejectWithValue("Room not found");
-      }
-    } catch (e) {
-      return thunkAPI.rejectWithValue(e);
-    }
-  }
-);
 
 //TODO: simplificar schema e fazer parser das messages para IMessage
 export const chatSlice = createSlice({
@@ -228,11 +187,12 @@ export const chatSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(sendMessage.fulfilled, (state, { payload }) => {
       if(payload){
-        const { roomId } = payload;
+        const { roomId, oldId } = payload;
         const room = state.chats.find((room) => room.id === roomId);
         if (room) {
-          const message = room.messages.find((message) => message._id === payload.message._id);
+          const message = room.messages.find((message) => message._id === payload.oldId);
           if (message) {
+            message._id = payload.message._id;
             message.pending = false;
             message.sent = true
           }
@@ -249,23 +209,6 @@ export const chatSlice = createSlice({
           room.messages.unshift(message);
         }
       }
-    });
-    builder.addCase(getRoomById.pending, (state) => {state.isLoading=true})
-    // Se encontrar a sala, atualiza, se não, adiciona
-    builder.addCase(getRoomById.fulfilled, (state, { payload }) => {
-      if(payload){
-        if(state.chats.find((room) => room.id === payload.id)){
-          state.chats = state.chats.map((room) => {
-            if(room.id === payload.id){
-              return payload;
-            }
-            return room;
-          });
-        }else{
-          state.chats.push(payload);
-        }
-      }
-      state.isLoading = false;
     });
     builder.addCase(createRoom.fulfilled, (state, { payload }) => {
       if(payload){

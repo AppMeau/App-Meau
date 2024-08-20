@@ -31,6 +31,11 @@ export default {
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
+      ["expo-notifications",
+        {
+          icon: './assets/icon.png',
+        }
+      ],
       [
         "expo-font",
         { "fonts": ["node_modules/@expo-google-fonts/roboto/Roboto_400Regular.ttf",

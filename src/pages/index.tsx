@@ -8,28 +8,35 @@ import { logout, selectUser } from "../redux/auth";
 // import redirect from "util/functions/redirect";
 
 import { NavigationProp } from "@react-navigation/native";
+import { useEffect } from "react";
 
-export default function App({navigation}: {navigation: NavigationProp<any>}) {
-  const dispatch = useAppDispatch()
+export default function App({
+  navigation,
+}: {
+  navigation: NavigationProp<any>;
+}) {
+  const dispatch = useAppDispatch();
   const isLogged = useAppSelector((state) => state.auth.status);
 
   const signout = async () => {
-    dispatch(logout()).then(()=>{
-      navigation.navigate("login")
-    })
-  }
+    dispatch(logout()).then(() => {
+      navigation.navigate("login");
+    });
+  };
 
   return (
     <SafeAreaProvider>
-      <View style={[styles.container, {height: "100%"}]}>
-        <View style={{ 
-          justifyContent: "space-between", 
-          flexDirection: 'column', 
-          display: 'flex', 
-          height: '100%', 
-          paddingBottom: 48
-        }}>
-          <View style={{gap: 48}}>
+      <View style={[styles.container, { height: "100%" }]}>
+        <View
+          style={{
+            justifyContent: "space-between",
+            flexDirection: "column",
+            display: "flex",
+            height: "100%",
+            paddingBottom: 48,
+          }}
+        >
+          <View style={{ gap: 48 }}>
             <View
               style={[
                 styles.container,
@@ -44,18 +51,33 @@ export default function App({navigation}: {navigation: NavigationProp<any>}) {
               <Text style={styles.h1}>Olá!</Text>
               <Text style={styles.paragraph}>
                 Bem vindo ao Meau! {"\n"}
-                Aqui você pode adotar, doar e ajudar cães e gatos com facilidade.
+                Aqui você pode adotar, doar e ajudar cães e gatos com
+                facilidade.
                 {"\n"}
                 {"\n"}
                 Qual o seu interesse?
               </Text>
             </View>
-            <View style={{gap: 48}}>
+            <View style={{ gap: 48 }}>
               <View style={{ gap: 12, alignItems: "center" }}>
-                <Button type="warn" mode="contained" onPress={()=>navigation.navigate("animalListingAdoption", {isToAdopt: true})} loading={false}>
+                <Button
+                  type="warn"
+                  mode="contained"
+                  onPress={() =>
+                    navigation.navigate("animalListingAdoption", {
+                      isToAdopt: true,
+                    })
+                  }
+                  loading={false}
+                >
                   ADOTAR
                 </Button>
-                <Button type="warn" mode="contained" onPress={()=>navigation.navigate("animalRegister")}  loading={false}>
+                <Button
+                  type="warn"
+                  mode="contained"
+                  onPress={() => navigation.navigate("animalRegister")}
+                  loading={false}
+                >
                   CADASTRAR ANIMAL
                 </Button>
               </View>
@@ -65,7 +87,7 @@ export default function App({navigation}: {navigation: NavigationProp<any>}) {
                     type="transparent"
                     mode="text"
                     onPress={async () => {
-                      signout()
+                      signout();
                     }}
                   >
                     logout

@@ -17,6 +17,8 @@ import {
   PetRegisterType,
   PetSchema,
 } from "../schemas/PetRegister/petRegisterTypes";
+import { sendInterestedNotification, sendMessageNotification } from "./notification";
+import { getUserById } from "./users";
 
 export type StateType = {
   pets: PetRegisterType[];
@@ -70,7 +72,13 @@ export const getUserPets = createAsyncThunk(
 export const addInterested = createAsyncThunk("pets/addInterested", 
   async (params: {pet: PetRegisterType, userId: string}, thunkAPI) => {
     try {
-      await updateDoc(doc(collection(db, "pets"), params.pet.id), {interesteds: [...params.pet.interesteds || [], params.userId]})
+      if(params.pet.userId){
+        const owner = await getUserById(params.pet.userId)
+        if(owner?.notification_token){
+          await updateDoc(doc(collection(db, "pets"), params.pet.id), {interesteds: [...params.pet.interesteds || [], params.userId]})
+          await sendInterestedNotification(owner.notification_token, params.pet.name)
+        }
+      }
     } catch (error: any) {
       return thunkAPI.rejectWithValue({ error: error.message });
     }

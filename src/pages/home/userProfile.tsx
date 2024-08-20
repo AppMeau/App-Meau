@@ -13,14 +13,14 @@ import { removeInterested } from "../../redux/pets";
 export default function UserProfile({navigation, route}: any) {
   const dispatch = useAppDispatch();
 
-  const {uid, photo, name} = useAppSelector(selectUser)
+  const {uid, photo, name, notification_token} = useAppSelector(selectUser)
 
   const targetUser = route.params.user 
   const pet: PetRegisterType = route.params.pet
 
   const createChat = async () => {
     try{
-      const result = await dispatch(createRoom({members: [targetUser, {id: uid, avatar: photo, name}], pet: {id:pet.id, name: pet.name} as {id: string, name: string}}))
+      const result = await dispatch(createRoom({members: [targetUser, {id: uid, avatar: photo, name, token: notification_token}], pet: {id:pet.id, name: pet.name} as {id: string, name: string}}))
       setOriginalResult(unwrapResult(result))
     } catch(e) {
       console.error(e)
