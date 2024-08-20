@@ -9,10 +9,6 @@ import { logout, selectUser } from "../redux/auth";
 
 import { NavigationProp } from "@react-navigation/native";
 import { useEffect } from "react";
-import {
-  pushNotifications,
-  schedulePushNotification,
-} from "../redux/notification";
 
 export default function App({
   navigation,
@@ -40,14 +36,6 @@ export default function App({
             paddingBottom: 48,
           }}
         >
-          <Button
-            type="warn"
-            mode="contained"
-            onPress={async () => await schedulePushNotification()}
-            loading={false}
-          >
-            notify
-          </Button>
           <View style={{ gap: 48 }}>
             <View
               style={[
