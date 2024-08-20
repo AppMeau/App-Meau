@@ -7,14 +7,16 @@ import {
   sendMessage,
   updateMessages,
 } from "../../redux/chat";
-import { Message, messageSchema } from "../../schemas/Chat/chatSchema";
+import { Message, messageSchema, Room } from "../../schemas/Chat/chatSchema";
 import { Text } from "react-native";
 import { selectUser } from "../../redux/auth";
 import { processMessages } from "../../redux/chat";
 import { collection, doc, onSnapshot, query } from "firebase/firestore";
 import { db } from "../../util/firebase";
+import Header from "../../components/header";
+import Colors from "../../util/Colors";
 
-export default function ChatComponent({route}: any) {
+export default function ChatComponent({route, navigation}: any) {
   const dispatch = useAppDispatch();
 
   const roomId = route.params.roomId;

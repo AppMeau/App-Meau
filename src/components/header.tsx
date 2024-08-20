@@ -1,24 +1,28 @@
 import { StyleSheet, Text, View } from "react-native";
 import Colors from "../util/Colors";
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import {
-  SafeAreaProvider,
   useSafeAreaInsets,
 } from "react-native-safe-area-context";
-import { useFonts } from "expo-font";
+
+type IconType = "menu" | "arrow-back";
 
 export default function Header({
   color,
   title,
   search = false,
+  icon = "menu",
+  dotsMenu = false,
   iconColor = Colors.textAuxPrimary,
   onDrawerClick,
 }: {
   color: string;
   title?: string;
   search?: Boolean;
+  dotsMenu?: Boolean;
   iconColor?: string;
+  icon?: IconType;
   onDrawerClick: () => void;
 }) {
   const insets = useSafeAreaInsets();
@@ -34,13 +38,14 @@ export default function Header({
       >
         <View style={[styles.flex, styles.headerContainer]}>
           <TouchableOpacity onPress={onDrawerClick}>
-            <Ionicons name="menu" size={24} color={iconColor} />
+            <Ionicons name={icon} size={24} color={iconColor} />
           </TouchableOpacity>
 
           <Text style={styles.title}>{title}</Text>
         </View>
 
         {search && <Ionicons name="search-sharp" size={24} color={iconColor} />}
+        {dotsMenu && <MaterialCommunityIcons name="dots-vertical" size={24} color={iconColor} />}
       </View>
     </>
   );

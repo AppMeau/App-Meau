@@ -13,10 +13,12 @@ export default function MyChatRooms({navigation, route}: any) {
   const uid = user.uid
   const [chats, setChats] = useState<Room[]>([])
   const isLoading = useAppSelector(state => !!state.chat.isLoading)
+
   const getAllMyRooms = async () => {
     const result = await dispatch(getMyRooms(user));
     setChats(unwrapResult(result))
   }
+  
   useEffect(() => {
     getAllMyRooms();
   }, [])
