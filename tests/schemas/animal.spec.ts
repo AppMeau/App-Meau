@@ -28,7 +28,7 @@ describe("Animal Schema", () => {
       about: "Test",
       disable: false,
       availableToAdoption: true,
-      userId: "Test",
+      ownerId: "Test",
     });
     expect(res.success).toBe(true);
   });
@@ -60,7 +60,7 @@ describe("Animal Schema", () => {
       about: "Test",
       disable: false,
       availableToAdoption: true,
-      userId: "Test",
+      ownerId: "Test",
     });
     expect(res.success).toBe(false);
   });
@@ -92,7 +92,7 @@ describe("Animal Schema", () => {
       about: "Test",
       disable: false,
       availableToAdoption: true,
-      userId: "Test",
+      ownerId: "Test",
     });
     expect(res.success).toBe(false);
   });
@@ -124,7 +124,7 @@ describe("Animal Schema", () => {
       about: "Test",
       disable: false,
       availableToAdoption: true,
-      userId: "Test",
+      ownerId: "Test",
     });
     expect(res.success).toBe(false);
   });
@@ -156,7 +156,7 @@ describe("Animal Schema", () => {
       about: "Test",
       disable: false,
       availableToAdoption: true,
-      userId: "Test",
+      ownerId: "Test",
     });
     expect(res.success).toBe(false);
   });
@@ -188,7 +188,7 @@ describe("Animal Schema", () => {
       about: "Test",
       disable: false,
       availableToAdoption: true,
-      userId: "Test",
+      ownerId: "Test",
     });
     expect(res.success).toBe(false);
   });
@@ -220,7 +220,7 @@ describe("Animal Schema", () => {
       about: "Test",
       disable: false,
       availableToAdoption: true,
-      userId: "Test",
+      ownerId: "Test",
     });
     expect(res.success).toBe(false);
   });
@@ -252,7 +252,7 @@ describe("Animal Schema", () => {
       about: "Test",
       disable: false,
       availableToAdoption: true,
-      userId: "Test",
+      ownerId: "Test",
     });
     expect(res.success).toBe(false);
   });
@@ -284,7 +284,7 @@ describe("Animal Schema", () => {
       about: "Test",
       disable: false,
       availableToAdoption: true,
-      userId: "Test",
+      ownerId: "Test",
     });
     expect(res.success).toBe(false);
   });
@@ -316,7 +316,7 @@ describe("Animal Schema", () => {
       about: "Test",
       disable: false,
       availableToAdoption: true,
-      userId: "Test",
+      ownerId: "Test",
     });
     expect(res.success).toBe(false);
   });
@@ -348,7 +348,7 @@ describe("Animal Schema", () => {
       about: "Test",
       disable: false,
       availableToAdoption: true,
-      userId: "Test",
+      ownerId: "Test",
     });
     expect(res.success).toBe(false);
   });
@@ -380,7 +380,7 @@ describe("Animal Schema", () => {
       about: "Test",
       disable: false,
       availableToAdoption: true,
-      userId: "Test",
+      ownerId: "Test",
     });
     expect(res.success).toBe(false);
   });
@@ -412,7 +412,7 @@ describe("Animal Schema", () => {
       about: "Test",
       disable: false,
       availableToAdoption: true,
-      userId: "Test",
+      ownerId: "Test",
     });
     expect(res.success).toBe(false);
   });
@@ -444,7 +444,7 @@ describe("Animal Schema", () => {
       about: "Test",
       disable: false,
       availableToAdoption: true,
-      userId: "Test",
+      ownerId: "Test",
     });
     expect(res.success).toBe(false);
   });
@@ -476,7 +476,7 @@ describe("Animal Schema", () => {
       about: "Test",
       disable: false,
       availableToAdoption: true,
-      userId: "Test",
+      ownerId: "Test",
     });
     expect(res.success).toBe(false);
   });
@@ -508,7 +508,7 @@ describe("Animal Schema", () => {
       about: "Test",
       disable: false,
       availableToAdoption: true,
-      userId: "Test",
+      ownerId: "Test",
     });
     expect(res.success).toBe(false);
   });
@@ -540,7 +540,7 @@ describe("Animal Schema", () => {
       about: "Test",
       disable: false,
       availableToAdoption: true,
-      userId: "Test",
+      ownerId: "Test",
     });
     expect(res.success).toBe(false);
   });
@@ -572,7 +572,7 @@ describe("Animal Schema", () => {
       about: "Test",
       disable: false,
       availableToAdoption: true,
-      userId: "Test",
+      ownerId: "Test",
     });
     expect(res.success).toBe(false);
   });
@@ -604,7 +604,7 @@ describe("Animal Schema", () => {
       about: "Test",
       disable: false,
       availableToAdoption: true,
-      userId: "Test",
+      ownerId: "Test",
     });
     expect(res.success).toBe(false);
   });
@@ -636,7 +636,7 @@ describe("Animal Schema", () => {
       about: "Test",
       disable: false,
       availableToAdoption: true,
-      userId: "Test",
+      ownerId: "Test",
     });
     expect(res.success).toBe(false);
   });
@@ -668,7 +668,7 @@ describe("Animal Schema", () => {
       about: "Test",
       disable: false,
       availableToAdoption: true,
-      userId: "Test",
+      ownerId: "Test",
     });
     expect(res.success).toBe(false);
   });
@@ -700,7 +700,7 @@ describe("Animal Schema", () => {
       about: "Test",
       disable: false,
       availableToAdoption: true,
-      userId: "Test",
+      ownerId: "Test",
     });
     expect(res.success).toBe(false);
   });
@@ -732,7 +732,7 @@ describe("Animal Schema", () => {
       about: "Test",
       disable: false,
       availableToAdoption: true,
-      userId: "Test",
+      ownerId: "Test",
     });
     expect(res.success).toBe(false);
   });
@@ -764,7 +764,7 @@ describe("Animal Schema", () => {
       about: "Test",
       disable: false,
       availableToAdoption: true,
-      userId: "Test",
+      ownerId: "Test",
     });
     expect(res.success).toBe(false);
   });
@@ -796,7 +796,7 @@ describe("Animal Schema", () => {
       about: "Test",
       disable: "false",
       availableToAdoption: true,
-      userId: "Test",
+      ownerId: "Test",
     });
     expect(res.success).toBe(false);
   });

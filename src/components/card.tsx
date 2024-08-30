@@ -16,6 +16,7 @@ export default function CardComponent({
   animal: PetRegisterType;
 }) {
   const navigation = useNavigation();
+  const interesteds = animal.interesteds?.map((interested: {userId: string, isAlreadyInChat: boolean}) => interested.isAlreadyInChat ? 0 : 1).reduce((acc: number, curr: number) => acc + curr, 0);
 
   const cardContent = isToAdopt ? (
     <View>
@@ -28,7 +29,7 @@ export default function CardComponent({
     </View>
   ) : (
     <View style={styles.interestedView}>
-      <Text style={styles.centerText}>{animal.interesteds?.length} NOVO(S) INTERESSADO(S)</Text>
+      <Text style={styles.centerText}>{interesteds} NOVO(S) INTERESSADO(S)</Text>
     </View>
   );
 
