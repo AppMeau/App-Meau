@@ -9,11 +9,11 @@ import Colors from "../../util/Colors";
 import Button from "../../components/customButton";
 import { useAppDispatch, useAppSelector } from "../../redux/store";
 import { selectUser } from "../../redux/auth";
-import { PetRegisterType } from "../../schemas/PetRegister/petRegisterTypes";
 import { useState } from "react";
 import { addInterested } from "../../redux/pets";
 import { useEffect } from "react";
 import Header from "../../components/header";
+import { PetRegisterType } from "../../schemas/PetRegister/petRegisterTypes";
 
 export default function AnimalDetails({route, navigation}: any) {
   const dispatch = useAppDispatch();
@@ -21,7 +21,7 @@ export default function AnimalDetails({route, navigation}: any) {
   const {uid} = useAppSelector(selectUser)
 
   const pet: PetRegisterType = route.params.animal;
-  const [isAlreadyInterested, setIsAlreadyInterested] = useState(pet.interesteds?.includes(uid));
+  const [isAlreadyInterested, setIsAlreadyInterested] = useState<boolean>(pet.interesteds.find((interested: {userId: string, isAlreadyInChat: boolean}) => interested.userId === uid) ? true : false);
 
   useEffect(() => {
     navigation.setOptions({
@@ -35,11 +35,10 @@ export default function AnimalDetails({route, navigation}: any) {
         />
       ),
     });
-
   }, []);
 
   function displayObject(pet: any){
-    const removeProps = ["id", "name", "photo", "disable", "availableToAdoption", "interesteds", "userId"]
+    const removeProps = ["id", "name", "photo", "disable", "availableToAdoption", "interesteds", "ownerId"]
     const translateObject = {
       species: "espécie",
       gender: "gênero",
@@ -84,49 +83,49 @@ export default function AnimalDetails({route, navigation}: any) {
     }
   }
 
-    return (
-      <>
-        {pet && (
-          <View style={{ flex: 1 }}>
-            <ScrollView>
-              <View style={styles.container}>
-              <View style={styles.pictureContainer}>
-                  <Image style={styles.picture} source={{ uri: pet.photo}} />
-              </View>
-              <View style={styles.infosTitleContainer}>
-                  <Text style={[{fontWeight: "bold"}]}>{pet.name}</Text>
-              </View>
-              <View style={styles.infosTitleContainer}>
-                {displayObject(pet)}
-              </View>
-              {isToAdopt ? <View style={styles.containerButton}>
-                {!isAlreadyInterested && pet.userId !== uid && (
-                <Button
-                  backgroundColor={Colors.yellowPrimary}
-                  onPress={wantToAdoptHandler}
-                  width={175}
-                >
-                  PRETENDO ADOTAR
-                </Button>
-              )}
-              </View> : <View style={styles.containerButton}>
-                <Button
-                  backgroundColor={Colors.bluePrimary}
-                  width={180}
-                  onPress={navigateToInteresteds}
-                >
-                  VER INTERESSADOS
-                </Button>
-                <Button
-                  backgroundColor={Colors.bluePrimary}
-                  onPress={()=>{}}
-                  width={175}
-                >
-                  REMOVER PET
-                </Button>
-              </View>}
-              
-              </View>
+  return (
+    <>
+      {pet && (
+        <View style={{ flex: 1 }}>
+          <ScrollView>
+            <View style={styles.container}>
+            <View style={styles.pictureContainer}>
+                <Image style={styles.picture} source={{ uri: pet.photo}} />
+            </View>
+            <View style={styles.infosTitleContainer}>
+                <Text style={[{fontWeight: "bold"}]}>{pet.name}</Text>
+            </View>
+            <View style={styles.infosTitleContainer}>
+              {displayObject(pet)}
+            </View>
+            {isToAdopt ? <View style={styles.containerButton}>
+              {!isAlreadyInterested && pet.ownerId !== uid && (
+              <Button
+                backgroundColor={Colors.yellowPrimary}
+                onPress={wantToAdoptHandler}
+                width={175}
+              >
+                PRETENDO ADOTAR
+              </Button>
+            )}
+            </View> : <View style={styles.containerButton}>
+              <Button
+                backgroundColor={Colors.bluePrimary}
+                width={180}
+                onPress={navigateToInteresteds}
+              >
+                VER INTERESSADOS
+              </Button>
+              <Button
+                backgroundColor={Colors.bluePrimary}
+                onPress={()=>{}}
+                width={175}
+              >
+                REMOVER PET
+              </Button>
+            </View>}
+            
+            </View>
           </ScrollView>
         </View>
       )}

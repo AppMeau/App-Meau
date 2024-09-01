@@ -48,9 +48,10 @@ export default function UserProfile({navigation, route}: any) {
     
     if(originalResult){
       removeInterestedUser();
-      navigation.navigate('chat', {
-        roomId: originalResult.id,
-      })
+      navigation.navigate('chatRoute', {
+        screen: 'chat',
+        params: { roomId: originalResult.id },
+      });
     }
   }, [originalResult])
 

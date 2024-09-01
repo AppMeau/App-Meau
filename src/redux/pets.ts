@@ -65,7 +65,7 @@ export const getUserPets = createAsyncThunk(
   async (userId: string, thunkAPI) => {
     try {
       const pets = await getDocs(
-        query(collection(db, "pets"), where("userId", "==", userId))
+        query(collection(db, "pets"), where("ownerId", "==", userId))
       );
       const allpetsData = pets.docs.map(parsePet);
       return allpetsData as PetRegisterType[];
@@ -94,10 +94,10 @@ export const getInterestedUsers = createAsyncThunk(
 export const addInterested = createAsyncThunk("pets/addInterested", 
   async (params: {pet: PetRegisterType, userId: string}, thunkAPI) => {
     try {
-      if(params.pet.userId){
-        const owner = await getUserById(params.pet.userId)
+      if(params.pet.ownerId){
+        const owner = await getUserById(params.pet.ownerId)
         if(owner?.notification_token){
-          await updateDoc(doc(collection(db, "pets"), params.pet.id), {interesteds: [...params.pet.interesteds || [], params.userId]})
+          await updateDoc(doc(collection(db, "pets"), params.pet.id), {interesteds: [...params.pet.interesteds, {userId: params.userId, isAlreadyInChat: false}]})
           await sendInterestedNotification(owner.notification_token, params.pet.name, params.pet.id)
         }
       }
@@ -109,7 +109,7 @@ export const addInterested = createAsyncThunk("pets/addInterested",
 export const removeInterested = createAsyncThunk("pets/removeInterested", 
   async (params: {pet: PetRegisterType, userId: string}, thunkAPI) => {
     try {
-      const interestedsUpdated = params.pet.interesteds!.filter((interested: any) => interested !== params.userId)
+      let interestedsUpdated = params.pet.interesteds.map((interested: {userId: string, isAlreadyInChat: boolean}) => interested.userId === params.userId ? {userId: interested.userId, isAlreadyInChat: true} : interested)
       await updateDoc(doc(collection(db, "pets"), params.pet.id), {interesteds: interestedsUpdated})
     } catch (error: any) {
       return thunkAPI.rejectWithValue({ error: error.message });
