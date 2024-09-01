@@ -14,7 +14,6 @@ export default function Interesteds({route}: any) {
   const petId: string = route.params.petId
   
   useEffect(() => {
-    console.log('petId', petId) 
     if(petId) {
       dispatch(getInterestedUsers(petId))
       dispatch(findPet(petId))

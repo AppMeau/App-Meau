@@ -17,7 +17,7 @@ import {
   PetRegisterType,
   PetSchema,
 } from "../schemas/PetRegister/petRegisterTypes";
-import { sendInterestedNotification, sendMessageNotification } from "./notification";
+import { notifications, sendNotification } from "./notification";
 import { getAllInteresteds, getUserById } from "./users";
 import { User } from "../schemas/UserRegister/userRegister";
 
@@ -98,7 +98,7 @@ export const addInterested = createAsyncThunk("pets/addInterested",
         const owner = await getUserById(params.pet.ownerId)
         if(owner?.notification_token){
           await updateDoc(doc(collection(db, "pets"), params.pet.id), {interesteds: [...params.pet.interesteds, {userId: params.userId, isAlreadyInChat: false}]})
-          await sendInterestedNotification(owner.notification_token, params.pet.name, params.pet.id)
+          await sendNotification(notifications.interested(owner.notification_token, params.pet.name, params.pet.id))
         }
       }
     } catch (error: any) {
