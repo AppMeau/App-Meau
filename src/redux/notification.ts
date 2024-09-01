@@ -32,12 +32,15 @@ export async function sendMessageNotification(token:string, msg: string) {
   });
 }
 
-export async function sendInterestedNotification(token: string, petName: string) {
+export async function sendInterestedNotification(token: string, petName: string, petId: string) {
   const message = {
     title: "Seu pet tem um novo interessado!",
     body: `Um usuário se interessou no seu pet ${petName}!`,
     to: token,
     sound: 'default',
+    data:{
+      url: `meau://animalListingMyPets/${petId}`
+    }
   };
   const res = await fetch('https://exp.host/--/api/v2/push/send', {
     method: 'POST',

@@ -76,7 +76,7 @@ export const addInterested = createAsyncThunk("pets/addInterested",
         const owner = await getUserById(params.pet.userId)
         if(owner?.notification_token){
           await updateDoc(doc(collection(db, "pets"), params.pet.id), {interesteds: [...params.pet.interesteds || [], params.userId]})
-          await sendInterestedNotification(owner.notification_token, params.pet.name)
+          await sendInterestedNotification(owner.notification_token, params.pet.name, params.pet.id)
         }
       }
     } catch (error: any) {
@@ -87,7 +87,7 @@ export const addInterested = createAsyncThunk("pets/addInterested",
 export const removeInterested = createAsyncThunk("pets/removeInterested", 
   async (params: {pet: PetRegisterType, userId: string}, thunkAPI) => {
     try {
-      const interestedsUpdated = params.pet.interesteds!.filter((interested) => interested !== params.userId)
+      const interestedsUpdated = params.pet.interesteds!.filter((interested: any) => interested !== params.userId)
       await updateDoc(doc(collection(db, "pets"), params.pet.id), {interesteds: interestedsUpdated})
     } catch (error: any) {
       return thunkAPI.rejectWithValue({ error: error.message });
