@@ -33,15 +33,17 @@ export async function getUserById(userId: string|number){
 	}
   }
 
-export const getAllInteresteds = createAsyncThunk('users/getAllInteresteds', async (usersId: Array<string>, thunkAPI) => {
+export const getAllInteresteds = createAsyncThunk('users/getAllInteresteds', async (interesteds: Array<{userId: string, isAlreadyInChat: boolean}>, thunkAPI) => {
 	try {
-		let interesteds: User[] = []
-		for (const userId of usersId) {
-			const user = await getDocs(query(collection(db, "users"), where("uid", "==", userId)))
-			const userData = user.docs.map(doc => doc.data()) as User[]
-			interesteds.push(userData[0])
+		let updatedInteresteds: User[] = []
+		for (const interested of interesteds) {
+			if (!interested.isAlreadyInChat) {
+				const user = await getDocs(query(collection(db, "users"), where("uid", "==", interested.userId)))
+				const userData = user.docs.map(doc => doc.data()) as User[]
+				updatedInteresteds.push(userData[0])
+			}
 		}
-		return interesteds
+		return updatedInteresteds
 	} catch (error: any) {
 		return thunkAPI.rejectWithValue({ error: error.message })
 	}
