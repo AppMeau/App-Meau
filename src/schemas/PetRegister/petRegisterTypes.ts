@@ -36,8 +36,11 @@ export const basePetSchema = z.object({
   disable: z.boolean(),
 
   availableToAdoption: z.boolean(),
-  userId: z.string().optional(),
-  interesteds: z.array(z.string()).optional(),
+  ownerId: z.string().optional(),
+  interesteds: z.array(z.object({
+    userId: z.string(),
+    isAlreadyInChat: z.boolean(),
+  })).optional(),
 });
 
 export const PetSchema = basePetSchema
