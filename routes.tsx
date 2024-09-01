@@ -16,6 +16,8 @@ import Header from "./src/components/header";
 import Colors from "./src/util/Colors";
 import UserProfile from "./src/pages/home/userProfile";
 import MyChatRooms from "./src/pages/home/myChatRooms";
+import FinishAdoption from "./src/pages/home/finishAdoption";
+import AdoptionFinalScreen from "./src/pages/home/adoptionFinalScreen";
 
 const Drawer = createDrawerNavigator();
 const DetailStack = createNativeStackNavigator();
@@ -41,6 +43,16 @@ function ChatRoute() {
         name="chat" 
         component={Chat} 
       />
+      <ChatStack.Screen 
+        name="finishAdoption" 
+        component={FinishAdoption} 
+        options={{ title: 'Finalizar Adoção'}} 
+      />
+      <ChatStack.Screen 
+        name="adoptionFinalScreen" 
+        component={AdoptionFinalScreen} 
+        options={{ title: 'Finalizar Adoção'}} 
+      />
     </ChatStack.Navigator>
   )
 }
@@ -65,6 +77,7 @@ function DetailsRoute({isToAdopt}:{isToAdopt: boolean}) {
         component={AnimalDetails} 
         options={{ title: 'Detalhes'}} 
       />
+
       <DetailStack.Screen 
         name="interesteds" 
         component={Interesteds} 
