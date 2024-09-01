@@ -33,7 +33,7 @@ export async function getUserById(userId: string|number){
 	}
   }
 
-export const getAllInteresteds = createAsyncThunk('users/getAllInteresteds', async (usersId: Array<string>, thunkAPI) => {
+export const getAllInteresteds = async (usersId: Array<string>) => {
 	try {
 		let interesteds: User[] = []
 		for (const userId of usersId) {
@@ -43,9 +43,9 @@ export const getAllInteresteds = createAsyncThunk('users/getAllInteresteds', asy
 		}
 		return interesteds
 	} catch (error: any) {
-		return thunkAPI.rejectWithValue({ error: error.message })
+		throw new Error(error)
 	}
-})
+}
 
 
 export const userSlice = createSlice({
@@ -56,17 +56,6 @@ export const userSlice = createSlice({
 		},
 	},
 	extraReducers: (builder) => {
-		builder.addCase(getAllInteresteds.pending, (state) => {
-			state.status = 'loading'
-		})
-		builder.addCase(getAllInteresteds.fulfilled, (state, action) => {
-			state.status = 'succeeded'
-			state.users = action.payload
-		})
-		builder.addCase(getAllInteresteds.rejected, (state, action) => {
-			state.status = 'failed'
-			state.error = (action.payload as { error: FirebaseError }).error
-		})
 	}
 	});
 

@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, current } from "@reduxjs/toolkit";
 import {
   collection,
   doc,
@@ -18,19 +18,25 @@ import {
   PetSchema,
 } from "../schemas/PetRegister/petRegisterTypes";
 import { sendInterestedNotification, sendMessageNotification } from "./notification";
-import { getUserById } from "./users";
+import { getAllInteresteds, getUserById } from "./users";
+import { User } from "../schemas/UserRegister/userRegister";
 
 export type StateType = {
+  currentPetInteresteds: User[];
+  currentPet: PetRegisterType | null;
   pets: PetRegisterType[];
   status: string;
   error: FirebaseError | null;
 };
 
 const initialState: StateType = {
+  currentPetInteresteds: [],
+  currentPet: null,
   pets: [],
   status: "idle",
   error: null,
 };
+
 
 const parsePet = (pet: QueryDocumentSnapshot<DocumentData, DocumentData>) => {
   try {
@@ -68,6 +74,22 @@ export const getUserPets = createAsyncThunk(
     }
   }
 );
+
+export const getInterestedUsers = createAsyncThunk(
+  "pets/getInterestedUsers",
+  async (petId: string, thunkAPI) => {
+    try {
+      const pet = await getDoc(doc(db, "pets", petId));
+      if(pet.exists()){
+        const interesteds = await getAllInteresteds(pet.data().interesteds);
+        return interesteds as User[];
+      }
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue({ error: error.message });
+    }
+  }
+);
+
 
 export const addInterested = createAsyncThunk("pets/addInterested", 
   async (params: {pet: PetRegisterType, userId: string}, thunkAPI) => {
@@ -113,9 +135,23 @@ export const petSlice = createSlice({
   name: "petSlice",
   initialState,
   reducers: {
-    reducer: (state, action) => {},
+    findPet: (state, action) => {
+      const pet = state.pets.find((pet) => pet.id === action.payload);
+      if(pet) state.currentPet = pet;
+    },
   },
   extraReducers: (builder) => {
+    builder.addCase(getInterestedUsers.pending, (state) => {
+      state.status = "loading";
+    });
+    builder.addCase(getInterestedUsers.fulfilled, (state, action) => {
+      state.status = "succeeded";
+      state.currentPetInteresteds = action.payload as User[];
+    });
+    builder.addCase(getInterestedUsers.rejected, (state, action) => {
+      state.status = "failed";
+      state.error = (action.payload as { error: FirebaseError }).error;
+    });
     builder.addCase(getAllpets.pending, (state) => {
       state.status = "loading";
     });
@@ -154,6 +190,6 @@ export const petSlice = createSlice({
 
 const PetReducer = petSlice.reducer;
 
-export const { reducer } = petSlice.actions;
+export const { findPet } = petSlice.actions;
 
 export default PetReducer;
