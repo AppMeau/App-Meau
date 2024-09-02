@@ -6,12 +6,14 @@ import CheckboxContainer from "../../components/checkboxContainer";
 import { useEffect, useState } from "react";
 import RadioContainer from "../../components/radioContainer";
 import Button from "../../components/customButton";
-import { getUserPets } from "../../redux/pets";
+import { getUserPets, getUserPetsWithInteresteds, setUnavailableToAdoption } from "../../redux/pets";
 import { AsyncThunkAction } from "@reduxjs/toolkit";
 import { AsyncThunkConfig } from "@reduxjs/toolkit/dist/createAsyncThunk";
 import { useAppDispatch, useAppSelector } from "../../redux/store";
 import { useSelector } from "react-redux";
 import { selectUser } from "../../redux/auth";
+import { getAllInteresteds, getAllInterestedsPetAdoption } from "../../redux/users";
+import { closeRoom } from "../../redux/chat";
 
 export default function FinishAdoption({navigation}: any) {
   let content = <View></View>;
@@ -25,33 +27,27 @@ export default function FinishAdoption({navigation}: any) {
 
   const { pets, status, error } = useAppSelector((state) => state.pets);
   const { uid } = useSelector(selectUser);
+  const { users } = useAppSelector((state) => state.users)
 
   useEffect(() => {
-    dispatch(getUserPets(uid))
+    dispatch(getUserPetsWithInteresteds(uid))
   },[dispatch]);
 
-
-  const [inputs, setInputs] = useState({
-    // TEMPERAMENTO
-    playfull: false,
-    shy: false,
-    calm: false,
-    guard: false,
-    lovely: false,
-    lazy: false,
+  const [petsInput, setPetsInput] = useState<Array<boolean>>([]);
+  const [usersInput, setUsersInput] = useState<string>("");
 
 
-    species: "",
-  });
+  function petsInputChangeHandler(petId: string, enteredValue: boolean) {
+    const newPetsInputs = pets.map(() => false);
+    const index = pets.findIndex(({ id }) => id === petId);
+    newPetsInputs[index] = enteredValue;
 
-
-  function inputChangedHandler(inputIdentifier: string, enteredValue: any) {
-    setInputs((currentInput: any) => {
-      return {
-        ...currentInput,
-        [inputIdentifier]: enteredValue,
-      };
-    });
+    dispatch(getAllInterestedsPetAdoption(pets[index].interesteds))
+    setPetsInput(newPetsInputs);
+  }
+  
+  function usersInputHandler(user: string){
+    setUsersInput(user);
   }
 
   const navigateToFinalScreenAdoption = () => {
@@ -61,8 +57,12 @@ export default function FinishAdoption({navigation}: any) {
     content = <Text>Loading...</Text>;
   }
   else if (status === "succeeded"){
-    console.log(pets)
-    content = <Provider>
+    if (petsInput.length !== pets.length) {
+      setPetsInput(pets.map(() => false))
+    }
+    
+
+    content = (
       <View style={{ flex: 1 }}>
         <ScrollView>
           <View style={[styles.container]}>
@@ -93,7 +93,13 @@ export default function FinishAdoption({navigation}: any) {
                   <Button
                     backgroundColor={Colors.bluePrimary}
                     width={180}
-                    onPress={navigateToFinalScreenAdoption}
+                    onPress={async () => {
+                      console.log(pets[petsInput.findIndex(pet => pet === true)].id)
+                      const petId = pets[petsInput.findIndex(pet => pet === true)].id
+                      await dispatch(setUnavailableToAdoption(petId));
+                      await dispatch(closeRoom(petId))
+                      navigateToFinalScreenAdoption()
+                    }}
                   >
                     LI E CONCORDO
                   </Button>
@@ -114,34 +120,19 @@ export default function FinishAdoption({navigation}: any) {
             <View style={styles.formContainer}>
               <Text style={styles.subtitle}>NOME DO ANIMAL</Text>
               <CheckboxContainer
-                states={[
-                  inputs.playfull,
-                  inputs.shy,
-                  inputs.calm,
-                  inputs.guard,
-                  inputs.lovely,
-                  inputs.lazy,
-                ]}
-                onPress={inputChangedHandler}
-                keys={["playfull", "shy", "calm", "guard", "lovely", "lazy"]}
-                labels={[
-                  "Brincalhão",
-                  "Tímido",
-                  "Calmo",
-                  "Guarda",
-                  "Amoroso",
-                  "Preguiçoso",
-                ]}
+                states={petsInput}
+                onPress={petsInputChangeHandler}
+                keys={pets.map((pet) => pet.id)}
+                labels={pets.map((pet) => pet.name)}
               />
-
-              <Text style={styles.subtitle}>SELECIONE O USUÁRIO</Text>
+              {petsInput.some(pet => pet===true) && <View><Text style={styles.subtitle}>SELECIONE O USUÁRIO</Text>
               <RadioContainer
-                state={inputs.species}
-                onPress={(enteredValue: any) =>
-                  inputChangedHandler("species", enteredValue)
+                state={usersInput}
+                onPress={usersInputHandler
                 }
-                labels={["Cachorro", "Gato"]}
-              />
+                labels={users.map((user) => user.name)}
+              /></View>}
+              
 
               <View style={styles.containerButton}>
                 <Button
@@ -155,16 +146,13 @@ export default function FinishAdoption({navigation}: any) {
             </View>
           </View>
         </ScrollView>
-      </View>
-    </Provider>
+      </View>);
   }
   else{
     content = <Text>Error: {error?.toString()}</Text>;
   }
 
-
-
-  return <View>{content}</View>;
+  return <Provider>{content}</Provider>;
 }
 
 const styles = StyleSheet.create({
