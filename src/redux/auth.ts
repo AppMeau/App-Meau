@@ -44,6 +44,17 @@ export const login = createAsyncThunk(
 );
 
 export const logout = createAsyncThunk("users/logout", async () => {
+  const user = auth.currentUser;
+  console.log(user)
+  if(user) {
+    try {
+      await updateDoc(doc(db, "users", user.uid), { notification_token: null });
+      
+    } catch (error) {
+      console.error(error)
+      
+    }
+  }
   const res = await auth.signOut();
   return true;
 });
