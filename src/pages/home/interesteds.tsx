@@ -24,7 +24,7 @@ export default function Interesteds({route}: any) {
 
   return (
     <View style={styles.outerContainer}>
-      {currentPetInteresteds.length === 0 ? (
+      {currentPetInteresteds && currentPetInteresteds.length === 0 ? (
         <Text>Nenhum usuário interessado neste animal</Text>
       ):(
         <FlatList
