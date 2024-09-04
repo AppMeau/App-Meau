@@ -95,6 +95,7 @@ export default function Register({navigation}: {navigation: NavigationProp<any>}
       address: inputs.adress,
       phone: inputs.phone,
       user: inputs.user,
+      adoptedPets: [],
       password: inputs.password,
       photo: url ? url : "",
     };

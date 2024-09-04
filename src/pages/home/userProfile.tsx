@@ -106,7 +106,7 @@ export default function UserProfile({navigation, route}: any) {
 
           <View style={styles.listComponent}>
             <Text style={styles.title}>HISTÓRICO</Text>
-            <Text style={styles.text}>Adotou _ pet</Text>
+            <Text style={styles.text}>Adotou {targetUser.adoptedPets.length} pet</Text>
           </View>
 
         </View>
