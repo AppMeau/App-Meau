@@ -9,6 +9,7 @@ import {
 import { collection, doc, getDocs, query, updateDoc, where } from "firebase/firestore";
 import { useAppDispatch } from "./store";
 import { registerForPushNotifications } from "./notification";
+import { getUserById } from "./users";
 
 type initialStateType = {
   status: boolean | null;
@@ -45,10 +46,13 @@ export const login = createAsyncThunk(
 
 export const logout = createAsyncThunk("users/logout", async () => {
   const user = auth.currentUser;
-  console.log(user)
   if(user) {
     try {
-      await updateDoc(doc(db, "users", user.uid), { notification_token: null });
+      const snapshot = await getDocs(
+        query(collection(db, "users"), where("uid", "==", user.uid))
+      );
+      const id = snapshot.docs.map(el => el.id)[0];
+      await updateDoc(doc(db, "users", id), { notification_token: null });
       
     } catch (error) {
       console.error(error)
