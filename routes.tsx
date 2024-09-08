@@ -106,7 +106,18 @@ export default function Routes() {
             {status ? (
                 <>
                   <Drawer.Screen name="inicio" component={Index} options={{ title: '', drawerLabel: 'Início' }}/>
-                  <Drawer.Screen name="animalRegister" component={AnimalRegister} options={{ title: 'Cadastrar um Pet' }}/>
+                  <Drawer.Screen 
+                    name="animalRegister" 
+                    component={AnimalRegister} 
+                    options={{ header: ({ navigation, options }: any) => (
+                      <Header
+                        color={Colors.yellowPrimary}
+                        title={'Cadastrar um Pet'}
+                        search
+                        icon="arrow-back"
+                        onDrawerClick={navigation.goBack}
+                      />
+                  )}}/>
                   <Drawer.Screen 
                     name="animalListingAdoption"
                     options={{ title: 'Adotar', headerShown: false, unmountOnBlur: true }}

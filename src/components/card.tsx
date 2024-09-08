@@ -25,7 +25,7 @@ export default function CardComponent({
         <Text style={styles.text}>{animal.age}</Text>
         <Text style={styles.text}>{animal.size}</Text>
       </View>
-      <Text style={styles.centerText}>ENDEREÇO</Text>
+      <Text style={styles.centerText}>{animal.ownerCityState}</Text>
     </View>
   ) : (
     <View style={styles.interestedView}>
