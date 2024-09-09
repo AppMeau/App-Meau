@@ -16,14 +16,25 @@ import Header from "./src/components/header";
 import Colors from "./src/util/Colors";
 import UserProfile from "./src/pages/home/userProfile";
 import MyChatRooms from "./src/pages/home/myChatRooms";
+import { Linking } from "react-native";
+import * as Notifications from 'expo-notifications';
 
 const Drawer = createDrawerNavigator();
 const DetailStack = createNativeStackNavigator();
 const ChatStack = createNativeStackNavigator();
 
-function ChatRoute() {
+function ChatRoute({route, navigation}: any) {
+  // useEffect(() => {
+  //   console.log(route.params)
+  //   const routes: any = [{ name: 'myChatRooms' }]
+  //   if(route.params?.roomId) routes.push({ name: 'chat', params: { roomId: route.params.roomId }})
+  //   navigation.reset({
+  //     index: 0,
+  //     routes,
+  //   });
+  // }, [navigation]);
   return (
-    <ChatStack.Navigator>
+    <ChatStack.Navigator initialRouteName="myChatRooms">
       <ChatStack.Screen
         name="myChatRooms"
         component={MyChatRooms}
@@ -100,8 +111,50 @@ export default function Routes() {
   useEffect(() => {
     dispatch(checkAuthStatus());
   }, []);
+  const linking = {
+    prefixes: ['https://meau.com.br', 'meau://'],
+    async getInitialURL() {
+      // First, you may want to do the default deep link handling
+      // Check if app was opened from a deep link
+      const url = await Linking.getInitialURL();
+
+      if (url != null) {
+        return url;
+      }
+
+      // Handle URL from expo push notifications
+      const response = await Notifications.getLastNotificationResponseAsync();
+
+      return response?.notification.request.content.data.url;
+    },
+    subscribe(listener: any) {
+      const onReceiveURL = ({ url }: { url: string }) => listener(url);
+
+      // Listen to incoming links from deep linking
+      const eventListenerSubscription = Linking.addEventListener('url', onReceiveURL);
+
+      // Listen to expo push notifications
+      const subscription = Notifications.addNotificationResponseReceivedListener(response => {
+        const url = response.notification.request.content.data.url;
+
+        // Any custom logic to see whether the URL needs to be handled
+        //...
+
+        // Let React Navigation handle the URL
+        listener(url);
+      });
+
+      return () => {
+        // Clean up the event listeners
+        eventListenerSubscription.remove();
+        subscription.remove();
+      };
+    },
+  }
     return (
-        <NavigationContainer>
+        <NavigationContainer
+          linking={linking}
+          >
           <Drawer.Navigator>
             {status ? (
                 <>
@@ -118,7 +171,12 @@ export default function Routes() {
                   <Drawer.Screen
                     name="chatRoute"
                     component={ChatRoute}
-                    options={{ title: "Minhas Conversas", unmountOnBlur: true, headerShown: false }}
+                    options={{ 
+                      title: "Minhas Conversas", 
+                      unmountOnBlur: true, 
+                      headerShown: false,
+                     }}
+                    listeners={({navigation}) => ({blur: () => navigation.setParams({screen: undefined})})}
                   />
                 </>
             ):(

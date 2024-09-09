@@ -51,8 +51,10 @@ export default function UserProfile({navigation, route}: any) {
       removeInterestedUser();
       navigation.navigate('chatRoute', {
         screen: 'chat',
+        initial: false, 
         params: { roomId: originalResult.id },
       });
+
     }
   }, [originalResult])
 
@@ -62,6 +64,13 @@ export default function UserProfile({navigation, route}: any) {
     } catch(e) {
       console.error(e)
     }
+  }
+
+  const NavigateToNewDetail = async () => {
+    navigation.navigate('animalDetails', {
+      petId: pet.id,
+      isToAdopt: false,
+    });
   }
 
   return (
