@@ -18,6 +18,7 @@ import UserProfile from "./src/pages/home/userProfile";
 import MyChatRooms from "./src/pages/home/myChatRooms";
 import { Linking } from "react-native";
 import * as Notifications from 'expo-notifications';
+import pendingAdoptions from "./src/pages/home/pendingAdoptions";
 
 const Drawer = createDrawerNavigator();
 const DetailStack = createNativeStackNavigator();
@@ -162,6 +163,11 @@ export default function Routes() {
                     name="chatRoute"
                     component={ChatRoute}
                     options={{ title: "Minhas Conversas", unmountOnBlur: true, headerShown: false }}
+                  />
+                  <Drawer.Screen
+                    name="pendingAdoptions"
+                    component={pendingAdoptions}
+                    options={{ title: "Adoções Pendentes", unmountOnBlur: true }}
                   />
                 </>
             ):(

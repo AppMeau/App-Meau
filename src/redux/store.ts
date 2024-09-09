@@ -15,12 +15,14 @@ import {
   REHYDRATE,
 } from "redux-persist";
 import notificationsReducer from "./notification";
+import adoptionsReducer from "./adoption";
 
 const reducers = combineReducers({
   auth: authReducer,
   pets: petSlice.reducer,
   users: userSlice.reducer,
   chat: chatSlice.reducer,
+  adoptions: adoptionsReducer,
   notification: notificationsReducer,
 });
 
