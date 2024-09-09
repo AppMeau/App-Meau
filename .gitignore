@@ -3,7 +3,11 @@ build/*.apk
 build/*.aab
 .expo
 .vscode
-.env
+.env*
 android
 ios
 package-lock
+app-meau-f213c-firebase-adminsdk-j0jrc-58653965a3.json
+*.apk
+credentials.json
+google-services.json

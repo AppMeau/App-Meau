@@ -16,7 +16,7 @@ import { getAllInteresteds, getAllInterestedsPetAdoption } from "../../redux/use
 import { closeRoom } from "../../redux/chat";
 import { collection, doc, getDocs, updateDoc, where } from "firebase/firestore";
 import { db } from "../../util/firebase";
-import { query } from "firebase/database";
+import { query } from "firebase/firestore";
 
 export default function FinishAdoption({navigation}: any) {
   let content = <View></View>;
@@ -38,7 +38,6 @@ export default function FinishAdoption({navigation}: any) {
 
   const [petsInput, setPetsInput] = useState<Array<boolean>>([]);
   const [usersInput, setUsersInput] = useState<string>("");
-
 
   function petsInputChangeHandler(petId: string, enteredValue: boolean) {
     const newPetsInputs = pets.map(() => false);
@@ -62,11 +61,13 @@ export default function FinishAdoption({navigation}: any) {
     const petId = pets[petsInput.findIndex(pet => pet === true)].id
     await dispatch(setUnavailableToAdoption(petId));
     await dispatch(closeRoom(petId))
+    
+
     const snapshot = await getDocs(
-      query(collection(db, "users"), where("uid", "==", user.uid))
+      query(collection(db, "users"), where("uid", "==", ))
     );
     const id = snapshot.docs.map(el => el.id)[0];
-    await updateDoc(doc(collection(db, "users"), id), {interesteds: [...params.pet.interesteds, {userId: params.userId, isAlreadyInChat: false}]})
+    await updateDoc(doc(collection(db, "users"), id), {adoptedPets: })
     navigateToFinalScreenAdoption()
   }
 
@@ -139,8 +140,7 @@ export default function FinishAdoption({navigation}: any) {
               {petsInput.some(pet => pet===true) && <View><Text style={styles.subtitle}>SELECIONE O USUÁRIO</Text>
               <RadioContainer
                 state={usersInput}
-                onPress={usersInputHandler
-                }
+                onPress={usersInputHandler}
                 labels={users.map((user) => user.name)}
               /></View>}
               

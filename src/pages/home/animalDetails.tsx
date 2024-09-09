@@ -10,32 +10,34 @@ import Button from "../../components/customButton";
 import { useAppDispatch, useAppSelector } from "../../redux/store";
 import { selectUser } from "../../redux/auth";
 import { useState } from "react";
-import { addInterested } from "../../redux/pets";
+import { addInterested, findPet } from "../../redux/pets";
 import { useEffect } from "react";
 import Header from "../../components/header";
-import { PetRegisterType } from "../../schemas/PetRegister/petRegisterTypes";
 
 export default function AnimalDetails({route, navigation}: any) {
   const dispatch = useAppDispatch();
   const isToAdopt = route.params.isToAdopt;
   const {uid} = useAppSelector(selectUser)
 
-  const pet: PetRegisterType = route.params.animal;
-  const [isAlreadyInterested, setIsAlreadyInterested] = useState<boolean>(pet.interesteds.find((interested: {userId: string, isAlreadyInChat: boolean}) => interested.userId === uid) ? true : false);
-
+  const petId: string = route.params.petId;
+  const currentPet = useAppSelector((state) => state.pets.currentPet);
+  const [isAlreadyInterested, setIsAlreadyInterested] = useState<boolean>(currentPet?.interesteds?.find((interested: {userId: string, isAlreadyInChat: boolean}) => interested.userId === uid) ? true : false);
   useEffect(() => {
+    if(petId) {
+      dispatch(findPet(petId))
+    }
     navigation.setOptions({
       header: ({ navigation, options }: any) => (
         <Header
           color={isToAdopt ? Colors.yellowPrimary : Colors.bluePrimary}
-          title={pet.name}
+          title={currentPet.name}
           search
           icon="arrow-back"
           onDrawerClick={navigation.goBack}
         />
       ),
     });
-  }, []);
+  }, [currentPet]);
 
   function displayObject(pet: any){
     const removeProps = ["id", "name", "photo", "disable", "availableToAdoption", "interesteds", "ownerId"]
@@ -72,34 +74,34 @@ export default function AnimalDetails({route, navigation}: any) {
 
   const navigateToInteresteds = () => {
     navigation.navigate('interesteds', {
-      animal: pet
+      petId
     })
   }
 
   const wantToAdoptHandler = async () => {
-    if(!isAlreadyInterested && pet.interesteds){
-      await dispatch(addInterested({pet, userId: uid}))
+    if(!isAlreadyInterested && currentPet.interesteds){
+      await dispatch(addInterested({pet:currentPet, userId: uid}))
       setIsAlreadyInterested(true);
     }
   }
 
   return (
     <>
-      {pet && (
+      {currentPet && (
         <View style={{ flex: 1 }}>
           <ScrollView>
             <View style={styles.container}>
             <View style={styles.pictureContainer}>
-                <Image style={styles.picture} source={{ uri: pet.photo}} />
+                <Image style={styles.picture} source={{ uri: currentPet.photo}} />
             </View>
             <View style={styles.infosTitleContainer}>
-                <Text style={[{fontWeight: "bold"}]}>{pet.name}</Text>
+                <Text style={[{fontWeight: "bold"}]}>{currentPet.name}</Text>
             </View>
             <View style={styles.infosTitleContainer}>
-              {displayObject(pet)}
+              {displayObject(currentPet)}
             </View>
             {isToAdopt ? <View style={styles.containerButton}>
-              {!isAlreadyInterested && pet.ownerId !== uid && (
+              {!isAlreadyInterested && currentPet.ownerId !== uid && (
               <Button
                 backgroundColor={Colors.yellowPrimary}
                 onPress={wantToAdoptHandler}

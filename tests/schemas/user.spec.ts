@@ -15,6 +15,7 @@ describe("User Schema", () => {
       photo: "phototest",
       uid: "uidtest",
       notification_token: "token",
+      adoptedPets: [],
     });
     expect(res.success).toBe(true);
   });
@@ -32,6 +33,7 @@ describe("User Schema", () => {
       password: "Test",
       uid: "uidtest",
       notification_token: "token",
+      adoptedPets: [],
     });
     expect(res.success).toBe(false);
   });
@@ -49,6 +51,7 @@ describe("User Schema", () => {
       password: "Test",
       uid: "uidtest",
       notification_token: "token",
+      adoptedPets: [],
     });
     expect(res.success).toBe(false);
   });
@@ -66,6 +69,7 @@ describe("User Schema", () => {
       password: "Test",
       uid: "uidtest",
       notification_token: "token",
+      adoptedPets: [],
     });
     expect(res.success).toBe(false);
   });
@@ -83,6 +87,7 @@ describe("User Schema", () => {
       password: "Test",
       uid: "uidtest",
       notification_token: "token",
+      adoptedPets: [],
     });
     expect(res.success).toBe(false);
   });
@@ -100,6 +105,7 @@ describe("User Schema", () => {
       password: "Test",
       uid: "uidtest",
       notification_token: "token",
+      adoptedPets: [],
     });
     expect(res.success).toBe(false);
   });
@@ -117,6 +123,7 @@ describe("User Schema", () => {
       password: "Test",
       uid: "uidtest",
       notification_token: "token",
+      adoptedPets: [],
     });
     expect(res.success).toBe(false);
   });
@@ -134,6 +141,7 @@ describe("User Schema", () => {
       password: "Test",
       uid: "uidtest",
       notification_token: "token",
+      adoptedPets: [],
     });
     expect(res.success).toBe(false);
   });
@@ -151,6 +159,7 @@ describe("User Schema", () => {
       password: "Test",
       uid: "uidtest",
       notification_token: "token",
+      adoptedPets: [],
     });
     expect(res.success).toBe(false);
   });
@@ -168,6 +177,7 @@ describe("User Schema", () => {
       password: "Test",
       uid: "uidtest",
       notification_token: "token",
+      adoptedPets: [],
     });
     expect(res.success).toBe(false);
   });
@@ -185,6 +195,7 @@ describe("User Schema", () => {
       password: "Test",
       uid: "uidtest",
       notification_token: "token",
+      adoptedPets: [],
     });
     expect(res.success).toBe(false);
   });
@@ -202,6 +213,7 @@ describe("User Schema", () => {
       password: "",
       uid: "uidtest",
       notification_token: "token",
+      adoptedPets: [],
     });
     expect(res.success).toBe(false);
   });

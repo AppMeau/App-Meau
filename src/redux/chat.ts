@@ -5,7 +5,6 @@ import { auth, db } from "../util/firebase";
 import { get, getDatabase, ref, child, set, update, push } from "firebase/database";
 import { addDoc, arrayUnion, collection, doc, getDoc, getDocs, query, setDoc, updateDoc, where } from "firebase/firestore";
 import { User, userSchema } from "../schemas/UserRegister/userRegister";
-import { sendMessageNotification } from "./notification";
 
 type initialStateType = {
   status: boolean | null;
@@ -92,10 +91,6 @@ export const sendMessage = createAsyncThunk(
       const messageDoc = doc(messagesCollection)
       const oldId = messagePayload.message._id;
       messagePayload.message._id = messageDoc.id;
-      const messageRef = await setDoc(messageDoc, messagePayload.message);
-      if(messagePayload.token){
-        await sendMessageNotification(messagePayload.token, messagePayload.message.text);
-      }
       return thunkAPI.fulfillWithValue({ message: messagePayload.message, roomId: messagePayload.roomId, oldId });
     } catch (e) {
       return thunkAPI.rejectWithValue({ error: e });
@@ -104,7 +99,7 @@ export const sendMessage = createAsyncThunk(
 );
 
 export const createRoom = createAsyncThunk("rooms/createRoom", 
-  async (roomData: {members: Array<{id: string, name: string, avatar: string}>, pet: {id: string, name: string}}, thunkAPI) => {
+  async (roomData: {members: Array<{id: string, name: string, avatar: string, token: string}>, pet: {id: string, name: string}}, thunkAPI) => {
     try {
       // const database = ref(getDatabase());
       // const newRoomId = await push(database).key;
