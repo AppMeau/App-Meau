@@ -20,6 +20,7 @@ export const userSchema = z.object({
   user: z.string().min(1),
   password: z.string().min(6),
   photo: z.string().optional(),
+  adoptedPets: z.array(z.string()).optional(),
   uid: z.string(),
   notification_token: z.string().optional(),
 });
