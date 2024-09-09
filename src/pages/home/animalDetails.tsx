@@ -21,7 +21,7 @@ export default function AnimalDetails({route, navigation}: any) {
 
   const petId: string = route.params.petId;
   const currentPet = useAppSelector((state) => state.pets.currentPet);
-  const [isAlreadyInterested, setIsAlreadyInterested] = useState<boolean>(currentPet?.interesteds.find((interested: {userId: string, isAlreadyInChat: boolean}) => interested.userId === uid) ? true : false);
+  const [isAlreadyInterested, setIsAlreadyInterested] = useState<boolean>(currentPet?.interesteds?.find((interested: {userId: string, isAlreadyInChat: boolean}) => interested.userId === uid) ? true : false);
   useEffect(() => {
     if(petId) {
       dispatch(findPet(petId))
