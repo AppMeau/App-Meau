@@ -14,6 +14,9 @@ import { useSelector } from "react-redux";
 import { selectUser } from "../../redux/auth";
 import { getAllInteresteds, getAllInterestedsPetAdoption } from "../../redux/users";
 import { closeRoom } from "../../redux/chat";
+import { collection, doc, getDocs, updateDoc, where } from "firebase/firestore";
+import { db } from "../../util/firebase";
+import { query } from "firebase/database";
 
 export default function FinishAdoption({navigation}: any) {
   let content = <View></View>;
@@ -59,6 +62,11 @@ export default function FinishAdoption({navigation}: any) {
     const petId = pets[petsInput.findIndex(pet => pet === true)].id
     await dispatch(setUnavailableToAdoption(petId));
     await dispatch(closeRoom(petId))
+    const snapshot = await getDocs(
+      query(collection(db, "users"), where("uid", "==", user.uid))
+    );
+    const id = snapshot.docs.map(el => el.id)[0];
+    await updateDoc(doc(collection(db, "users"), id), {interesteds: [...params.pet.interesteds, {userId: params.userId, isAlreadyInChat: false}]})
     navigateToFinalScreenAdoption()
   }
 
