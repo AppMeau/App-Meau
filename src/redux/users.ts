@@ -33,7 +33,7 @@ export async function getUserById(userId: string|number){
 	}
   }
 
-export const getAllInteresteds = async (interesteds: Array<{userId: string, isAlreadyInChat: boolean}>) => {
+export const getAllInteresteds = createAsyncThunk( 'users/getAllInteresteds',  async (interesteds: Array<{userId: string, isAlreadyInChat: boolean}>) => {
 	try {
 		let updatedInteresteds: User[] = []
 		for (const interested of interesteds) {
@@ -47,7 +47,7 @@ export const getAllInteresteds = async (interesteds: Array<{userId: string, isAl
 	} catch (error: any) {
 		throw new Error(error)
 	}
-}
+})
 
 export const getAllInterestedsPetAdoption = createAsyncThunk('users/getAllInterestedsPetAdoption', async (interesteds: Array<{userId: string, isAlreadyInChat: boolean}>, thunkAPI) => {
 	try {

@@ -26,9 +26,18 @@ const Drawer = createDrawerNavigator();
 const DetailStack = createNativeStackNavigator();
 const ChatStack = createNativeStackNavigator();
 
-function ChatRoute() {
+function ChatRoute({route, navigation}: any) {
+  // useEffect(() => {
+  //   console.log(route.params)
+  //   const routes: any = [{ name: 'myChatRooms' }]
+  //   if(route.params?.roomId) routes.push({ name: 'chat', params: { roomId: route.params.roomId }})
+  //   navigation.reset({
+  //     index: 0,
+  //     routes,
+  //   });
+  // }, [navigation]);
   return (
-    <ChatStack.Navigator>
+    <ChatStack.Navigator initialRouteName="myChatRooms">
       <ChatStack.Screen
         name="myChatRooms"
         component={MyChatRooms}
@@ -158,7 +167,8 @@ export default function Routes() {
   }
     return (
         <NavigationContainer
-          linking={linking}>
+          linking={linking}
+          >
           <Drawer.Navigator>
             {status ? (
                 <>
@@ -175,7 +185,12 @@ export default function Routes() {
                   <Drawer.Screen
                     name="chatRoute"
                     component={ChatRoute}
-                    options={{ title: "Minhas Conversas", unmountOnBlur: true, headerShown: false }}
+                    options={{ 
+                      title: "Minhas Conversas", 
+                      unmountOnBlur: true, 
+                      headerShown: false,
+                     }}
+                    listeners={({navigation}) => ({blur: () => navigation.setParams({screen: undefined})})}
                   />
                   <Drawer.Screen
                     name="pendingAdoptions"

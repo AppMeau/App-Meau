@@ -13,7 +13,8 @@ export default function MyChatRooms({navigation, route}: any) {
   const dispatch = useAppDispatch()
   const user = useAppSelector(selectUser)
   const uid = user.uid
-  const [chats, setChats] = useState<Room[]>([])
+  // const [chats, setChats] = useState<Room[]>([])
+  const {chats} = useAppSelector(state => state.chat)
   const isLoading = useAppSelector(state => !!state.chat.isLoading)
 
   const navigateToFormsAdoption = () => {
@@ -21,8 +22,8 @@ export default function MyChatRooms({navigation, route}: any) {
   }
 
   const getAllMyRooms = async () => {
-    const result = await dispatch(getMyRooms(user));
-    setChats(unwrapResult(result))
+    dispatch(getMyRooms(user));
+    // setChats(unwrapResult(result))
   }
   
   useEffect(() => {
