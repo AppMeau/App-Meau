@@ -50,8 +50,10 @@ export default function UserProfile({navigation, route}: any) {
       removeInterestedUser();
       navigation.navigate('chatRoute', {
         screen: 'chat',
+        initial: false, 
         params: { roomId: originalResult.id },
       });
+
     }
   }, [originalResult])
 
@@ -63,9 +65,17 @@ export default function UserProfile({navigation, route}: any) {
     }
   }
 
+  const NavigateToNewDetail = async () => {
+    navigation.navigate('animalDetails', {
+      petId: pet.id,
+      isToAdopt: false,
+    });
+  }
+
   return (
     <View>
       <Button onPress={navigateToNewChat}>CHAT</Button>
+      <Button onPress={NavigateToNewDetail}>Animal Details</Button>
     </View>
   )
 }

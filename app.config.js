@@ -21,7 +21,8 @@ export default {
       "supportsTablet": true
     },
     "android": {
-      "package": "com.appmeau.appmeau",
+      "package": "com.unb.appmeau",
+      "googleServicesFile": './google-services.json',
       "adaptiveIcon": {
         "foregroundImage": "./assets/icon.png",
         "backgroundColor": "#ffffff"
