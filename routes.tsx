@@ -26,7 +26,7 @@ const ChatStack = createNativeStackNavigator();
 
 function ChatRoute() {
   return (
-    <ChatStack.Navigator>
+    <ChatStack.Navigator initialRouteName="myChatRooms">
       <ChatStack.Screen
         name="myChatRooms"
         component={MyChatRooms}

@@ -8,6 +8,7 @@ import { useNavigation } from "@react-navigation/native";
 export default function ChatCard({ user, lastMessage, roomId, pet }: { user: {id: string, name: string, avatar: string}, lastMessage: Message, roomId: string | number, pet: {id: string, name: string} }) {
     const navigation: any = useNavigation();
     const navigateToChat = () => {
+        console.log("clickou")
         navigation.navigate('chat', {roomId})
     }
     const parseDateToTimestamp = (date: string) => `${new Date(lastMessage.createdAt).getHours()}:${new Date(lastMessage.createdAt).getMinutes()}`

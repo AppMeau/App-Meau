@@ -51,7 +51,9 @@ export default function UserProfile({navigation, route}: any) {
       navigation.navigate('chatRoute', {
         screen: 'chat',
         params: { roomId: originalResult.id },
-      });
+        initial: false
+      }
+    );
     }
   }, [originalResult])
 
