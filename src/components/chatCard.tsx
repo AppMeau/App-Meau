@@ -9,6 +9,10 @@ export default function ChatCard({ user, lastMessage, roomId, pet }: { user: {id
     const navigation: any = useNavigation();
     const navigateToChat = () => {
         navigation.navigate('chat', {roomId})
+        // navigation.navigate('chatRoute', {
+        //     screen: 'chat',
+        //     params: { roomId: roomId },
+        // });
     }
     const parseDateToTimestamp = (date: string) => `${new Date(lastMessage.createdAt).getHours()}:${new Date(lastMessage.createdAt).getMinutes()}`
     return (
