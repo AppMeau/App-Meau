@@ -6,12 +6,14 @@ import { User } from '../schemas/UserRegister/userRegister';
 
 export type StateType = {
 	users: User[],
+	currentUser: User | null,
 	status: string,
 	error: FirebaseError | null
 }
 
 const initialState: StateType = {
   users: [],
+  currentUser: null,
   status: 'idle',
   error: null
 }
@@ -33,7 +35,7 @@ export async function getUserById(userId: string|number){
 	}
   }
 
-export const getAllInteresteds = createAsyncThunk( 'users/getAllInteresteds',  async (interesteds: Array<{userId: string, isAlreadyInChat: boolean}>) => {
+export const getAllInteresteds = async (interesteds: Array<{userId: string, isAlreadyInChat: boolean}>) => {
 	try {
 		let updatedInteresteds: User[] = []
 		for (const interested of interesteds) {
@@ -47,7 +49,7 @@ export const getAllInteresteds = createAsyncThunk( 'users/getAllInteresteds',  a
 	} catch (error: any) {
 		throw new Error(error)
 	}
-})
+}
 
 export const getAllInterestedsPetAdoption = createAsyncThunk('users/getAllInterestedsPetAdoption', async (interesteds: Array<{userId: string, isAlreadyInChat: boolean}>, thunkAPI) => {
 	try {
@@ -70,6 +72,8 @@ export const userSlice = createSlice({
 	name: 'userSlice',
 	initialState,
 	reducers: {
+		clearCurrentUser: (state) => {state.currentUser = null},
+		setCurrentUser: (state, {payload}) => {state.currentUser = payload},
 		reducer: (state, action) => {
 		},
 	},
@@ -88,4 +92,4 @@ export const userSlice = createSlice({
 	}
 	});
 
-export const { reducer } = userSlice.actions;
+export const { clearCurrentUser, setCurrentUser } = userSlice.actions;

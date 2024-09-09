@@ -4,15 +4,18 @@ import { User } from "../schemas/UserRegister/userRegister";
 import { useNavigation } from "@react-navigation/native";
 import Colors from "../util/Colors";
 import { PetRegisterType } from "../schemas/PetRegister/petRegisterTypes";
+import { useAppDispatch } from "../redux/store";
+import { setCurrentUser } from "../redux/users";
 
 export default function InterestedsCard({user, pet}: {user: User, pet: PetRegisterType}) {
   const navigation: any = useNavigation();
-
+  const dispatch = useAppDispatch()
   const navigateToUserProfile = () => {
-    navigation.navigate('userProfile', {
-      user: user,
-      pet: pet,
-    })
+    // navigation.navigate('userProfile', {
+    //   user: user,
+    //   pet: pet,
+    // })
+    dispatch(setCurrentUser(user))
   }
 
   return (

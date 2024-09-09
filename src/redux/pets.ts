@@ -82,6 +82,7 @@ export const getInterestedUsers = createAsyncThunk(
       const pet = await getDoc(doc(db, "pets", petId));
       if(pet.exists()){
         const interesteds = await getAllInteresteds(pet.data().interesteds);
+        console.log(interesteds)
         return interesteds as User[];
       }
     } catch (error: any) {
@@ -174,6 +175,7 @@ export const petSlice = createSlice({
     });
     builder.addCase(getInterestedUsers.fulfilled, (state, action) => {
       state.status = "succeeded";
+      console.log(action.payload)
       state.currentPetInteresteds = action.payload as User[];
     });
     builder.addCase(getInterestedUsers.rejected, (state, action) => {
