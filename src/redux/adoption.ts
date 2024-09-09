@@ -39,8 +39,8 @@ export const respondAdoption = createAsyncThunk("adoption/respondAdoption", asyn
   try{
     const adoptionRef = doc(db, "adoptions", adoption.id);
     await updateDoc(adoptionRef, {status: status});
-    if(status) cancelAllAdoptions(adoption.pet.id)
-    if(status){
+    if(status==="accepted"){
+      await cancelAllAdoptions(adoption.pet.id)
       await sendNotification(notifications.adopted(adoption.adopter.notifyToken, adoption.pet.name, adoption.pet.id));
       await sendNotification(notifications.adoptionAccepted(adoption.currentOwner.notifyToken, adoption.pet.name, adoption.adopter.name));
     }

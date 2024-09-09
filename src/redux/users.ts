@@ -6,12 +6,14 @@ import { User } from '../schemas/UserRegister/userRegister';
 
 export type StateType = {
 	users: User[],
+	currentInterested: User | null,
 	status: string,
 	error: FirebaseError | null
 }
 
 const initialState: StateType = {
   users: [],
+  currentInterested: null,
   status: 'idle',
   error: null
 }
@@ -54,11 +56,16 @@ export const userSlice = createSlice({
 	name: 'userSlice',
 	initialState,
 	reducers: {
-		reducer: (state, action) => {
+		setCurrentInterested: (state, action) => {
+			state.currentInterested = action.payload
+			console.log(action.payload)
 		},
+		clearCurrentInterested: (state) => {
+			state.currentInterested = null
+		}
 	},
 	extraReducers: (builder) => {
 	}
 	});
 
-export const { reducer } = userSlice.actions;
+export const { setCurrentInterested, clearCurrentInterested } = userSlice.actions;

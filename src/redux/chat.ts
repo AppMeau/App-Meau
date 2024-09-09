@@ -87,12 +87,15 @@ export const sendMessage = createAsyncThunk(
   "messages/send",
   async (messagePayload: { message: Message; roomId: number|string, token: string }, thunkAPI) => {
     try{
+      console.log(messagePayload)
       const messagesCollection = collection(db, "rooms", messagePayload.roomId as string, "messages");
       const messageDoc = doc(messagesCollection)
       const oldId = messagePayload.message._id;
       messagePayload.message._id = messageDoc.id;
+      const messageRef = await setDoc(messageDoc, messagePayload.message);
       return thunkAPI.fulfillWithValue({ message: messagePayload.message, roomId: messagePayload.roomId, oldId });
     } catch (e) {
+      console.log(e)
       return thunkAPI.rejectWithValue({ error: e });
     }
   }

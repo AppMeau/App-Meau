@@ -30,7 +30,7 @@ function ChatRoute() {
       <ChatStack.Screen
         name="myChatRooms"
         component={MyChatRooms}
-        options={{ title: "Minhas Conversas", 
+        options={{ title: "Minhas Conversas",
           header: ({ navigation, options }: any) => (
             <Header
               color={Colors.bluePrimary}

@@ -2,6 +2,7 @@ import { z } from "zod";
 const pet = z.object({
     id: z.string(),
     name: z.string(),
+    image: z.string(),
 })
 const user = z.object({
     id: z.string(),

@@ -1,18 +1,19 @@
 import { Pressable, StyleSheet, View } from "react-native";
 import { Card, Text } from "react-native-paper";
 import { User } from "../schemas/UserRegister/userRegister";
-import { useNavigation } from "@react-navigation/native";
 import Colors from "../util/Colors";
 import { PetRegisterType } from "../schemas/PetRegister/petRegisterTypes";
+import { useAppDispatch } from "../redux/store";
+import { setCurrentInterested } from "../redux/users";
 
 export default function InterestedsCard({user, pet}: {user: User, pet: PetRegisterType}) {
-  const navigation: any = useNavigation();
-
+  const dispatch = useAppDispatch()
   const navigateToUserProfile = () => {
-    navigation.navigate('userProfile', {
-      user: {id: user.uid, name: user.name, avatar: user.photo, token: user.notification_token},
-      pet: pet,
-    })
+    // navigation.navigate('userProfile', {
+    //   user: {id: user.uid, name: user.name, avatar: user.photo, token: user.notification_token},
+    //   pet: pet,
+    // })
+    dispatch(setCurrentInterested(user))
   }
 
   return (
