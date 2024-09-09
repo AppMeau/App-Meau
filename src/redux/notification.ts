@@ -4,6 +4,7 @@ import * as Notifications from "expo-notifications";
 import Constants from "expo-constants";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../util/firebase";
+import Interesteds from "../pages/home/interesteds";
 
 type initialStateType = {
   expoPushToken: string | null;
@@ -14,31 +15,44 @@ const initialState: initialStateType = {
   isLoading: false,
 };
 
-export async function sendMessageNotification(token:string, msg: string) {
-  const message = {
-    title: "Você tem uma nova mensagem!",
-    body: msg,
-    to: token,
-    sound: 'default',
+type message = {
+  title: string;
+  body: string;
+  to: string;
+  sound: string;
+  data?: {
+    url: string;
   };
-  const res = await fetch('https://exp.host/--/api/v2/push/send', {
-    method: 'POST',
-    headers: {
-      Accept: 'application/json',
-      'Accept-encoding': 'gzip, deflate',
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(message),
-  });
-}
+};
 
-export async function sendInterestedNotification(token: string, petName: string) {
-  const message = {
-    title: "Seu pet tem um novo interessado!",
-    body: `Um usuário se interessou no seu pet ${petName}!`,
-    to: token,
-    sound: 'default',
-  };
+export const notifications = {
+  interested: (token: string, petName: string, petId: string) => {
+    return {
+      title: "Seu pet tem um novo interessado!",
+      body: `Um usuário se interessou no seu pet ${petName}!`,
+      to: token,
+      sound: 'default',
+      data:{
+        url: `meau://animalListingMyPets/interesteds?petId=${petId}`
+      }
+    }
+  },
+  adopted: (token: string, petName: string, petId: string) => {
+    return {
+      title: "Adoção com sucesso!",
+      body: `Parabéns! Agora você é o novo tutor do ${petName}!`,
+      to: token,
+      sound: 'default',
+      data:{
+        url: `meau://animalListingMyPets/animalDetails?petId=${petId}`
+      }
+    }
+  }
+
+} 
+
+export async function sendNotification(message: message) {
+
   const res = await fetch('https://exp.host/--/api/v2/push/send', {
     method: 'POST',
     headers: {
