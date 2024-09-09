@@ -53,6 +53,15 @@ export default function FinishAdoption({navigation}: any) {
   const navigateToFinalScreenAdoption = () => {
     navigation.navigate('adoptionFinalScreen')
   }
+
+  const finishProcessHandler = async () => {
+    console.log(pets[petsInput.findIndex(pet => pet === true)].id)
+    const petId = pets[petsInput.findIndex(pet => pet === true)].id
+    await dispatch(setUnavailableToAdoption(petId));
+    await dispatch(closeRoom(petId))
+    navigateToFinalScreenAdoption()
+  }
+
   if (status === "loading") {
     content = <Text>Loading...</Text>;
   }
@@ -93,13 +102,7 @@ export default function FinishAdoption({navigation}: any) {
                   <Button
                     backgroundColor={Colors.bluePrimary}
                     width={180}
-                    onPress={async () => {
-                      console.log(pets[petsInput.findIndex(pet => pet === true)].id)
-                      const petId = pets[petsInput.findIndex(pet => pet === true)].id
-                      await dispatch(setUnavailableToAdoption(petId));
-                      await dispatch(closeRoom(petId))
-                      navigateToFinalScreenAdoption()
-                    }}
+                    onPress={finishProcessHandler}
                   >
                     LI E CONCORDO
                   </Button>
