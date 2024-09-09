@@ -28,15 +28,13 @@ export const basePetSchema = z.object({
 
   acompanyBeforeAdoption: z.boolean(),
   periodToAcompany: z.enum(["", "1 Mês", "3 Meses", "6 Meses"]),
-  // oneMonth: z.boolean(),
-  // threeMonths: z.boolean(),
-  // sixMonths: z.boolean(),
 
   about: z.string().optional(),
   disable: z.boolean(),
 
   availableToAdoption: z.boolean(),
   ownerId: z.string().optional(),
+  ownerCityState: z.string().optional(),
   interesteds: z.array(z.object({
     userId: z.string(),
     isAlreadyInChat: z.boolean(),
