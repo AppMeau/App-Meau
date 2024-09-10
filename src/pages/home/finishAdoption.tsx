@@ -4,17 +4,19 @@ import { ScrollView } from "react-native-gesture-handler";
 import { Portal, Provider, Modal } from "react-native-paper";
 import CheckboxContainer from "../../components/checkboxContainer";
 import { useEffect, useState } from "react";
-import RadioContainer from "../../components/radioContainer";
 import Button from "../../components/customButton";
-import { getUserPets, getUserPetsWithInteresteds, setUnavailableToAdoption } from "../../redux/pets";
-import { AsyncThunkAction } from "@reduxjs/toolkit";
-import { AsyncThunkConfig } from "@reduxjs/toolkit/dist/createAsyncThunk";
+import { getUserPetsWithInteresteds, setUnavailableToAdoption } from "../../redux/pets";
 import { useAppDispatch, useAppSelector } from "../../redux/store";
 import { useSelector } from "react-redux";
 import { selectUser } from "../../redux/auth";
-import { getAllInteresteds, getAllInterestedsPetAdoption } from "../../redux/users";
+import { getAllInterestedsPetAdoption } from "../../redux/users";
 import { closeRoom } from "../../redux/chat";
+<<<<<<< HEAD
 import { createAdoption } from "../../redux/adoption";
+=======
+import Header from "../../components/header";
+
+>>>>>>> 61f39081ef5702f51336d910e0eba024c38a5cd9
 
 export default function FinishAdoption({navigation}: any) {
   let content = <View></View>;
@@ -30,12 +32,23 @@ export default function FinishAdoption({navigation}: any) {
   const { uid } = useSelector(selectUser);
   const { users } = useAppSelector((state) => state.users)
 
+  
+
   useEffect(() => {
     dispatch(getUserPetsWithInteresteds(uid))
+    navigation.setOptions({
+      header: ({ navigation, options }: any) => (
+        <Header
+          color={Colors.bluePrimary}
+          title={options.title}
+          onDrawerClick={navigation.toggleDrawer}
+        />
+      ),
+    });
   },[dispatch]);
 
   const [petsInput, setPetsInput] = useState<Array<boolean>>([]);
-  const [usersInput, setUsersInput] = useState<string>("");
+  const [usersInput, setUsersInput] = useState<Array<boolean>>([]);
 
 
   function petsInputChangeHandler(petId: string, enteredValue: boolean) {
@@ -43,12 +56,18 @@ export default function FinishAdoption({navigation}: any) {
     const index = pets.findIndex(({ id }) => id === petId);
     newPetsInputs[index] = enteredValue;
 
+  
     dispatch(getAllInterestedsPetAdoption(pets[index].interesteds))
     setPetsInput(newPetsInputs);
   }
   
-  function usersInputHandler(user: string){
-    setUsersInput(user);
+  function usersInputHandler(userId: string, enteredValue: boolean){
+    const newUsersInputs = users.map(() => false);
+    const index = users.findIndex(({ uid }) => uid === userId);
+    newUsersInputs[index] = enteredValue;
+
+    setUsersInput(newUsersInputs);
+    
   }
 
   const navigateToFinalScreenAdoption = () => {
@@ -71,6 +90,10 @@ export default function FinishAdoption({navigation}: any) {
   else if (status === "succeeded"){
     if (petsInput.length !== pets.length) {
       setPetsInput(pets.map(() => false))
+    }
+
+    if (usersInput.length !== users.length) {
+      setUsersInput(users.map(() => false))
     }
     
 
@@ -105,7 +128,17 @@ export default function FinishAdoption({navigation}: any) {
                   <Button
                     backgroundColor={Colors.bluePrimary}
                     width={180}
+<<<<<<< HEAD
                     onPress={finishProcessHandler}
+=======
+                    onPress={async () => {
+                      const petId = pets[petsInput.findIndex(pet => pet === true)].id
+                      const newOwnerId = users[usersInput.findIndex(user => user === true)].uid
+                      await dispatch(setUnavailableToAdoption({petId, ownerId:newOwnerId}));
+                      await dispatch(closeRoom(petId))
+                      navigateToFinalScreenAdoption()
+                    }}
+>>>>>>> 61f39081ef5702f51336d910e0eba024c38a5cd9
                   >
                     LI E CONCORDO
                   </Button>
@@ -132,12 +165,19 @@ export default function FinishAdoption({navigation}: any) {
                 labels={pets.map((pet) => pet.name)}
               />
               {petsInput.some(pet => pet===true) && <View><Text style={styles.subtitle}>SELECIONE O USUÁRIO</Text>
-              <RadioContainer
+              {/* <RadioContainer
                 state={usersInput}
                 onPress={usersInputHandler
                 }
                 labels={users.map((user) => user.name)}
-              /></View>}
+              /> */}
+              <CheckboxContainer
+                states={usersInput}
+                onPress={usersInputHandler}
+                keys={users.map((user) => user.uid)}
+                labels={users.map((user) => user.name)}
+              />
+              </View>}
               
 
               <View style={styles.containerButton}>

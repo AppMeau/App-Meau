@@ -152,9 +152,9 @@ export const getUserPetsWithInteresteds = createAsyncThunk(
   }
 );
 export const setUnavailableToAdoption = createAsyncThunk("pets/setUnavailableToAdoption", 
-  async (petId: string, thunkAPI) => {
+  async (params: any, thunkAPI) => {
     try {
-      await updateDoc(doc(collection(db, "pets"), petId), {availableToAdoption: false})     
+      await updateDoc(doc(collection(db, "pets"), params.petId), {availableToAdoption: false, ownerId: params.ownerId })     
     } catch (error: any) {
       return thunkAPI.rejectWithValue({ error: error.message });
     }
