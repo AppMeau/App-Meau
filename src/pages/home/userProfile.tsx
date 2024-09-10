@@ -10,13 +10,15 @@ import { PetRegisterType } from "../../schemas/PetRegister/petRegisterTypes";
 import { removeInterested } from "../../redux/pets";
 import Button from "../../components/customButton";
 import { ScrollView } from "react-native-gesture-handler";
+import { User } from "../../schemas/UserRegister/userRegister";
+
 
 export default function UserProfile({navigation, route}: any) {
   const dispatch = useAppDispatch();
 
   const {uid, photo, name, notification_token} = useAppSelector(selectUser)
 
-  const targetUser = route.params.user 
+  const targetUser: User = route.params.user 
   const pet: PetRegisterType = route.params.pet
 
   const createChat = async () => {
@@ -44,7 +46,7 @@ export default function UserProfile({navigation, route}: any) {
   
   useEffect(()=>{
     const removeInterestedUser = async () => {
-      await dispatch(removeInterested({pet, userId: targetUser.id}))
+      await dispatch(removeInterested({pet, userId: targetUser.uid}))
     }
     
     if(originalResult){
@@ -53,8 +55,8 @@ export default function UserProfile({navigation, route}: any) {
         screen: 'chat',
         initial: false, 
         params: { roomId: originalResult.id },
-      });
-
+      }
+    );
     }
   }, [originalResult])
 
@@ -105,7 +107,7 @@ export default function UserProfile({navigation, route}: any) {
 
           <View style={styles.listComponent}>
             <Text style={styles.title}>TELEFONE</Text>
-            <Text style={styles.text}>({targetUser.phone.slice(0, 2)}) {targetUser.phone.slice(2)}</Text>
+            <Text style={styles.text}>({targetUser.phone?.slice(0, 2)}) {targetUser.phone?.slice(2)}</Text>
           </View>
 
           <View style={styles.listComponent}>
@@ -115,7 +117,7 @@ export default function UserProfile({navigation, route}: any) {
 
           <View style={styles.listComponent}>
             <Text style={styles.title}>HISTÓRICO</Text>
-            <Text style={styles.text}>Adotou {targetUser.adoptedPets.length} pet</Text>
+            {/* <Text style={styles.text}>Adotou {targetUser.adoptedPets.length} pet</Text> */}
           </View>
 
         </View>

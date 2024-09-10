@@ -1,39 +1,52 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { collection, doc, DocumentData, DocumentReference, getDoc, getDocs, query, QueryDocumentSnapshot, where } from 'firebase/firestore';
+import { collection, doc, DocumentData, DocumentReference, getDoc, getDocs, query, QueryDocumentSnapshot, updateDoc, where } from 'firebase/firestore';
 import { db } from '../util/firebase';
 import { FirebaseError } from 'firebase/app';
-import { User } from '../schemas/UserRegister/userRegister';
+import { User, userSchema } from '../schemas/UserRegister/userRegister';
 
 export type StateType = {
 	users: User[],
+	currentInterested: User | null,
 	status: string,
 	error: FirebaseError | null
 }
 
 const initialState: StateType = {
   users: [],
+  currentInterested: null,
   status: 'idle',
   error: null
 }
 
 
-export async function getUserById(userId: string|number){
+
+export async function getUserById(userId: string|number): Promise<User>{
 	try{
 		const snapshot = await getDocs(
 			query(collection(db, "users"), where("uid", "==", userId))
 		);
 		const user = snapshot.docs.map(el => el.data())[0];
 	  if(user){
-		return user
+		return userSchema.parse(user)
 	  } else {
 		throw new Error('user not found')
 	  }
-	} catch(e){
+	} catch(e: any){
 	  console.error(e)
+	  throw new Error(e)
 	}
   }
 
-export const getAllInteresteds = createAsyncThunk( 'users/getAllInteresteds',  async (interesteds: Array<{userId: string, isAlreadyInChat: boolean}>) => {
+export const addPetToAdoptedPets = async (petId: string, userUid: string) => {
+	const snapshot = await getDocs(
+		query(collection(db, "users"), where("uid", "==", userUid))
+	);
+	const userId = snapshot.docs.map(el => el.id)[0];
+	const {adoptedPets} = await getUserById(userUid);
+	await updateDoc(doc(collection(db, "users"), userId), {adoptedPets: adoptedPets ? adoptedPets.push(petId) : []})
+}
+
+export const getAllInteresteds = async (interesteds: Array<{userId: string, isAlreadyInChat: boolean}>) => {
 	try {
 		let updatedInteresteds: User[] = []
 		for (const interested of interesteds) {
@@ -47,7 +60,7 @@ export const getAllInteresteds = createAsyncThunk( 'users/getAllInteresteds',  a
 	} catch (error: any) {
 		throw new Error(error)
 	}
-})
+}
 
 export const getAllInterestedsPetAdoption = createAsyncThunk('users/getAllInterestedsPetAdoption', async (interesteds: Array<{userId: string, isAlreadyInChat: boolean}>, thunkAPI) => {
 	try {
@@ -70,21 +83,15 @@ export const userSlice = createSlice({
 	name: 'userSlice',
 	initialState,
 	reducers: {
-		reducer: (state, action) => {
+		setCurrentInterested: (state, action) => {
+			state.currentInterested = action.payload
+			console.log(action.payload)
 		},
+		clearCurrentInterested: (state) => {
+			state.currentInterested = null
+		}
 	},
 	extraReducers: (builder) => {
-		builder.addCase(getAllInteresteds.pending, (state) => {
-			state.status = 'loading'
-		})
-		builder.addCase(getAllInteresteds.fulfilled, (state, action) => {
-			state.status = 'succeeded'
-			state.users = action.payload
-		})
-		builder.addCase(getAllInteresteds.rejected, (state, action) => {
-			state.status = 'failed'
-			state.error = (action.payload as { error: FirebaseError }).error
-		})
 		builder.addCase(getAllInterestedsPetAdoption.pending, (state) => {
 			state.status = 'loading'
 		})
@@ -99,4 +106,4 @@ export const userSlice = createSlice({
 	}
 	});
 
-export const { reducer } = userSlice.actions;
+export const { setCurrentInterested, clearCurrentInterested } = userSlice.actions;

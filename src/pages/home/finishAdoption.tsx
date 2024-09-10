@@ -5,17 +5,15 @@ import { Portal, Provider, Modal } from "react-native-paper";
 import CheckboxContainer from "../../components/checkboxContainer";
 import { useEffect, useState } from "react";
 import Button from "../../components/customButton";
-import { getUserPetsWithInteresteds, setUnavailableToAdoption } from "../../redux/pets";
+import { getUserPetsWithInteresteds, changeOwnership } from "../../redux/pets";
 import { useAppDispatch, useAppSelector } from "../../redux/store";
 import { useSelector } from "react-redux";
 import { selectUser } from "../../redux/auth";
 import { getAllInterestedsPetAdoption } from "../../redux/users";
 import { closeRoom } from "../../redux/chat";
+import { createAdoption } from "../../redux/adoption";
+import { pet, user } from "../../schemas/Adoption/schema";
 import Header from "../../components/header";
-
-import { collection, doc, getDocs, updateDoc, where } from "firebase/firestore";
-import { db } from "../../util/firebase";
-import { query } from "firebase/firestore";
 
 export default function FinishAdoption({navigation}: any) {
   let content = <View></View>;
@@ -27,6 +25,7 @@ export default function FinishAdoption({navigation}: any) {
   const showModal = () => setVisible(true);
   const hideModal = () => setVisible(false);
 
+  const { user: currentUser } = useAppSelector((state) => state.auth);
   const { pets, status, error } = useAppSelector((state) => state.pets);
   const { uid } = useSelector(selectUser);
   const { users } = useAppSelector((state) => state.users)
@@ -72,17 +71,14 @@ export default function FinishAdoption({navigation}: any) {
   }
 
   const finishProcessHandler = async () => {
-    const petId = pets[petsInput.findIndex(pet => pet === true)].id
-    const newOwnerId = users[usersInput.findIndex(user => user === true)].uid
-    await dispatch(setUnavailableToAdoption({petId, ownerId:newOwnerId}));
-    await dispatch(closeRoom(petId))
-
-    const snapshot = await getDocs(
-      query(collection(db, "users"), where("uid", "==", newOwnerId))
-    );
-    const id = snapshot.docs.map(el => el.id)[0];
-    const { adoptedPets } = snapshot.docs.map(el => el.data())[0];
-    await updateDoc(doc(collection(db, "users"), id), {adoptedPets: adoptedPets.push(petId)})
+    const currentPet = pets[petsInput.findIndex(pet => pet === true)]
+    const newOwner = users[usersInput.findIndex(user => user === true)]
+    try{
+      const obj = {pet: pet.parse(currentPet), currentOwner: user.parse(currentUser), adopter: user.parse(newOwner)}
+      dispatch(createAdoption(obj))
+    } catch (e) {
+      console.error(e)
+    }
     navigateToFinalScreenAdoption()
   }
 

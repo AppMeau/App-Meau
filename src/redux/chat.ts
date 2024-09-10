@@ -87,12 +87,15 @@ export const sendMessage = createAsyncThunk(
   "messages/send",
   async (messagePayload: { message: Message; roomId: number|string, token: string }, thunkAPI) => {
     try{
+      console.log(messagePayload)
       const messagesCollection = collection(db, "rooms", messagePayload.roomId as string, "messages");
       const messageDoc = doc(messagesCollection)
       const oldId = messagePayload.message._id;
       messagePayload.message._id = messageDoc.id;
+      const messageRef = await setDoc(messageDoc, messagePayload.message);
       return thunkAPI.fulfillWithValue({ message: messagePayload.message, roomId: messagePayload.roomId, oldId });
     } catch (e) {
+      console.log(e)
       return thunkAPI.rejectWithValue({ error: e });
     }
   }
@@ -124,19 +127,14 @@ export const createRoom = createAsyncThunk("rooms/createRoom",
     }
 });
 
-export const closeRoom = createAsyncThunk("rooms/closeRoom", 
-  async (petId: string, thunkAPI) => {
-    try {
-      const rooms = await getDocs(
-        query(
-          collection(db, "rooms"),
-          where("pet.id", "==", petId))
-      );
-      Promise.all(rooms.docs.map(room => updateDoc(doc(collection(db, "rooms"), room.id), {active: false})))
-    } catch (error: any) {
-      return thunkAPI.rejectWithValue({ error: error.message });
-    }
-});
+export const closeRoom = async (petId: string) => {
+  const rooms = await getDocs(
+    query(
+      collection(db, "rooms"),
+      where("pet.id", "==", petId))
+  );
+  Promise.all(rooms.docs.map(room => updateDoc(doc(collection(db, "rooms"), room.id), {active: false})))
+};
 
 //TODO: simplificar schema e fazer parser das messages para IMessage
 export const chatSlice = createSlice({
