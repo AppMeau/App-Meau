@@ -20,7 +20,7 @@ const initialState: initialStateType = { status: null, user: null };
 
 export const login = createAsyncThunk(
   "users/login",
-  async (credentials: Credential) => {
+  async (credentials: Credential, thunkAPI) => {
     try {
       const res = await signInWithEmailAndPassword(
         getAuth(firebase),
@@ -34,12 +34,13 @@ export const login = createAsyncThunk(
       if (usersData.length) {
         const token = await registerForPushNotifications()
         users.docs.map(async doc => await updateDoc(doc.ref, { notification_token: token }))
-        return usersData[0];
+        const user = usersData[0];
+        user.notification_token = token;
+        return thunkAPI.fulfillWithValue(userSchema.parse(user));
       }
-      return null;
+      return thunkAPI.rejectWithValue("User not found");
     } catch (e) {
-      console.error(e);
-      return null;
+      return thunkAPI.rejectWithValue(e);
     }
   }
 );
@@ -94,7 +95,7 @@ export const Slice = createSlice({
     builder.addCase(login.fulfilled, (state, action) => {
       state.status = true;
       state.isLoading = false;
-      state.user = userSchema.parse(action.payload);
+      state.user = action.payload;
     });
     builder.addCase(login.pending, (state, action) => {
       state.isLoading = true;
@@ -106,6 +107,13 @@ export const Slice = createSlice({
     builder.addCase(logout.fulfilled, (state, action) => {
       state.status = false;
       state.user = null;
+      state.isLoading = false;
+    });
+    builder.addCase(logout.pending, (state, action) => {
+      state.isLoading = true;
+    });
+    builder.addCase(logout.rejected, (state, action) => {
+      state.isLoading = false;
     });
   },
 });

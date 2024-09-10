@@ -17,7 +17,7 @@ export default function App({
   navigation: NavigationProp<any>;
 }) {
   const dispatch = useAppDispatch();
-  const isLogged = useAppSelector((state) => state.auth.status);
+  const {isLoading, status:isLogged} = useAppSelector((state) => state.auth);
 
   const signout = async () => {
     dispatch(logout()).then(() => {
@@ -87,6 +87,7 @@ export default function App({
                   <Button
                     type="transparent"
                     mode="text"
+                    loading={isLoading}
                     onPress={async () => {
                       signout();
                     }}

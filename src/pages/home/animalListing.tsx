@@ -50,6 +50,7 @@ export default function AnimalListing({ navigation, route }: any) {
         data={pets}
         style={{ height: "100%", padding: 10, flex: 1 }}
         keyExtractor={(animal) => animal.id!.toString()}
+        ListEmptyComponent={<Text style={{textAlign: 'center', paddingTop: 30}}>Nenhum pet encontrado</Text>}
         refreshControl={<RefreshControl onRefresh={loadPage} refreshing={status=="loading"}/>}
         renderItem={(itemData) => {
           return (

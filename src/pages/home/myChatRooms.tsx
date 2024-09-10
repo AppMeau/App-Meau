@@ -30,21 +30,28 @@ export default function MyChatRooms({navigation, route}: any) {
     getAllMyRooms();
   }, [])
   return (
-    <View style={{ flex: 1 }}>
-      <FlatList refreshControl={<RefreshControl onRefresh={getAllMyRooms} refreshing={isLoading}/>} data={chats} keyExtractor={room => room.id.toString()} renderItem={({item}) => {
-        return (
-          <View>
-            <ChatCard active={item.active} pet={item.pet} user={item.members.find(el => el.id !== uid)!} lastMessage={item.messages[0]} roomId={item.id}/>
-          </View>
-        )
+    <View style={{ flex: 1, justifyContent: 'space-between' }}>
+      <FlatList 
+        refreshControl={<RefreshControl onRefresh={getAllMyRooms} refreshing={isLoading}/>}
+        data={chats}
+        keyExtractor={room => room.id.toString()}
+        ListEmptyComponent={<Text style={{textAlign: 'center', paddingTop: 30}}>Você não possui nenhuma conversa</Text>}
+        renderItem={({item}) => {
+          return (
+            <View>
+              <ChatCard active={item.active} pet={item.pet} user={item.members.find(el => el.id !== uid)!} lastMessage={item.messages[0]} roomId={item.id}/>
+            </View>
+          )
       }}/>
-      <View style={styles.containerButton}><Button
-        backgroundColor={Colors.bluePrimary}
-        onPress={navigateToFormsAdoption}
-        width={280}
-      >
-        FINALIZAR UM PROCESSO
-      </Button></View>
+      <View style={styles.containerButton}>
+        <Button
+          backgroundColor={Colors.bluePrimary}
+          onPress={navigateToFormsAdoption}
+          width={280}
+        >
+          FINALIZAR UM PROCESSO
+        </Button>
+      </View>
       
     </View>
   )
