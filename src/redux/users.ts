@@ -43,7 +43,8 @@ export const addPetToAdoptedPets = async (petId: string, userUid: string) => {
 	);
 	const userId = snapshot.docs.map(el => el.id)[0];
 	const {adoptedPets} = await getUserById(userUid);
-	await updateDoc(doc(collection(db, "users"), userId), {adoptedPets: adoptedPets ? adoptedPets.push(petId) : []})
+	console.log(adoptedPets)
+	await updateDoc(doc(collection(db, "users"), userId), {adoptedPets: adoptedPets ? adoptedPets.push(petId) : [petId]})
 }
 
 export const getAllInteresteds = async (interesteds: Array<{userId: string, isAlreadyInChat: boolean}>) => {

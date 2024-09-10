@@ -188,10 +188,12 @@ export default function Routes() {
                   <Drawer.Screen 
                     name="animalListingAdoption"
                     options={{ title: 'Adotar', headerShown: false, unmountOnBlur: true }}
+                    listeners={({navigation}) => ({blur: () => navigation.setParams({screen: undefined})})}
                   >{props => <DetailsRoute {...props} isToAdopt={true} />}</Drawer.Screen>
                   <Drawer.Screen 
                     name="animalListingMyPets" 
                     options={{ title: 'Meus Pets', headerShown: false, unmountOnBlur: true }}
+                    listeners={({navigation}) => ({blur: () => navigation.setParams({screen: undefined})})}
                   >{props => <DetailsRoute {...props} isToAdopt={false} />}</Drawer.Screen>
                   <Drawer.Screen
                     name="chatRoute"
