@@ -24,7 +24,7 @@ import imageHandler from "../../util/functions/ImageHandler";
 import { NavigationProp } from "@react-navigation/native";
 
 export default function Register({navigation}: {navigation: NavigationProp<any>}) {
-
+  const [loading, setLoading] = useState(false)
   const [inputs, setInputs] = useState({
     name: "",
     age: "",
@@ -80,26 +80,26 @@ export default function Register({navigation}: {navigation: NavigationProp<any>}
   }, [showPhotoDialog, isFromGallery]);
 
   const handleSubmit = async () => {
-    const url = await imageHandler(
-      "images/users/",
-      inputs.photoUrl,
-      inputs.name,
-    );
-
-    const docData = {
-      name: inputs.name,
-      age: inputs.age,
-      email: inputs.email,
-      state: inputs.state,
-      city: inputs.city,
-      address: inputs.adress,
-      phone: inputs.phone,
-      user: inputs.user,
-      adoptedPets: [],
-      password: inputs.password,
-      photo: url ? url : "",
-    };
+    setLoading(true)
     try {
+      const url = await imageHandler(
+        "images/users/",
+        inputs.photoUrl,
+        inputs.name,
+      );
+      const docData = {
+        name: inputs.name,
+        age: inputs.age,
+        email: inputs.email,
+        state: inputs.state,
+        city: inputs.city,
+        address: inputs.adress,
+        phone: inputs.phone,
+        user: inputs.user,
+        adoptedPets: [],
+        password: inputs.password,
+        photo: url ? url : "",
+      };
       const auth = getAuth(firebase);
       const newUser = await createUserWithEmailAndPassword(
         auth,
@@ -107,16 +107,17 @@ export default function Register({navigation}: {navigation: NavigationProp<any>}
         inputs.password,
       );
       if (newUser) {
-        userSchema.parse(docData);
-        await addDoc(collection(db, "users"), {
+        const user = userSchema.parse({
           ...docData,
           uid: newUser.user.uid,
         });
+        await addDoc(collection(db, "users"), user);
       }
       navigation.navigate("login");
     } catch (e) {
       console.log(e);
     }
+    setLoading(false)
   };
   const hideDialog = () => setShowPhotoDialog(false);
 
@@ -317,12 +318,15 @@ export default function Register({navigation}: {navigation: NavigationProp<any>}
                   </View>
                 </Pressable>
 
-                <CustomButton
-                  backgroundColor={Colors.bluePrimary}
+                <Button
+                  mode="contained" 
+                  style={{backgroundColor: Colors.bluePrimary, width: 200, borderRadius: 8}}
+                  labelStyle={{color: Colors.textAuxPrimary}}
                   onPress={handleSubmit}
+                  loading={loading}
                 >
                   FAZER CADASTRO
-                </CustomButton>
+                </Button>
               </View>
             </View>
           </View>
