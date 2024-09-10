@@ -321,7 +321,7 @@ export default function Register({navigation}: {navigation: NavigationProp<any>}
                 <Button
                   mode="contained" 
                   style={{backgroundColor: Colors.bluePrimary, width: 200, borderRadius: 8}}
-                  labelStyle={{color: Colors.textAuxPrimary}}
+                  labelStyle={{color: Colors.textAuxPrimary, fontFamily: "Roboto_400Regular"}}
                   onPress={handleSubmit}
                   loading={loading}
                 >

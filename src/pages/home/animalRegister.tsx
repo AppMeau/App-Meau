@@ -70,6 +70,7 @@ export default function AnimalRegister({
     disable: false,
   });
 
+  const [loading, setLoading] = useState(false);
   const [showPhotoDialog, setShowPhotoDialog] = useState(false);
   const [isFromGallery, setIsFromGallery] = useState<boolean | null>(null);
   const [disableSickness, setDisableSickness] = useState(false);
@@ -142,48 +143,50 @@ export default function AnimalRegister({
   const hideDialog = () => setShowPhotoDialog(false);
 
   const handleSubmit = async () => {
-    const url = await imageHandler(
-      "images/pets/",
-      inputs.photoUrl,
-      inputs.name
-    );
-    const docData = {
-      name: inputs.name,
-      photo: url,
-      species: inputs.species,
-      gender: inputs.gender,
-      size: inputs.size,
-      age: inputs.age,
-      playfull: inputs.playfull,
-      shy: inputs.shy,
-      calm: inputs.calm,
-      guard: inputs.guard,
-      lovely: inputs.lovely,
-      lazy: inputs.lazy,
-      vaccinated: inputs.vaccinated,
-      dewormed: inputs.dewormed,
-      castrated: inputs.castrated,
-      sick: inputs.sick,
-      sickness: inputs.sickness,
-      adoptionTerm: inputs.adoptionTerm,
-      homePhotos: inputs.homePhotos,
-      previousVisit: inputs.previousVisit,
-      acompanyBeforeAdoption: inputs.acompanyBeforeAdoption,
-      periodToAcompany: inputs.periodToAcompany,
-      about: inputs.about,
-      disable: inputs.disable,
-      availableToAdoption: true,
-      ownerId: uid,
-      ownerCityState: `${city.toUpperCase()} - ${state.toUpperCase()}`,
-      interesteds: [],
-    };
     try {
+      setLoading(true);
+      const url = await imageHandler(
+        "images/pets/",
+        inputs.photoUrl,
+        inputs.name
+      );
+      const docData = {
+        name: inputs.name,
+        photo: url,
+        species: inputs.species,
+        gender: inputs.gender,
+        size: inputs.size,
+        age: inputs.age,
+        playfull: inputs.playfull,
+        shy: inputs.shy,
+        calm: inputs.calm,
+        guard: inputs.guard,
+        lovely: inputs.lovely,
+        lazy: inputs.lazy,
+        vaccinated: inputs.vaccinated,
+        dewormed: inputs.dewormed,
+        castrated: inputs.castrated,
+        sick: inputs.sick,
+        sickness: inputs.sickness,
+        adoptionTerm: inputs.adoptionTerm,
+        homePhotos: inputs.homePhotos,
+        previousVisit: inputs.previousVisit,
+        acompanyBeforeAdoption: inputs.acompanyBeforeAdoption,
+        periodToAcompany: inputs.periodToAcompany,
+        about: inputs.about,
+        disable: inputs.disable,
+        availableToAdoption: true,
+        ownerId: uid,
+        ownerCityState: `${city.toUpperCase()} - ${state.toUpperCase()}`,
+        interesteds: [],
+      };
       PetSchema.parse(docData);
       await addDoc(collection(db, "pets"), docData);
       navigation.navigate("animalListingMyPets");
     } catch (e) {
       console.log(e);
     }
+    setLoading(false);
   };
 
   return (
@@ -192,22 +195,6 @@ export default function AnimalRegister({
         <ScrollView>
           <View style={[styles.container]}>
             <View style={styles.formContainer}>
-              <Text>Tenho interesse em cadastrar o animal para:</Text>
-              <View style={styles.buttonsContainer}>
-                <Button
-                  mode="elevated"
-                  buttonColor={Colors.yellowPrimary}
-                  textColor={Colors.textAuxPrimary}
-                  contentStyle={styles.buttons}
-                  theme={{ roundness: 1 }}
-                  labelStyle={styles.buttonsText}
-                >
-                  ADOÇÃO
-                </Button>
-              </View>
-
-              <Text style={styles.sectionText}>Adoção</Text>
-
               <Text style={styles.subtitle}>NOME DO ANIMAL</Text>
               <InputComponent
                 lazy
@@ -385,12 +372,15 @@ export default function AnimalRegister({
               />
 
               <View style={styles.container}>
-                <CustomButton
-                  backgroundColor={Colors.yellowPrimary}
+              <Button
+                  mode="contained" 
+                  style={{backgroundColor: Colors.yellowPrimary, width: 200, borderRadius: 8}}
+                  labelStyle={{color: Colors.textAuxPrimary, fontFamily: "Roboto_400Regular"}}
                   onPress={handleSubmit}
+                  loading={loading}
                 >
-                  COLOCAR PARA ADOÇÃO
-                </CustomButton>
+                  Colocar para adoção
+                </Button>
               </View>
             </View>
           </View>

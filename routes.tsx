@@ -176,7 +176,9 @@ export default function Routes() {
                   <Drawer.Screen 
                     name="animalRegister" 
                     component={AnimalRegister} 
-                    options={{ header: ({ navigation, options }: any) => (
+                    options={{
+                      title: 'Cadastrar um Pet',
+                      header: ({ navigation, options }: any) => (
                       <Header
                         color={Colors.yellowPrimary}
                         title={'Cadastrar um Pet'}
