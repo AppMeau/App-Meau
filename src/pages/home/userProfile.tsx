@@ -12,6 +12,7 @@ import Button from "../../components/customButton";
 import { ScrollView } from "react-native-gesture-handler";
 import { User } from "../../schemas/UserRegister/userRegister";
 
+
 export default function UserProfile({navigation, route}: any) {
   const dispatch = useAppDispatch();
 

@@ -40,7 +40,7 @@ export default function AnimalDetails({route, navigation}: any) {
   }, [currentPet]);
 
   function displayObject(pet: any){
-    const removeProps = ["id", "name", "photo", "disable", "availableToAdoption", "interesteds", "ownerId"]
+    const removeProps = ["id", "name", "photo", "disable", "availableToAdoption", "interesteds", "ownerId", "ownerCityState"];
     const translateObject = {
       species: "espécie",
       gender: "gênero",
