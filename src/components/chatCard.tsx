@@ -5,11 +5,15 @@ import { Card } from "react-native-paper";
 import Colors from "../util/Colors";
 import { useNavigation } from "@react-navigation/native";
 
-export default function ChatCard({ user, lastMessage, roomId, pet }: { user: {id: string, name: string, avatar: string}, lastMessage: Message, roomId: string | number, pet: {id: string, name: string} }) {
+export default function ChatCard({ user, lastMessage, roomId, pet, active }: { user: {id: string, name: string, avatar: string}, lastMessage: Message, roomId: string | number, pet: {id: string, name: string}, active: boolean}) {
     const navigation: any = useNavigation();
     const navigateToChat = () => {
         console.log("clickou")
         navigation.navigate('chat', {roomId})
+        // navigation.navigate('chatRoute', {
+        //     screen: 'chat',
+        //     params: { roomId: roomId },
+        // });
     }
     const parseDateToTimestamp = (date: string) => `${new Date(lastMessage.createdAt).getHours()}:${new Date(lastMessage.createdAt).getMinutes()}`
     return (
@@ -21,7 +25,7 @@ export default function ChatCard({ user, lastMessage, roomId, pet }: { user: {id
                     </View>
                     <View style={{flex: 1,alignItems: "flex-start"}}>
                         <View style={{justifyContent: "space-between", flexDirection: "row", width: "100%"}}>
-                            <Text style={styles.title}>{user.name + " | " + pet.name}</Text>
+                            <Text style={{...styles.title, opacity: active ? 1 : 0.5}}>{user.name + " | " + pet.name}</Text>
                             <Text style={styles.timestamp}>{lastMessage? parseDateToTimestamp(lastMessage.createdAt) : ""}</Text>
                         </View>
                         <Text style={styles.content} numberOfLines={1} >{lastMessage? lastMessage.text : ""}</Text>
@@ -58,7 +62,7 @@ const styles = StyleSheet.create({
       fontSize: 14,
       fontFamily: 'Roboto_400Regular',
       fontWeight: 'bold',
-      color: Colors.blueHighlight,
+      color: Colors.blueHighlight
     },
     content: {
         // width: "100%",

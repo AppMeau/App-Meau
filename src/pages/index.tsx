@@ -9,6 +9,7 @@ import { logout, selectUser } from "../redux/auth";
 
 import { NavigationProp } from "@react-navigation/native";
 import { useEffect } from "react";
+import { getAuth } from "firebase/auth";
 
 export default function App({
   navigation,

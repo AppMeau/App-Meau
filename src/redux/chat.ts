@@ -102,7 +102,7 @@ export const sendMessage = createAsyncThunk(
 );
 
 export const createRoom = createAsyncThunk("rooms/createRoom", 
-  async (roomData: {members: Array<{id: string, name: string, avatar: string}>, pet: {id: string, name: string}}, thunkAPI) => {
+  async (roomData: {members: Array<{id: string, name: string, avatar: string, token: string}>, pet: {id: string, name: string}}, thunkAPI) => {
     try {
       // const database = ref(getDatabase());
       // const newRoomId = await push(database).key;
@@ -124,6 +124,20 @@ export const createRoom = createAsyncThunk("rooms/createRoom",
       return thunkAPI.fulfillWithValue({...room, id: res.id});
     } catch (e) {
       return thunkAPI.rejectWithValue(e);
+    }
+});
+
+export const closeRoom = createAsyncThunk("rooms/closeRoom", 
+  async (petId: string, thunkAPI) => {
+    try {
+      const rooms = await getDocs(
+        query(
+          collection(db, "rooms"),
+          where("pet.id", "==", petId))
+      );
+      Promise.all(rooms.docs.map(room => updateDoc(doc(collection(db, "rooms"), room.id), {active: false})))
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue({ error: error.message });
     }
 });
 

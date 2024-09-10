@@ -82,6 +82,7 @@ export const getInterestedUsers = createAsyncThunk(
       const pet = await getDoc(doc(db, "pets", petId));
       if(pet.exists()){
         const interesteds = await getAllInteresteds(pet.data().interesteds);
+        console.log(interesteds)
         return interesteds as User[];
       }
     } catch (error: any) {
@@ -131,6 +132,34 @@ export const getAvailablePets = createAsyncThunk(
   }
 );
 
+export const getUserPetsWithInteresteds = createAsyncThunk(
+  "pets/getPetsWithInteresteds",
+  async (userId: string, thunkAPI) => {
+    try {
+      const pets = await getDocs(
+        query(
+          collection(db, "pets"),
+          where("ownerId", "==", userId),
+          where("interesteds", "!=", []),
+          where("availableToAdoption", "==", true))
+      );
+      const allpetsData = pets.docs.map(parsePet);
+      return allpetsData as PetRegisterType[];
+    } catch (error: any) {
+      console.log(error)
+      return thunkAPI.rejectWithValue({ error: error.message });
+    }
+  }
+);
+export const setUnavailableToAdoption = createAsyncThunk("pets/setUnavailableToAdoption", 
+  async (petId: string, thunkAPI) => {
+    try {
+      await updateDoc(doc(collection(db, "pets"), petId), {availableToAdoption: false})     
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue({ error: error.message });
+    }
+});
+
 export const petSlice = createSlice({
   name: "petSlice",
   initialState,
@@ -146,6 +175,7 @@ export const petSlice = createSlice({
     });
     builder.addCase(getInterestedUsers.fulfilled, (state, action) => {
       state.status = "succeeded";
+      console.log(action.payload)
       state.currentPetInteresteds = action.payload as User[];
     });
     builder.addCase(getInterestedUsers.rejected, (state, action) => {
@@ -185,6 +215,27 @@ export const petSlice = createSlice({
       state.status = "failed";
       state.error = (action.payload as { error: FirebaseError }).error;
     });
+    builder.addCase(getUserPetsWithInteresteds.pending, (state) => {
+      state.status = "loading";
+    });
+    builder.addCase(getUserPetsWithInteresteds.fulfilled, (state, action) => {
+      state.status = "succeeded";
+      state.pets = action.payload;
+    });
+    builder.addCase(getUserPetsWithInteresteds.rejected, (state, action) => {
+      state.status = "failed";
+      state.error = (action.payload as { error: FirebaseError }).error;
+    });
+    // builder.addCase(setUnavailableToAdoption.pending, (state) => {
+    //   state.status = "loading";
+    // });
+    // builder.addCase(setUnavailableToAdoption.fulfilled, (state, action) => {
+    //   state.status = "insert succeeded";
+    // });
+    // builder.addCase(setUnavailableToAdoption.rejected, (state, action) => {
+    //   state.status = "failed";
+    //   state.error = (action.payload as { error: FirebaseError }).error;
+    // });
   },
 });
 

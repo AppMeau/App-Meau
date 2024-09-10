@@ -7,12 +7,11 @@ import {
   sendMessage,
   updateMessages,
 } from "../../redux/chat";
-import { Message, messageSchema, Room } from "../../schemas/Chat/chatSchema";
+import { messageSchema, Room } from "../../schemas/Chat/chatSchema";
 import { Text } from "react-native";
+import { getDatabase, off, onValue, ref } from "firebase/database";
 import { selectUser } from "../../redux/auth";
 import { processMessages } from "../../redux/chat";
-import { collection, doc, onSnapshot, query } from "firebase/firestore";
-import { db } from "../../util/firebase";
 import Header from "../../components/header";
 import Colors from "../../util/Colors";
 
@@ -39,38 +38,31 @@ export default function ChatComponent({route, navigation}: any) {
     });
 
   }, []);
-  
+
   useEffect(() => {
-    const roomDoc = query(collection(db, "rooms", roomId, "messages"));
-    const unsub = onSnapshot(roomDoc, { includeMetadataChanges: true },async (snapshot: any) => {
-      try{
-        const messages: Message[] = []
-
-        snapshot.forEach((doc: any) => messages.push(doc.data()));
-
-        const source = snapshot.metadata.hasPendingWrites ? "Local" : "Server";
-        if (messages.length && room && source === "Server") {
-          try{
-            await markAsReceived(messages, roomId);
-            const newMessages = await processMessages(messages, room);
-            if(newMessages.length) dispatch(updateMessages({ messages: newMessages, roomId }));
-          } catch (e) {
-            console.error(e);
-          } 
-        }
-      } catch (e) {
-        console.error(e);
+    const rtdb = getDatabase()
+    const chatRef = ref(rtdb,roomId+'/messages');
+    onValue(chatRef, async (snapshot) => {
+      const data = snapshot.val();
+      if (data && room) {
+        try{
+          const messages = Object.keys(data).map((key) => data[key]);
+          await markAsReceived(messages, roomId);
+          const newMessages = await processMessages(messages, room);
+          if(newMessages.length) dispatch(updateMessages({ messages: newMessages, roomId }));
+        } catch (e) {
+          console.error(e);
+        } 
       }
     });
     return ()=>{
-      unsub()
+      off(chatRef, 'value');
     }
   }, []);
 
   const onSend = (messages: IMessage[] = []) => {
-    const targetUser = room?.members.find((member: any) => member.id !== user?.uid);
     try {
-      dispatch(sendMessage({ message: messageSchema.parse(messages[0]), roomId: roomId, token: targetUser?.token }));
+      dispatch(sendMessage({ message: messageSchema.parse(messages[0]), roomId: roomId, token: user.notification_token }));
     } catch (e) {
       console.error(e);
     }
@@ -82,6 +74,7 @@ export default function ChatComponent({route, navigation}: any) {
         <GiftedChat
           messages={room.messages}
           onSend={(messages: IMessage[]) => onSend(messages)}
+          renderInputToolbar={room.active ? undefined : () => null}
           user={{
             _id: user?.uid,
             name: user?.name,

@@ -1,4 +1,4 @@
-import { FlatList, ScrollView, StyleSheet, Text, View } from "react-native";
+import { FlatList, RefreshControl, ScrollView, StyleSheet, Text, View } from "react-native";
 import InterestedsCard from "../../components/interestedCard";
 import { useAppDispatch, useAppSelector } from "../../redux/store";
 import { findPet, getInterestedUsers } from "../../redux/pets";
@@ -6,6 +6,8 @@ import { useEffect } from "react";
 import { Button, Dialog, Portal, Provider } from "react-native-paper";
 import Colors from "../../util/Colors";
 import { clearCurrentInterested } from "../../redux/users";
+import { User } from "../../schemas/UserRegister/userRegister";
+import { PetRegisterType } from "../../schemas/PetRegister/petRegisterTypes";
 import { useNavigation } from "@react-navigation/native";
 
 export default function Interesteds({route}: any) {
@@ -18,12 +20,12 @@ export default function Interesteds({route}: any) {
   const {currentPet} = useAppSelector((state) => state.pets)
   const {currentInterested} = useAppSelector((state) => state.users)
   useEffect(() => {
+    clear()
     if(petId) {
       dispatch(getInterestedUsers(petId))
       dispatch(findPet(petId))
     }
   }, [])
-
 
   return (
     <Provider>
@@ -121,7 +123,6 @@ const styles = StyleSheet.create({
     fontFamily: 'Roboto_400Regular',
     fontSize: 12,
   },
-
   dialog: {
     borderRadius: 8,
     backgroundColor: "white",

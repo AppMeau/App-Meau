@@ -51,6 +51,22 @@ export const getAllInteresteds = async (interesteds: Array<{userId: string, isAl
 	}
 }
 
+export const getAllInterestedsPetAdoption = createAsyncThunk('users/getAllInterestedsPetAdoption', async (interesteds: Array<{userId: string, isAlreadyInChat: boolean}>, thunkAPI) => {
+	try {
+		let updatedInteresteds: User[] = []
+		for (const interested of interesteds) {
+		
+				const user = await getDocs(query(collection(db, "users"), where("uid", "==", interested.userId)))
+				const userData = user.docs.map(doc => doc.data()) as User[]
+				updatedInteresteds.push(userData[0])
+			
+		}
+		return updatedInteresteds
+	} catch (error: any) {
+		return thunkAPI.rejectWithValue({ error: error.message })
+	}
+})
+
 
 export const userSlice = createSlice({
 	name: 'userSlice',
@@ -65,6 +81,17 @@ export const userSlice = createSlice({
 		}
 	},
 	extraReducers: (builder) => {
+		builder.addCase(getAllInterestedsPetAdoption.pending, (state) => {
+			state.status = 'loading'
+		})
+		builder.addCase(getAllInterestedsPetAdoption.fulfilled, (state, action) => {
+			state.status = 'succeeded'
+			state.users = action.payload
+		})
+		builder.addCase(getAllInterestedsPetAdoption.rejected, (state, action) => {
+			state.status = 'failed'
+			state.error = (action.payload as { error: FirebaseError }).error
+		})
 	}
 	});
 
