@@ -82,6 +82,7 @@ export const getInterestedUsers = createAsyncThunk(
       const pet = await getDoc(doc(db, "pets", petId));
       if(pet.exists()){
         const interesteds = await getAllInteresteds(pet.data().interesteds);
+        console.log(interesteds)
         return interesteds as User[];
       }
     } catch (error: any) {
@@ -131,7 +132,9 @@ export const getAvailablePets = createAsyncThunk(
     }
   }
 );
-
+export const clearInteresteds = (petId: string) => {
+  updateDoc(doc(collection(db, "pets"), petId), {interesteds: []})
+}
 export const getUserPetsWithInteresteds = createAsyncThunk(
   "pets/getPetsWithInteresteds",
   async (userId: string, thunkAPI) => {
@@ -151,14 +154,9 @@ export const getUserPetsWithInteresteds = createAsyncThunk(
     }
   }
 );
-export const setUnavailableToAdoption = createAsyncThunk("pets/setUnavailableToAdoption", 
-  async (params: any, thunkAPI) => {
-    try {
-      await updateDoc(doc(collection(db, "pets"), params.petId), {availableToAdoption: false, ownerId: params.ownerId })     
-    } catch (error: any) {
-      return thunkAPI.rejectWithValue({ error: error.message });
-    }
-});
+export const changeOwnership = async (params: {petId: string, ownerId: string}) => {
+  await updateDoc(doc(collection(db, "pets"), params.petId), {availableToAdoption: false, ownerId: params.ownerId })     
+};
 
 export const petSlice = createSlice({
   name: "petSlice",
@@ -175,6 +173,7 @@ export const petSlice = createSlice({
     });
     builder.addCase(getInterestedUsers.fulfilled, (state, action) => {
       state.status = "succeeded";
+      console.log(action.payload)
       state.currentPetInteresteds = action.payload as User[];
     });
     builder.addCase(getInterestedUsers.rejected, (state, action) => {

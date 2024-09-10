@@ -16,10 +16,11 @@ import Header from "./src/components/header";
 import Colors from "./src/util/Colors";
 import UserProfile from "./src/pages/home/userProfile";
 import MyChatRooms from "./src/pages/home/myChatRooms";
-import FinishAdoption from "./src/pages/home/finishAdoption";
-import AdoptionFinalScreen from "./src/pages/home/adoptionFinalScreen";
 import { Linking } from "react-native";
 import * as Notifications from 'expo-notifications';
+import pendingAdoptions from "./src/pages/home/pendingAdoptions";
+import FinishAdoption from "./src/pages/home/finishAdoption";
+import AdoptionFinalScreen from "./src/pages/home/adoptionFinalScreen";
 
 const Drawer = createDrawerNavigator();
 const DetailStack = createNativeStackNavigator();
@@ -40,7 +41,7 @@ function ChatRoute({route, navigation}: any) {
       <ChatStack.Screen
         name="myChatRooms"
         component={MyChatRooms}
-        options={{ title: "Minhas Conversas", 
+        options={{ title: "Minhas Conversas",
           header: ({ navigation, options }: any) => (
             <Header
               color={Colors.bluePrimary}
@@ -201,6 +202,11 @@ export default function Routes() {
                       headerShown: false,
                      }}
                     listeners={({navigation}) => ({blur: () => navigation.setParams({screen: undefined})})}
+                  />
+                  <Drawer.Screen
+                    name="pendingAdoptions"
+                    component={pendingAdoptions}
+                    options={{ title: "Adoções Pendentes", unmountOnBlur: true }}
                   />
                 </>
             ):(

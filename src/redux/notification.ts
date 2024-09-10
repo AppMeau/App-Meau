@@ -47,6 +47,33 @@ export const notifications = {
         url: `meau://animalListingMyPets/animalDetails?petId=${petId}`
       }
     }
+  },
+  adoptionRejected: (token: string, petName: string, username: string) => {
+    return {
+      title: "Adoção recusada",
+      body: `Infelizmente ${username} se recusou a adotar o ${petName}.`,
+      to: token,
+      sound: 'default',
+    }
+  },
+  adoptionAccepted: (token: string, petName: string, username: string) => {
+    return {
+      title: "Adoção aceita",
+      body: `Parabéns! ${username} aceitou adotar o ${petName}.`,
+      to: token,
+      sound: 'default',
+    }
+  },
+  adoptionSolicitation: (token: string, petName: string, username: string) => {
+    return {
+      title: "Solicitação de adoção!",
+      body: `O usuário ${username} enviou uma solicitação para você adotar o ${petName}.`,
+      to: token,
+      sound: 'default',
+      data:{
+        url:"meau://pendingAdoptions"
+      }
+    }
   }
 
 } 
