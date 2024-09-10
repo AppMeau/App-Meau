@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { collection, doc, DocumentData, DocumentReference, getDoc, getDocs, query, QueryDocumentSnapshot, where } from 'firebase/firestore';
 import { db } from '../util/firebase';
 import { FirebaseError } from 'firebase/app';
-import { User } from '../schemas/UserRegister/userRegister';
+import { User, userSchema } from '../schemas/UserRegister/userRegister';
 
 export type StateType = {
 	users: User[],
@@ -18,20 +18,20 @@ const initialState: StateType = {
   error: null
 }
 
-
-export async function getUserById(userId: string|number){
+export async function getUserById(userId: string|number): Promise<User>{
 	try{
 		const snapshot = await getDocs(
 			query(collection(db, "users"), where("uid", "==", userId))
 		);
 		const user = snapshot.docs.map(el => el.data())[0];
 	  if(user){
-		return user
+		return userSchema.parse(user)
 	  } else {
 		throw new Error('user not found')
 	  }
-	} catch(e){
+	} catch(e: any){
 	  console.error(e)
+	  throw new Error(e)
 	}
   }
 

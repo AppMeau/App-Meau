@@ -5,18 +5,15 @@ import { Portal, Provider, Modal } from "react-native-paper";
 import CheckboxContainer from "../../components/checkboxContainer";
 import { useEffect, useState } from "react";
 import Button from "../../components/customButton";
-import { getUserPetsWithInteresteds, setUnavailableToAdoption } from "../../redux/pets";
+import { getUserPetsWithInteresteds, changeOwnership } from "../../redux/pets";
 import { useAppDispatch, useAppSelector } from "../../redux/store";
 import { useSelector } from "react-redux";
 import { selectUser } from "../../redux/auth";
 import { getAllInterestedsPetAdoption } from "../../redux/users";
 import { closeRoom } from "../../redux/chat";
-<<<<<<< HEAD
 import { createAdoption } from "../../redux/adoption";
-=======
+import { pet, user } from "../../schemas/Adoption/schema";
 import Header from "../../components/header";
-
->>>>>>> 61f39081ef5702f51336d910e0eba024c38a5cd9
 
 export default function FinishAdoption({navigation}: any) {
   let content = <View></View>;
@@ -28,6 +25,7 @@ export default function FinishAdoption({navigation}: any) {
   const showModal = () => setVisible(true);
   const hideModal = () => setVisible(false);
 
+  const { user: currentUser } = useAppSelector((state) => state.auth);
   const { pets, status, error } = useAppSelector((state) => state.pets);
   const { uid } = useSelector(selectUser);
   const { users } = useAppSelector((state) => state.users)
@@ -75,12 +73,14 @@ export default function FinishAdoption({navigation}: any) {
   }
 
   const finishProcessHandler = async () => {
-    console.log(pets[petsInput.findIndex(pet => pet === true)].id)
-    const pet = pets[petsInput.findIndex(pet => pet === true)]
-    dispatch(createAdoption({pet, userId: usersInput}))
-
-    await dispatch(setUnavailableToAdoption(pet.id));
-    await dispatch(closeRoom(pet.id))
+    const currentPet = pets[petsInput.findIndex(pet => pet === true)]
+    const newOwner = users[usersInput.findIndex(user => user === true)]
+    try{
+      const obj = {pet: pet.parse(currentPet), currentOwner: user.parse(currentUser), adopter: user.parse(newOwner)}
+      dispatch(createAdoption(obj))
+    } catch (e) {
+      console.error(e)
+    }
     navigateToFinalScreenAdoption()
   }
 
@@ -128,17 +128,7 @@ export default function FinishAdoption({navigation}: any) {
                   <Button
                     backgroundColor={Colors.bluePrimary}
                     width={180}
-<<<<<<< HEAD
                     onPress={finishProcessHandler}
-=======
-                    onPress={async () => {
-                      const petId = pets[petsInput.findIndex(pet => pet === true)].id
-                      const newOwnerId = users[usersInput.findIndex(user => user === true)].uid
-                      await dispatch(setUnavailableToAdoption({petId, ownerId:newOwnerId}));
-                      await dispatch(closeRoom(petId))
-                      navigateToFinalScreenAdoption()
-                    }}
->>>>>>> 61f39081ef5702f51336d910e0eba024c38a5cd9
                   >
                     LI E CONCORDO
                   </Button>

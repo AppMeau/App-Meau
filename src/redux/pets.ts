@@ -131,7 +131,9 @@ export const getAvailablePets = createAsyncThunk(
     }
   }
 );
-
+export const clearInteresteds = (petId: string) => {
+  updateDoc(doc(collection(db, "pets"), petId), {interesteds: []})
+}
 export const getUserPetsWithInteresteds = createAsyncThunk(
   "pets/getPetsWithInteresteds",
   async (userId: string, thunkAPI) => {
@@ -151,14 +153,9 @@ export const getUserPetsWithInteresteds = createAsyncThunk(
     }
   }
 );
-export const setUnavailableToAdoption = createAsyncThunk("pets/setUnavailableToAdoption", 
-  async (params: any, thunkAPI) => {
-    try {
-      await updateDoc(doc(collection(db, "pets"), params.petId), {availableToAdoption: false, ownerId: params.ownerId })     
-    } catch (error: any) {
-      return thunkAPI.rejectWithValue({ error: error.message });
-    }
-});
+export const changeOwnership = async (params: {petId: string, ownerId: string}) => {
+  await updateDoc(doc(collection(db, "pets"), params.petId), {availableToAdoption: false, ownerId: params.ownerId })     
+};
 
 export const petSlice = createSlice({
   name: "petSlice",

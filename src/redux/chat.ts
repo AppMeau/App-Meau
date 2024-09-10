@@ -127,19 +127,14 @@ export const createRoom = createAsyncThunk("rooms/createRoom",
     }
 });
 
-export const closeRoom = createAsyncThunk("rooms/closeRoom", 
-  async (petId: string, thunkAPI) => {
-    try {
-      const rooms = await getDocs(
-        query(
-          collection(db, "rooms"),
-          where("pet.id", "==", petId))
-      );
-      Promise.all(rooms.docs.map(room => updateDoc(doc(collection(db, "rooms"), room.id), {active: false})))
-    } catch (error: any) {
-      return thunkAPI.rejectWithValue({ error: error.message });
-    }
-});
+export const closeRoom = async (petId: string) => {
+  const rooms = await getDocs(
+    query(
+      collection(db, "rooms"),
+      where("pet.id", "==", petId))
+  );
+  Promise.all(rooms.docs.map(room => updateDoc(doc(collection(db, "rooms"), room.id), {active: false})))
+};
 
 //TODO: simplificar schema e fazer parser das messages para IMessage
 export const chatSlice = createSlice({

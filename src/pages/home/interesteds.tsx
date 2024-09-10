@@ -56,6 +56,10 @@ export default function Interesteds({route}: any) {
               <Dialog.Actions>
                 <Button
                   onPress={() => {
+                    navigation.navigate('chatRoute', {
+                      screen: 'finishAdoption',
+                      initial: false, 
+                    })
                     clear()
                   }}
                   textColor={Colors.bluePrimary}

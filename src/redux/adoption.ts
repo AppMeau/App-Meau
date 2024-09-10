@@ -1,9 +1,12 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { auth, db, firebase, storage } from "../util/firebase";
 import {adoptionPet, adoptionSchema, adoptionUser, type adoption} from '../schemas/Adoption/schema'
-import { collection, doc, getDocs, query, updateDoc, where } from "firebase/firestore";
+import { addDoc, collection, doc, getDocs, query, updateDoc, where } from "firebase/firestore";
 import { useAppDispatch } from "./store";
 import { notifications, sendNotification } from "./notification";
+import { changeOwnership, clearInteresteds } from "./pets";
+import { closeRoom } from "./chat";
+import { getUserById } from "./users";
 
 type initialStateType = {
   isLoading?: boolean;
@@ -20,32 +23,38 @@ const cancelAllAdoptions = async (petId: string) => {
 
 export const createAdoption = createAsyncThunk("adoption/createAdoption", async ({pet, currentOwner, adopter}: {pet: adoptionPet, currentOwner: adoptionUser, adopter: adoptionUser}) => {
   try{
-    const adoptionRef = doc(collection(db, "adoptions"));
+    const {notification_token} = await getUserById(adopter.uid)
     const adoption = {
       pet: pet,
       currentOwner: currentOwner,
       adopter: adopter,
       status: "pending",
     }
-    await updateDoc(adoptionRef, adoption);
-    await sendNotification(notifications.adoptionSolicitation(adopter.notifyToken, pet.name, currentOwner.name));
-    return adoptionSchema.parse({id: adoptionRef.id, ...adoption});
+    const res = await addDoc(collection(db, "adoptions"), adoption);
+    await sendNotification(notifications.adoptionSolicitation(notification_token!, pet.name, currentOwner.name));
+    return adoptionSchema.parse({id: res.id, ...adoption});
   } catch (e){
     console.error(e);
   }
 })
 
 export const respondAdoption = createAsyncThunk("adoption/respondAdoption", async ({adoption, status}: {adoption: adoption, status: "accepted"|"rejected"}) => {
+  const {pet, currentOwner, adopter} = adoption;
   try{
+    const {notification_token: adopter_notification_token} = await getUserById(adopter.uid)
+    const {notification_token: owner_notification_token} = await getUserById(currentOwner.uid)
     const adoptionRef = doc(db, "adoptions", adoption.id);
     await updateDoc(adoptionRef, {status: status});
     if(status==="accepted"){
-      await cancelAllAdoptions(adoption.pet.id)
-      await sendNotification(notifications.adopted(adoption.adopter.notifyToken, adoption.pet.name, adoption.pet.id));
-      await sendNotification(notifications.adoptionAccepted(adoption.currentOwner.notifyToken, adoption.pet.name, adoption.adopter.name));
+      await cancelAllAdoptions(pet.id)
+      await sendNotification(notifications.adopted(adopter_notification_token!, pet.name, pet.id));
+      await sendNotification(notifications.adoptionAccepted(owner_notification_token!, pet.name, adopter.name));
+      await changeOwnership({petId: pet.id, ownerId:adopter.uid});
+      await clearInteresteds(pet.id);
+      await closeRoom(pet.id)
     }
     else
-      await sendNotification(notifications.adoptionRejected(adoption.currentOwner.notifyToken, adoption.pet.name, adoption.adopter.name));
+      await sendNotification(notifications.adoptionRejected(owner_notification_token!, adoption.pet.name, adopter.name));
     return adoption.id;
   } catch (e){
     console.error(e);
@@ -55,7 +64,7 @@ export const respondAdoption = createAsyncThunk("adoption/respondAdoption", asyn
 export const getUserPendingAdoptions = createAsyncThunk("adoption/getUserPendingAdoptions", async (userId: string) => {
   try{
     const adoptionsRef = collection(db, "adoptions");
-    const adoptionSnapshot = await getDocs( query(adoptionsRef, where("adopter.id", "==", userId), where("status", "==", "pending")));
+    const adoptionSnapshot = await getDocs( query(adoptionsRef, where("adopter.uid", "==", userId), where("status", "==", "pending")));
     return adoptionSnapshot.docs.map((doc) => {
       return adoptionSchema.parse({id: doc.id, ...doc.data()})
     });
