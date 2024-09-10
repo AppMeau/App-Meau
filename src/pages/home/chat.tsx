@@ -74,6 +74,7 @@ export default function ChatComponent({route, navigation}: any) {
         <GiftedChat
           messages={room.messages}
           onSend={(messages: IMessage[]) => onSend(messages)}
+          renderInputToolbar={room.active ? undefined : () => null}
           user={{
             _id: user?.uid,
             name: user?.name,
