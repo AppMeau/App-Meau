@@ -37,7 +37,8 @@ export default function FinishAdoption({navigation}: any) {
         <Header
           color={Colors.bluePrimary}
           title={options.title}
-          onDrawerClick={navigation.toggleDrawer}
+          icon="arrow-back"
+          onDrawerClick={navigation.goBack}
         />
       ),
     });

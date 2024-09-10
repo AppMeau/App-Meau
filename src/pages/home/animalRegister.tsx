@@ -34,7 +34,7 @@ export default function AnimalRegister({
 }: {
   navigation: NavigationProp<any>;
 }) {
-  const [inputs, setInputs] = useState({
+  const defaultInputs = {
     name: "",
     photoUrl: null,
     photoDownloadUrl: "",
@@ -68,7 +68,8 @@ export default function AnimalRegister({
 
     about: "",
     disable: false,
-  });
+  }
+  const [inputs, setInputs] = useState({...defaultInputs});
 
   const [loading, setLoading] = useState(false);
   const [showPhotoDialog, setShowPhotoDialog] = useState(false);
@@ -182,6 +183,7 @@ export default function AnimalRegister({
       };
       PetSchema.parse(docData);
       await addDoc(collection(db, "pets"), docData);
+      setInputs({...defaultInputs});
       navigation.navigate("animalListingMyPets");
     } catch (e) {
       console.log(e);

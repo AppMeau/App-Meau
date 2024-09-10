@@ -31,7 +31,7 @@ export default function Interesteds({route}: any) {
     <Provider>
       <View style={styles.outerContainer}>
         {currentPetInteresteds && currentPetInteresteds.length === 0 ? (
-          <Text>Nenhum usuário interessado neste animal</Text>
+          <Text style={{textAlign: 'center'}}>Nenhum usuário interessado neste animal.</Text>
         ):(
           <FlatList
             data={currentPetInteresteds}
@@ -41,7 +41,7 @@ export default function Interesteds({route}: any) {
             contentContainerStyle={styles.flatListContainer}
           />
         )} 
-        <Button labelStyle={styles.btnLabel} style={styles.btn}>TODAS AS CONVERSAS</Button>
+        <Button labelStyle={styles.btnLabel} style={styles.btn} onPress={()=>{navigation.navigate("chatRoute", {screen: 'myChatRooms'})}}>TODAS AS CONVERSAS</Button>
       </View>
       <Portal>
             <Dialog
@@ -102,6 +102,7 @@ export default function Interesteds({route}: any) {
 
 const styles = StyleSheet.create({
   outerContainer: {
+    justifyContent: 'space-between',
     flex: 1,
   },
   rowContainer: {

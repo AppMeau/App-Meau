@@ -97,7 +97,7 @@ function DetailsRoute({isToAdopt}:{isToAdopt: boolean}) {
           <Header
             color={Colors.bluePrimary}
             title={'Interessados'}
-            search
+            // search
             icon="arrow-back"
             onDrawerClick={navigation.goBack}
           />
@@ -110,7 +110,7 @@ function DetailsRoute({isToAdopt}:{isToAdopt: boolean}) {
           <Header
             color={Colors.bluePrimary}
             title={'Interessados'}
-            search
+            // search
             onDrawerClick={navigation.toggleDrawer}
           />
         ),}} 
@@ -182,7 +182,7 @@ export default function Routes() {
                       <Header
                         color={Colors.yellowPrimary}
                         title={'Cadastrar um Pet'}
-                        search
+                        // search
                         icon="arrow-back"
                         onDrawerClick={navigation.goBack}
                       />

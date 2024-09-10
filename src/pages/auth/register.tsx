@@ -24,8 +24,7 @@ import imageHandler from "../../util/functions/ImageHandler";
 import { NavigationProp } from "@react-navigation/native";
 
 export default function Register({navigation}: {navigation: NavigationProp<any>}) {
-  const [loading, setLoading] = useState(false)
-  const [inputs, setInputs] = useState({
+  const defaultInputs = {
     name: "",
     age: "",
     email: "",
@@ -37,7 +36,9 @@ export default function Register({navigation}: {navigation: NavigationProp<any>}
     password: "",
     passwordConfirmation: "",
     photoUrl: null,
-  });
+  }
+  const [loading, setLoading] = useState(false)
+  const [inputs, setInputs] = useState({...defaultInputs});
 
   function inputChangedHandler(inputIdentifier: string, enteredValue: any) {
     setInputs((currentInput) => {
@@ -112,6 +113,7 @@ export default function Register({navigation}: {navigation: NavigationProp<any>}
           uid: newUser.user.uid,
         });
         await addDoc(collection(db, "users"), user);
+        setInputs({...defaultInputs});
       }
       navigation.navigate("login");
     } catch (e) {

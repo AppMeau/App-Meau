@@ -55,14 +55,14 @@ export default function CardComponent({
         <Card.Title
           title={animal.name}
           titleStyle={styles.title}
-          right={({ size }) => (
-            <MaterialIcons
-              name={isToAdopt ? "favorite-border" : undefined}
-              size={size}
-              color={Colors.textAuxPrimary}
-              style={{ marginRight: 10 }}
-            />
-          )}
+          // right={({ size }) => (
+          //   <MaterialIcons
+          //     name={isToAdopt ? "favorite-border" : undefined}
+          //     size={size}
+          //     color={Colors.textAuxPrimary}
+          //     style={{ marginRight: 10 }}
+          //   />
+          // )}
         />
         <Card.Cover source={{ uri: animal.photo }} style={styles.cover} />
         <Card.Content style={styles.contentCard}>{cardContent}</Card.Content>

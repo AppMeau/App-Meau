@@ -30,7 +30,7 @@ export default function ChatComponent({route, navigation}: any) {
         <Header
           color={Colors.bluePrimary}
           title={room.members.find((el: any) => el.id !== user.uid).name}
-          dotsMenu
+          // dotsMenu
           icon="arrow-back"
           onDrawerClick={navigation.goBack}
         />
