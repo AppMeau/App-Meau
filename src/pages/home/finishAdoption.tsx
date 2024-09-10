@@ -14,6 +14,7 @@ import { useSelector } from "react-redux";
 import { selectUser } from "../../redux/auth";
 import { getAllInteresteds, getAllInterestedsPetAdoption } from "../../redux/users";
 import { closeRoom } from "../../redux/chat";
+import { createAdoption } from "../../redux/adoption";
 
 export default function FinishAdoption({navigation}: any) {
   let content = <View></View>;
@@ -56,9 +57,11 @@ export default function FinishAdoption({navigation}: any) {
 
   const finishProcessHandler = async () => {
     console.log(pets[petsInput.findIndex(pet => pet === true)].id)
-    const petId = pets[petsInput.findIndex(pet => pet === true)].id
-    await dispatch(setUnavailableToAdoption(petId));
-    await dispatch(closeRoom(petId))
+    const pet = pets[petsInput.findIndex(pet => pet === true)]
+    dispatch(createAdoption({pet, userId: usersInput}))
+
+    await dispatch(setUnavailableToAdoption(pet.id));
+    await dispatch(closeRoom(pet.id))
     navigateToFinalScreenAdoption()
   }
 

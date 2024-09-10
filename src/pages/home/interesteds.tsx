@@ -81,7 +81,7 @@ export default function Interesteds({route}: any) {
                 <Button
                   onPress={() => {
                     navigation.navigate('userProfile', {
-                      user: {id: currentInterested!.uid, name: currentInterested!.name, avatar: currentInterested!.photo, token: currentInterested!.notification_token},
+                      user: currentInterested,
                       pet: currentPet,
                     })
                   }}
