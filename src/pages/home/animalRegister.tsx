@@ -4,6 +4,7 @@ import * as ImagePicker from "expo-image-picker";
 import { collection, addDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import {
+  Alert,
   Image,
   Pressable,
   ScrollView,
@@ -185,8 +186,16 @@ export default function AnimalRegister({
       await addDoc(collection(db, "pets"), docData);
       setInputs({...defaultInputs});
       navigation.navigate("animalListingMyPets");
-    } catch (e) {
-      console.log(e);
+    } catch (e: any) {
+      console.log(e)
+      switch(e.message){
+        case "Missing file url.":
+          Alert.alert("Selecione uma foto para o animal.");
+          break;
+        case "Missing file name.":
+          Alert.alert("Adicione um nome para o animal.");
+          break;
+      }
     }
     setLoading(false);
   };
