@@ -96,6 +96,7 @@ export const addInterested = createAsyncThunk("pets/addInterested",
     try {
       if(params.pet.ownerId){
         const owner = await getUserById(params.pet.ownerId)
+        await updateDoc(doc(collection(db, "pets"), params.pet.id), {interesteds: [...params.pet.interesteds, {userId: params.userId, isAlreadyInChat: false}]})
         if(owner?.notification_token){
           await updateDoc(doc(collection(db, "pets"), params.pet.id), {interesteds: [...params.pet.interesteds, {userId: params.userId, isAlreadyInChat: false}]})
           await sendNotification(notifications.interested(owner.notification_token, params.pet.name, params.pet.id))
@@ -151,9 +152,9 @@ export const getUserPetsWithInteresteds = createAsyncThunk(
   }
 );
 export const setUnavailableToAdoption = createAsyncThunk("pets/setUnavailableToAdoption", 
-  async (petId: string, thunkAPI) => {
+  async (params: any, thunkAPI) => {
     try {
-      await updateDoc(doc(collection(db, "pets"), petId), {availableToAdoption: false})     
+      await updateDoc(doc(collection(db, "pets"), params.petId), {availableToAdoption: false, ownerId: params.ownerId })     
     } catch (error: any) {
       return thunkAPI.rejectWithValue({ error: error.message });
     }

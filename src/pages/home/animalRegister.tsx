@@ -75,7 +75,7 @@ export default function AnimalRegister({
   const [disableSickness, setDisableSickness] = useState(false);
   const [isValidAbout, setIsValidAbout] = useState(true);
 
-  const { uid } = useSelector(selectUser);
+  const { uid, city, state } = useSelector(selectUser);
 
   useEffect(() => {
     if (inputs.acompanyBeforeAdoption === true) {
@@ -174,12 +174,13 @@ export default function AnimalRegister({
       disable: inputs.disable,
       availableToAdoption: true,
       ownerId: uid,
+      ownerCityState: `${city.toUpperCase()} - ${state.toUpperCase()}`,
       interesteds: [],
     };
     try {
       PetSchema.parse(docData);
       await addDoc(collection(db, "pets"), docData);
-      navigation.navigate("login");
+      navigation.navigate("animalListingMyPets");
     } catch (e) {
       console.log(e);
     }

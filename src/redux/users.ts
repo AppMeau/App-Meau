@@ -33,7 +33,7 @@ export async function getUserById(userId: string|number){
 	}
   }
 
-export const getAllInteresteds = async (interesteds: Array<{userId: string, isAlreadyInChat: boolean}>) => {
+export const getAllInteresteds = createAsyncThunk( 'users/getAllInteresteds',  async (interesteds: Array<{userId: string, isAlreadyInChat: boolean}>) => {
 	try {
 		let updatedInteresteds: User[] = []
 		for (const interested of interesteds) {
@@ -47,7 +47,7 @@ export const getAllInteresteds = async (interesteds: Array<{userId: string, isAl
 	} catch (error: any) {
 		throw new Error(error)
 	}
-}
+})
 
 export const getAllInterestedsPetAdoption = createAsyncThunk('users/getAllInterestedsPetAdoption', async (interesteds: Array<{userId: string, isAlreadyInChat: boolean}>, thunkAPI) => {
 	try {
@@ -74,6 +74,17 @@ export const userSlice = createSlice({
 		},
 	},
 	extraReducers: (builder) => {
+		builder.addCase(getAllInteresteds.pending, (state) => {
+			state.status = 'loading'
+		})
+		builder.addCase(getAllInteresteds.fulfilled, (state, action) => {
+			state.status = 'succeeded'
+			state.users = action.payload
+		})
+		builder.addCase(getAllInteresteds.rejected, (state, action) => {
+			state.status = 'failed'
+			state.error = (action.payload as { error: FirebaseError }).error
+		})
 		builder.addCase(getAllInterestedsPetAdoption.pending, (state) => {
 			state.status = 'loading'
 		})

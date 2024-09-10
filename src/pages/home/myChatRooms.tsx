@@ -30,7 +30,7 @@ export default function MyChatRooms({navigation, route}: any) {
     getAllMyRooms();
   }, [])
   return (
-    <View>
+    <View style={{ flex: 1 }}>
       <FlatList refreshControl={<RefreshControl onRefresh={getAllMyRooms} refreshing={isLoading}/>} data={chats} keyExtractor={room => room.id.toString()} renderItem={({item}) => {
         return (
           <View>
@@ -41,7 +41,7 @@ export default function MyChatRooms({navigation, route}: any) {
       <View style={styles.containerButton}><Button
         backgroundColor={Colors.bluePrimary}
         onPress={navigateToFormsAdoption}
-        width={210}
+        width={280}
       >
         FINALIZAR UM PROCESSO
       </Button></View>
@@ -57,5 +57,6 @@ const styles = StyleSheet.create({
     paddingTop: "5%",
     justifyContent: "space-around",
     width: "100%",
+    paddingBottom: 20
   }
 });
