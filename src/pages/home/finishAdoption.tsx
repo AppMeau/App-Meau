@@ -30,8 +30,6 @@ export default function FinishAdoption({navigation}: any) {
   const { uid } = useSelector(selectUser);
   const { users } = useAppSelector((state) => state.users)
 
-  
-
   useEffect(() => {
     dispatch(getUserPetsWithInteresteds(uid))
     navigation.setOptions({
@@ -157,15 +155,14 @@ export default function FinishAdoption({navigation}: any) {
               {petsInput.some(pet => pet===true) && <View><Text style={styles.subtitle}>SELECIONE O USUÁRIO</Text>
               {/* <RadioContainer
                 state={usersInput}
-                onPress={usersInputHandler
-                }
+                onPress={usersInputHandler}
                 labels={users.map((user) => user.name)}
               /> */}
               <CheckboxContainer
                 states={usersInput}
                 onPress={usersInputHandler}
                 keys={users.map((user) => user.uid)}
-                labels={users.map((user) => user.name)}
+                labels={users.map((user) => user.name)}            
               />
               </View>}
               

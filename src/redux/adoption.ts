@@ -6,7 +6,7 @@ import { useAppDispatch } from "./store";
 import { notifications, sendNotification } from "./notification";
 import { changeOwnership, clearInteresteds } from "./pets";
 import { closeRoom } from "./chat";
-import { getUserById } from "./users";
+import { addPetToAdoptedPets, getUserById } from "./users";
 
 type initialStateType = {
   isLoading?: boolean;
@@ -50,6 +50,7 @@ export const respondAdoption = createAsyncThunk("adoption/respondAdoption", asyn
       await sendNotification(notifications.adopted(adopter_notification_token!, pet.name, pet.id));
       await sendNotification(notifications.adoptionAccepted(owner_notification_token!, pet.name, adopter.name));
       await changeOwnership({petId: pet.id, ownerId:adopter.uid});
+      await addPetToAdoptedPets(pet.id, adopter.uid);
       await clearInteresteds(pet.id);
       await closeRoom(pet.id)
     }

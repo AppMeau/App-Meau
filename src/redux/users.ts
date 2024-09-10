@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { collection, doc, DocumentData, DocumentReference, getDoc, getDocs, query, QueryDocumentSnapshot, where } from 'firebase/firestore';
+import { collection, doc, DocumentData, DocumentReference, getDoc, getDocs, query, QueryDocumentSnapshot, updateDoc, where } from 'firebase/firestore';
 import { db } from '../util/firebase';
 import { FirebaseError } from 'firebase/app';
 import { User, userSchema } from '../schemas/UserRegister/userRegister';
@@ -18,6 +18,8 @@ const initialState: StateType = {
   error: null
 }
 
+
+
 export async function getUserById(userId: string|number): Promise<User>{
 	try{
 		const snapshot = await getDocs(
@@ -34,6 +36,16 @@ export async function getUserById(userId: string|number): Promise<User>{
 	  throw new Error(e)
 	}
   }
+
+export const addPetToAdoptedPets = async (petId: string, userUid: string) => {
+	const snapshot = await getDocs(
+		query(collection(db, "users"), where("uid", "==", userUid))
+	);
+	const userId = snapshot.docs.map(el => el.id)[0];
+	const {adoptedPets} = await getUserById(userUid);
+	console.log(adoptedPets)
+	await updateDoc(doc(collection(db, "users"), userId), {adoptedPets: adoptedPets ? adoptedPets.push(petId) : [petId]})
+}
 
 export const getAllInteresteds = async (interesteds: Array<{userId: string, isAlreadyInChat: boolean}>) => {
 	try {
